@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 
-    'allowed_origins' => [env('CLIENT_URL', 'http://localhost:3000')],
+    'allowed_origins' => explode(',', env('CLIENT_URLS', 'http://localhost:3000')),
 
     'allowed_origins_patterns' => [],
 

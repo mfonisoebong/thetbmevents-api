@@ -13,6 +13,7 @@ use App\Http\Middleware\LoginGoogleCallback;
 use App\Http\Middleware\ManagaerAdminAuth;
 use App\Http\Middleware\OrganizerActivated;
 use App\Http\Middleware\RegisterGoogleCallback;
+use App\Http\Middleware\RoleAuthenticate;
 use App\Http\Middleware\SuperAdminAuth;
 use App\Http\Middleware\SupportAdminAuth;
 use App\Http\Middleware\ValidateRecaptcha;
@@ -95,6 +96,7 @@ class Kernel extends HttpKernel
         'superadmin'=> SuperAdminAuth::class,
         'manageradmin'=>ManagaerAdminAuth::class,
         'supportadmin'=>SupportAdminAuth::class,
-        'organizeractivated'=> OrganizerActivated::class
+        'organizeractivated'=> OrganizerActivated::class,
+        'role'=> RoleAuthenticate::class
     ];
 }

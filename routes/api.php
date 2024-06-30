@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\users\AuthController;
 use App\Http\Controllers\users\HomePageController;
-use App\Http\Controllers\users\DevController;
 use App\Http\Controllers\users\EventsController;
 use App\Http\Controllers\users\NewsletterController;
 use App\Http\Controllers\users\PaymentController;
@@ -98,8 +97,8 @@ Route::group(['prefix' => 'payments'], function () {
 
 });
 
-Route::group(['prefix' => 'cart', 'middleware' => ['auth:sanctum', 'individualoradmin']], function () {
-    Route::middleware(['validateticketid'])->group(function () {
+Route::group(['prefix' => 'cart', 'middleware' => 'auth:sanctum'], function () {
+    Route::middleware('validateticketid')->group(function () {
         Route::post('/', [CartController::class, 'store']);
     });
     Route::get('/', [CartController::class, 'getCartItems']);
@@ -111,16 +110,6 @@ Route::group(['prefix' => 'cart', 'middleware' => ['auth:sanctum', 'individualor
 Route::prefix('/contact-messages')->group(function () {
     Route::post('/', [ContactMessagesController::class, 'store'])
         ->middleware('validaterecaptcha');;
-});
-
-Route::prefix('/dev')->group(function () {
-    Route::get('/migrate-refresh-seed', [DevController::class, 'migrateAndSeed']);
-    Route::get('/migrate', [DevController::class, 'migrate']);
-    Route::get('/migrate-refresh', [DevController::class, 'migrateRefresh']);
-    Route::get('/storage-link', [DevController::class, 'storageLink']);
-    Route::post('/upload-test', [DevController::class, 'testFileUpload']);
-    Route::get('/test-email', [DevController::class, 'sendTestEmail']);
-    Route::post('/webhook', [DevController::class, 'sendTestEmail']);
 });
 
 Route::prefix('auth')->group(function () {
@@ -178,7 +167,7 @@ Route::group(['prefix' => 'webhooks'], function () {
     Route::post('/paystack', [PaymentWebhook::class, 'paystackWebhook']);
 });
 
-Route::group(['prefix' => 'bank-details', 'middleware' => ['auth:sanctum', 'authnotuser']], function () {
+Route::group(['prefix' => 'bank-details', 'middleware' => ['auth:sanctum', 'role:organizer']], function () {
     Route::get('/', [OrganizerBankDetailsController::class, 'getBankDetails']);
     Route::post('/', [OrganizerBankDetailsController::class, 'store']);
     Route::patch('/', [OrganizerBankDetailsController::class, 'update']);
@@ -186,23 +175,23 @@ Route::group(['prefix' => 'bank-details', 'middleware' => ['auth:sanctum', 'auth
 });
 
 // Admin routes
-Route::group(['prefix' => 'admin', 'middleware' => ['auth:sanctum', 'adminauth']], function () {
+Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum'], function () {
 
     Route::prefix('overview')->group(function () {
         Route::get('/', [OverviewController::class, 'getOverview']);
         Route::get('/revenue', [OverviewController::class, 'getNetRevenue']);
         Route::get('/events', [OverviewController::class, 'getEventsOverview']);
-    })->middleware('manageradmin');
+    })->middleware('role:admin,manager');
 
 
     Route::prefix('users')->group(function () {
-        Route::middleware('superadmin')->group(function () {
+        Route::middleware('role:admin,super_admin')->group(function () {
             Route::get('/staffs', [UsersController::class, 'getAdmins']);
             Route::post('/staffs', [UsersController::class, 'store']);
         });
 
 
-        Route::middleware('supportadmin')->group(function () {
+        Route::middleware('role:admin,super_admin')->group(function () {
             Route::get('/', [UsersController::class, 'getUsers']);
             Route::get('/organizers', [UsersController::class, 'getOrganizers']);
             Route::get('/organizers/{organizer}', [UsersController::class, 'getOrganizer']);
@@ -229,40 +218,40 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:sanctum', 'adminauth']
             Route::delete('/{category}', [AdminEventsController::class, 'destroy']);
         });
 
-    })->middleware('manageradmin');
+    })->middleware('role:admin,manager');
 
     Route::prefix('newsletters')->group(function () {
         Route::get('/', [AdminNewsletterController::class, 'getNewsletterSignups']);
     })
-        ->middleware('manageradmin');
+        ->middleware('role:admin,manager');
 
     Route::prefix('commision')->group(function () {
         Route::post('/', [CommisionsController::class, 'store']);
         Route::patch('/{commision}', [CommisionsController::class, 'update']);
         Route::delete('/{commision}', [CommisionsController::class, 'destroy']);
     })
-        ->middleware('supportadmin');
+        ->middleware('role:admin,support');
 
     Route::prefix('/features')->group(function () {
         Route::post('/', [FeaturesController::class, 'store']);
         Route::get('/', [FeaturesController::class, 'getFeatures']);
         Route::post('/update', [FeaturesController::class, 'update']);
     })
-        ->middleware('manageradmin');
+        ->middleware('role:admin,manager');
 
 
     Route::prefix('order-history')->group(function () {
         Route::get('/', [OrderHistoryController::class, 'getOrderHistory']);
         Route::get('/export', [OrderHistoryController::class, 'exportAsCSV']);
     })
-        ->middleware('supportadmin');
+        ->middleware('role:admin,support');
 
     Route::prefix('/testimonies')->group(function () {
         Route::get('/', [TestimoniesController::class, 'getTestimonies']);
         Route::post('/', [TestimoniesController::class, 'store']);
         Route::post('/update', [TestimoniesController::class, 'update']);
     })
-        ->middleware('supportadmin');
+        ->middleware('role:admin,support');
 
     Route::prefix('finances')->group(function () {
         Route::get('/revenue-commisions-overview', [FinancesController::class, 'getRevenueOverview']);
@@ -270,13 +259,13 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:sanctum', 'adminauth']
         Route::get('/top-customers', [FinancesController::class, 'getTopCustomers']);
         Route::get('/top-organizers', [FinancesController::class, 'getTopOrganizers']);
     })
-        ->middleware('manageradmin');
+        ->middleware('role:admin,manager');
 
     Route::prefix('payment-methods')->group(function () {
         Route::patch('/vella', [PaymentMethodController::class, 'updateVellaPaymentMethod']);
         Route::patch('/paystack', [PaymentMethodController::class, 'updatePaystackPaymentMethod']);
     })
-        ->middleware('manageradmin');
+        ->middleware('role:admin,manager');
 
 });
 
