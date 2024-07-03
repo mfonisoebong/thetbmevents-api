@@ -33,6 +33,7 @@ class PaymentRequest extends FormRequest
             'attendees.*.ticket_id' => ['required'],
             'tickets.*.id' => ['required'],
             'tickets.*.quantity' => ['required'],
+            'coupon_code' => ['nullable', 'string', 'exists:coupons,code'],
         ];
     }
 }

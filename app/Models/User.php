@@ -47,6 +47,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'remember_token',
+        'password'
     ];
 
     /**
@@ -58,54 +59,69 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function scopeFilter(Builder $builder){
-        $builder->when(request('search'), function ($builder){
-            $searchVal= '%'. request('search') .'%';
-           $builder->where('first_name', 'like', $searchVal)
-               ->orWhere('last_name', 'like', $searchVal)
-               ->orWhere('email', 'like', $searchVal)
-               ->orWhere('buisness_name', 'like', $searchVal);
+    public function scopeFilter(Builder $builder)
+    {
+        $builder->when(request('search'), function ($builder) {
+            $searchVal = '%' . request('search') . '%';
+            $builder->where('first_name', 'like', $searchVal)
+                ->orWhere('last_name', 'like', $searchVal)
+                ->orWhere('email', 'like', $searchVal)
+                ->orWhere('buisness_name', 'like', $searchVal);
         });
 
     }
 
-    public function getFullNameAttribute(){
-        $name= $this?->buisness_name ?? $this->first_name.' '.$this->last_name;
+    public function getFullNameAttribute()
+    {
+        $name = $this?->buisness_name ?? $this->first_name . ' ' . $this->last_name;
         return $name;
     }
 
-    public function getAvatarAttribute($value){
-        $isGoogleAvatar= Str::isUrl($value);
-        $avatar= $isGoogleAvatar ? $value : env('APP_URL').'/'.$value;
-        return !$value ? null: $avatar;
+    public function getAvatarAttribute($value)
+    {
+        $isGoogleAvatar = Str::isUrl($value);
+        $avatar = $isGoogleAvatar ? $value : env('APP_URL') . '/' . $value;
+        return !$value ? null : $avatar;
     }
 
-    public function passwordResetTokens(){
+    public function passwordResetTokens()
+    {
         return $this->hasMany(PasswordResetToken::class);
     }
 
-    public function bankDetails(){
+    public function bankDetails()
+    {
         return $this->hasOne(OrganizerBankDetails::class);
     }
 
-    public function commision(){
+    public function coupons()
+    {
+        return $this->hasMany(Coupon::class);
+    }
+
+    public function commision()
+    {
         return $this->hasOne(Commision::class);
     }
 
-    public function isAdmin(){
-        return $this->role==='admin';
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
     }
 
 
-    public function invoices(){
+    public function invoices()
+    {
         return $this->hasMany(Invoice::class);
     }
 
-    public function events(){
+    public function events()
+    {
         return $this->hasMany(Event::class);
     }
 
-    public function cartItems(){
+    public function cartItems()
+    {
         return $this->hasMany(CartItem::class);
     }
 
@@ -114,29 +130,36 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class);
     }
 
-    public function billingInfo(){
+    public function billingInfo()
+    {
         return $this->hasOne(BillingInfo::class);
     }
 
-    public function createdTickets(){
+    public function createdTickets()
+    {
         return $this->hasMany(Ticket::class);
     }
 
 
-    public function otpCodes(){
+    public function otpCodes()
+    {
         return $this->hasMany(OtpVerification::class);
     }
-    public function sales(){
+
+    public function sales()
+    {
         return $this->hasMany(Sale::class, 'organizer_id');
     }
 
-    public function purchasedTickets(){
+    public function purchasedTickets()
+    {
         return $this->hasMany(PurchasedTicket::class, 'user_id');
     }
-    public function usersPurhcasedTickets(){
+
+    public function usersPurhcasedTickets()
+    {
         return $this->hasMany(PurchasedTicket::class, 'organizer_id');
     }
-
 
 
 }

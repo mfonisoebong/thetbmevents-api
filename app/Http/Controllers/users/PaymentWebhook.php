@@ -46,13 +46,14 @@ class PaymentWebhook extends Controller
         if ($invoice->payment_status === 'success') {
             return response(null, 200);
         }
-        $amountInCart = $this->getTotalAmount($invoice->cart_items) * 100;
-        $parsedAmountInCart = (float)$amountInCart;
+        $amountInCart = ($this->getTotalAmount($invoice->cart_items) - (float)$invoice->coupon_amount) * 100;
 
-        if ($parsedAmountInCart !== $amount) {
+        if ($amountInCart !== $amount) {
+            error_log('Amount in cart: ' . $amountInCart);
             return response(null, 200);
         }
 
+        error_log('Invoice verified');
 
         $invoice->update([
             'payment_status' => 'success'

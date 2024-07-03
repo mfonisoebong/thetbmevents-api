@@ -41,6 +41,8 @@ class ProfileController extends Controller
             ->get()
             ->toArray();
 
+
+
         $allTimeSalesCount = count($allTimeSales);
         $salesThisMonthCount = count($salesThisMonth);
 
@@ -85,7 +87,6 @@ class ProfileController extends Controller
             ],
             'revenue' => $revenue
         ]);
-
     }
 
     public function getFinanceOverview(Request $request)
@@ -189,7 +190,6 @@ class ProfileController extends Controller
             'overview' => $allThroughTheYearStats,
             'topCustomers' => $topCustomersList
         ]);
-
     }
 
 
@@ -217,7 +217,6 @@ class ProfileController extends Controller
             'avatar' => null
         ]);
         return $this->success(null, 'Avatar removed successfull');
-
     }
 
     private function calculateTotalProfitAndCommisions($rate, $user_id, $month = null)
@@ -229,9 +228,9 @@ class ProfileController extends Controller
             ->get()
             ->toArray() :
             Sale::where('organizer_id', '=', $user_id)
-                ->select('total')
-                ->get()
-                ->toArray();
+            ->select('total')
+            ->get()
+            ->toArray();
 
         $totalSalesArr = array_map(function ($sale) {
             return $sale['total'];

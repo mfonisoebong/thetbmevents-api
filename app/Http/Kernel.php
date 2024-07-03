@@ -2,24 +2,12 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\AdminAuth;
-use App\Http\Middleware\AuthAsOrganizer;
-use App\Http\Middleware\AuthAsIndividual;
-use App\Http\Middleware\AuthIndividualOrAdmin;
-use App\Http\Middleware\AuthNotUser;
-use App\Http\Middleware\GoogleCallback;
-use App\Http\Middleware\GoogleCallbackCheckUser;
+use App\Http\Middleware\AccountState;
 use App\Http\Middleware\LoginGoogleCallback;
-use App\Http\Middleware\ManagaerAdminAuth;
-use App\Http\Middleware\OrganizerActivated;
 use App\Http\Middleware\RegisterGoogleCallback;
 use App\Http\Middleware\RoleAuthenticate;
-use App\Http\Middleware\SuperAdminAuth;
-use App\Http\Middleware\SupportAdminAuth;
 use App\Http\Middleware\ValidateRecaptcha;
 use App\Http\Middleware\ValidateTicketId;
-use App\Http\Middleware\VerifyPayment;
-use App\Http\Middleware\VerifyVellaPayment;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -60,7 +48,7 @@ class Kernel extends HttpKernel
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -83,20 +71,11 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'googleregister'=> RegisterGoogleCallback::class,
-        'googlelogin'=> LoginGoogleCallback::class,
-        'validaterecaptcha'=> ValidateRecaptcha::class,
-        'adminauth'=> AdminAuth::class,
-        'individual'=>AuthAsIndividual::class,
-        'individualoradmin'=>AuthIndividualOrAdmin::class,
-        'validateticketid'=> ValidateTicketId::class,
-        'verifypayment'=> VerifyPayment::class,
-        'organizer'=> AuthAsOrganizer::class,
-        'authnotuser'=> AuthNotUser::class,
-        'superadmin'=> SuperAdminAuth::class,
-        'manageradmin'=>ManagaerAdminAuth::class,
-        'supportadmin'=>SupportAdminAuth::class,
-        'organizeractivated'=> OrganizerActivated::class,
-        'role'=> RoleAuthenticate::class
+        'googleregister' => RegisterGoogleCallback::class,
+        'googlelogin' => LoginGoogleCallback::class,
+        'validaterecaptcha' => ValidateRecaptcha::class,
+        'validateticketid' => ValidateTicketId::class,
+        'account_state' => AccountState::class,
+        'role' => RoleAuthenticate::class
     ];
 }

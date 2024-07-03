@@ -25,21 +25,18 @@ class Sale extends Model
 
     public function scopeFilter(Builder $builder)
     {
-//        Filter with date range
         $builder->when(request('from'), function ($builder) {
             $startDate = Carbon::parse(request('from'));
             $endDate = Carbon::parse(request('to'));
             $builder->whereBetween('created_at', [$startDate, $endDate]);
         });
 
-//        Filter with Month & Year
         $builder->when(request('year'), function ($builder) {
             $builder
                 ->whereYear('created_at', request('year'))
                 ->whereMonth('created_at', request('month'));
         });
 
-//        Filter with today's date
 
         $builder->when(request('today'), function ($builder) {
             $today = Carbon::now()
@@ -47,21 +44,18 @@ class Sale extends Model
             $builder->whereDate('created_at', $today);
         });
 
-//        Filter with yesterday's date
         $builder->when(request('yesterday'), function ($builder) {
             $yesterday = Carbon::yesterday()
                 ->toDateString();
             $builder->whereDate('created_at', $yesterday);
         });
 
-//            Filter with the past three months
         $builder->when(request('past_three_months'), function ($builder) {
             $threeMonthsAgo = Carbon::now()->subMonths(3);
             $builder->where('created_at', '>=', $threeMonthsAgo);
         });
 
         return $builder;
-
     }
 
     public function invoice()
@@ -88,5 +82,4 @@ class Sale extends Model
     {
         return $this->belongsTo(Event::class);
     }
-
 }

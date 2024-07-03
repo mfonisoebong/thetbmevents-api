@@ -10,6 +10,7 @@ use App\Http\Controllers\users\ProfileController;
 use App\Http\Controllers\users\TicketsController;
 use App\Http\Controllers\users\CartController;
 use App\Http\Controllers\users\SalesController;
+use App\Http\Controllers\users\CouponController;
 use App\Http\Controllers\users\ContactMessagesController;
 use App\Http\Controllers\users\PaymentMethodController as UserPaymentMethodController;
 use App\Http\Controllers\users\PaymentWebhook;
@@ -47,7 +48,7 @@ Route::prefix('events')->group(function () {
             Route::get('/{event}', [EventsController::class, 'getUserEvent']);
         });
 
-        Route::middleware(['organizer', 'organizeractivated'])->group(function () {
+        Route::middleware(['auth:sanctum', 'role:organizer', 'account_state:active'])->group(function () {
             Route::post('/store', [EventsController::class, 'store']);
             Route::post('/export', [EventsController::class, 'exportCsv']);
             Route::post('/{event}/export/attendees', [EventsController::class, 'exportAttendeesCsv']);
@@ -62,30 +63,37 @@ Route::prefix('events')->group(function () {
     Route::get('/filter', [EventsController::class, 'filterEvents']);
     Route::get('/location', [EventsController::class, 'getEventsByLocation']);
     Route::get('/slugs', [EventsController::class, 'getEventsSlugs']);
-
     Route::get('/{alias}', [EventsController::class, 'getEvent']);
 
 
 });
 
-Route::group(['prefix' => 'sales', 'middleware' => 'auth:sanctum'], function () {
-    Route::get('/', [SalesController::class, 'getSales']);
-});
+Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('sales')->group(function () {
+        Route::get('/', [SalesController::class, 'getSales']);
+    });
 
-Route::group(['prefix' => 'tickets', 'middleware' => 'auth:sanctum'], function () {
-    Route::middleware('organizer')->group(function () {
+    Route::prefix('tickets')->group(function () {
         Route::post('/', [TicketsController::class, 'store']);
         Route::patch('/{event}', [TicketsController::class, 'update']);
         Route::delete('/{ticket}', [TicketsController::class, 'destroy']);
         Route::post('/verify/{ticket}', [TicketsController::class, 'verifyTicket']);
-    });
-    Route::middleware('individualoradmin')->group(function () {
-        Route::get('/purchased', [PurhcasedTicketsController::class, 'getPurhcasedTickets']);
-        Route::get('/purchased/{ticket}', [PurhcasedTicketsController::class, 'getTicket']);
-        Route::get('/qrcode/{ticket}', [PurhcasedTicketsController::class, 'getQrCode']);
+//        Route::get('/purchased', [PurhcasedTicketsController::class, 'getPurhcasedTickets']);
+//        Route::get('/purchased/{ticket}', [PurhcasedTicketsController::class, 'getTicket']);
+//        Route::get('/qrcode/{ticket}', [PurhcasedTicketsController::class, 'getQrCode']);
     });
 
+    Route::prefix('coupons')->group(function () {
+        Route::get('/', [CouponController::class, 'viewAll']);
+        Route::get('/{coupon}', [CouponController::class, 'view']);
+        Route::post('/', [CouponController::class, 'store']);
+        Route::delete('/{coupon}', [CouponController::class, 'destroy']);
+        Route::patch('/{coupon}', [CouponController::class, 'update']);
+    });
+
+
 });
+
 
 Route::group(['prefix' => 'payments'], function () {
 
@@ -97,15 +105,6 @@ Route::group(['prefix' => 'payments'], function () {
 
 });
 
-Route::group(['prefix' => 'cart', 'middleware' => 'auth:sanctum'], function () {
-    Route::middleware('validateticketid')->group(function () {
-        Route::post('/', [CartController::class, 'store']);
-    });
-    Route::get('/', [CartController::class, 'getCartItems']);
-    Route::delete('/', [CartController::class, 'destroyAll']);
-    Route::delete('/{cartItem}', [CartController::class, 'destroy']);
-    Route::patch('/{cartItem}', [CartController::class, 'update']);
-});
 
 Route::prefix('/contact-messages')->group(function () {
     Route::post('/', [ContactMessagesController::class, 'store'])
@@ -191,7 +190,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum'], function () 
         });
 
 
-        Route::middleware('role:admin,super_admin')->group(function () {
+        Route::middleware('role:admin,support')->group(function () {
             Route::get('/', [UsersController::class, 'getUsers']);
             Route::get('/organizers', [UsersController::class, 'getOrganizers']);
             Route::get('/organizers/{organizer}', [UsersController::class, 'getOrganizer']);
@@ -267,8 +266,4 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum'], function () 
     })
         ->middleware('role:admin,manager');
 
-});
-
-Route::post('/', function () {
-    return 'Post recieved';
 });

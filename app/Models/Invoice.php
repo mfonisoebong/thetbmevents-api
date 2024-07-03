@@ -15,7 +15,9 @@ class Invoice extends Model
         'payment_method',
         'cart_items',
         'transaction_reference',
-        'payment_status'
+        'payment_status',
+        'coupon_id',
+        'coupon_amount'
     ];
 
     public function customer()

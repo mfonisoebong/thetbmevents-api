@@ -31,7 +31,6 @@ class SendPurchasedTickets
         $customer = $event->customer;
         $attendees = $customer->attendees;
 
-
         foreach ($purchasedTickets as $ticket) {
             $datePurchased = Carbon::parse($ticket->invoice->created_at)
                 ->format('d/m/y');
@@ -53,7 +52,7 @@ class SendPurchasedTickets
 
             Storage::disk('public')
                 ->put($ticketPath, $qrCode);
-            $qrCodeUrl = env('APP_URL') . '/storage/' . $ticketPath;
+            $qrCodeUrl = config('app.url') . '/storage/' . $ticketPath;
 
 
             $data = [
