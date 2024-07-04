@@ -112,7 +112,7 @@ class User extends Authenticatable
 
     public function invoices()
     {
-        return $this->hasMany(Invoice::class);
+        return $this->hasMany(Invoice::class, 'organizer_id');
     }
 
     public function events()

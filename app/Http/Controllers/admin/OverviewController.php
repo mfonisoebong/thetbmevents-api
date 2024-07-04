@@ -6,6 +6,7 @@ use App\Http\Resources\EventsWithTicketResource;
 use App\Models\Commision;
 use App\Models\Customer;
 use App\Models\Event;
+use App\Models\Invoice;
 use App\Models\Sale;
 use App\Models\User;
 use App\Traits\CurrentDateTime;
@@ -30,11 +31,9 @@ class OverviewController extends Controller
             ->get();
 
         $allThroughTheYearStats = array_map(function ($month) {
-            $sales = Sale::whereYear('created_at', $this->getCurrentYear())
+            $sales = Invoice::whereYear('created_at', $this->getCurrentYear())
                 ->whereMonth('created_at', $month)
-                ->select('total', 'organizer_id')
-                ->get()
-                ->toArray();
+                ->where('payment_status', 'success');
             return $this->calculateNetRevenueAndCommision($sales);
         }, $this->months);
         $topCustomers = Sale::filter()
@@ -64,15 +63,13 @@ class OverviewController extends Controller
                 'name' => Str::of($user->full_name)->limit(15)
             ];
         }, $topCustomers);
-        
-        
 
-        
-            $topOrganizersList = array_map(function ($event) {
+
+        $topOrganizersList = array_map(function ($event) {
             $organizerEvent = Event::where('id', $event['event_id'])
                 ->first();
-                
-        
+
+
             return [
                 'title' => $organizerEvent?->title,
                 'organizer' => $organizerEvent?->user?->buisness_name,
@@ -93,11 +90,9 @@ class OverviewController extends Controller
 
     public function getNetRevenue(Request $request)
     {
-        $netSales = Sale::whereYear('created_at', $this->getCurrentYear())
+        $netSales = Invoice::whereYear('created_at', $this->getCurrentYear())
             ->whereMonth('created_at', request('month'))
-            ->select('total', 'organizer_id', 'tickets_bought')
-            ->get()
-            ->toArray();
+            ->where('payment_status', 'success');
 
         $netRevenueCommisions = $this->calculateNetRevenueAndCommision($netSales);
 
@@ -142,31 +137,25 @@ class OverviewController extends Controller
         return $this->success($eventOverview);
     }
 
-    private function calculateNetRevenueAndCommision($sales)
+    private function calculateNetRevenueAndCommision($invoices)
     {
-        $totalSalesArr = array_map(function ($sale) {
-            return $sale['total'];
-        }, $sales);
+        $sales = $invoices->get();
 
         $totalCommisionsArr = array_map(function ($sale) {
             $commision = Commision::where('user_id', $sale['organizer_id'])
                 ->select('rate')
                 ->first();
             $rate = $commision ? $commision->rate : $this->default_rate;
-            return $sale['total'] * $rate / 100;
-        }, $sales);
+            return $sale['amount'] * $rate / 100;
+        }, $sales->toArray());
 
-
-        $totalSales = array_reduce($totalSalesArr, function ($a, $b) {
-            return $a + $b;
-        }) ?? 0;
 
         $totalCommisions = array_reduce($totalCommisionsArr, function ($a, $b) {
             return $a + $b;
         }) ?? 0;
 
         return [
-            'net_revenue' => $totalSales,
+            'net_revenue' => $invoices->sum('amount'),
             'net_commision' => $totalCommisions
         ];
     }

@@ -94,6 +94,8 @@ class PaymentController extends Controller
 
             Invoice::create([
                 'customer_id' => $customer->id,
+                'organizer_id' => $ticket->event->user_id,
+                'amount' => $total,
                 'payment_method' => 'paystack',
                 'cart_items' => json_encode($request->tickets),
                 'transaction_reference' => $reference,
@@ -107,42 +109,6 @@ class PaymentController extends Controller
 
     }
 
-    public function vellaGenerateInvoice($reference, PaymentRequest $request)
-    {
-        try {
-            $this->checkSellingDate($request->tickets);
-
-        } catch (Exception $e) {
-            if ($e->getCode() === 403) {
-                return $this->failed(403, null, $e->getMessage());
-            }
-            return $this->failed(500, null, $e->getMessage());
-        }
-        $customer = Customer::create([
-            "first_name" => $request->customer_first_name,
-            "last_name" => $request->customer_last_name,
-            "email" => $request->customer_email,
-            "phone_dial_code" => $request->customer_phone_dial_code,
-            "phone_number" => $request->customer_phone_number
-        ]);
-        $attendees = array_map(function ($a) use ($customer) {
-            return [...$a, 'customer_id' => $customer->id];
-        }, $request->attendees);
-        Attendee::insert($attendees);
-
-
-        Invoice::create([
-            'customer_id' => $customer->id,
-            'payment_method' => 'vella',
-            'cart_items' => json_encode($request->tickets),
-            'transaction_reference' => $reference,
-            'payment_status' => 'pending'
-        ]);
-
-
-        return $this->success(null, 'Invoice generated', 200);
-
-    }
 
     public function freePayment(PaymentRequest $request)
     {
@@ -175,10 +141,13 @@ class PaymentController extends Controller
         Attendee::insert($attendees);
 
         $reference = $customer->id;
+        $ticket = Ticket::where('id', $request->tickets[0]['id'])
+            ->first();
 
         $invoice = Invoice::create([
             'customer_id' => $customer->id,
-            'payment_method' => 'vella',
+            'organizer_id' => $ticket->event->user_id,
+            'payment_method' => 'paystack',
             'cart_items' => json_encode($request->tickets),
             'transaction_reference' => $reference,
             'payment_status' => 'success'

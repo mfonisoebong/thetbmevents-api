@@ -4,6 +4,7 @@ namespace App\Http\Controllers\users;
 
 use App\Http\Requests\UploadAvatarRequest;
 use App\Models\Customer;
+use App\Models\Invoice;
 use App\Models\Sale;
 use App\Models\User;
 use App\Traits\CurrentDateTime;
@@ -30,31 +31,21 @@ class ProfileController extends Controller
         $tickets = $user->sales->sum('tickets_bought');
 
 
-        $allTimeSales = Sale::where('organizer_id', '=', $user->id)
-            ->select('total')
-            ->get()
-            ->toArray();
-        $salesThisMonth = Sale::where('organizer_id', '=', $user->id)
+        $allTimeSales = $user->invoices()
+            ->where('payment_status', 'success');
+        $salesThisMonth = $user->invoices()
+            ->where('payment_status', 'success')
             ->whereYear('created_at', $this->getCurrentYear())
-            ->whereMonth('created_at', $this->getCurrentMonth())
-            ->select('total')
-            ->get()
-            ->toArray();
+            ->whereMonth('created_at', $this->getCurrentMonth());
 
 
-
-        $allTimeSalesCount = count($allTimeSales);
-        $salesThisMonthCount = count($salesThisMonth);
+        $allTimeSalesCount = $allTimeSales->count();
+        $salesThisMonthCount = $salesThisMonth->count();
 
         $earningsPercent = !$allTimeSalesCount ? 0 : ($salesThisMonthCount / $allTimeSalesCount) * 100;
 
-        $totalSales = array_map(function ($sale) {
-            return $sale['total'];
-        }, $salesThisMonth);
 
-        $totalEarningsThisMonth = array_reduce($totalSales, function ($a, $b) {
-            return $a + $b;
-        }) ?? 0;
+        $totalEarningsThisMonth = (float)$salesThisMonth->sum('amount');
 
 
         $earnings = [
@@ -94,15 +85,11 @@ class ProfileController extends Controller
         $user = $request->user();
         $commissionRate = $user->commision->rate ?? $this->default_commition;
 
-        $sales = Sale::where('organizer_id', '=', $user->id)
-            ->filter()
-            ->select('total')
-            ->get()
-            ->toArray();
         $ticketSales = $user->sales->sum('tickets_bought');
         $revenueAndProfit = $this->calculateSalesRevenueAndProfit(
             $commissionRate ?? $this->default_commition,
-            $sales
+            $user->invoices()
+                ->where('payment_status', 'success')
         );
 
         $userEvents = $user->events->toArray();
@@ -127,18 +114,14 @@ class ProfileController extends Controller
 
         $eventsStats = array_map(function ($event) {
             $eventSales = Sale::filter()
-                ->where('event_id', '=', $event['id'])
-                ->select('total')
-                ->get()
-                ->toArray();
+                ->sum('tickets_bought');
 
-            $eventTicketsSold = count($eventSales);
 
             return [
                 'id' => $event['id'],
                 'title' => Str::of($event['title'])->limit(25) ?? $event['title'],
                 'logo' => $event['logo'],
-                'tickets' => $eventTicketsSold,
+                'tickets' => $eventSales,
                 'created_at' => $event['created_at'],
             ];
         }, $userEvents);
@@ -228,9 +211,9 @@ class ProfileController extends Controller
             ->get()
             ->toArray() :
             Sale::where('organizer_id', '=', $user_id)
-            ->select('total')
-            ->get()
-            ->toArray();
+                ->select('total')
+                ->get()
+                ->toArray();
 
         $totalSalesArr = array_map(function ($sale) {
             return $sale['total'];
@@ -270,16 +253,9 @@ class ProfileController extends Controller
     }
 
 
-    private function calculateSalesRevenueAndProfit($rate, $sales)
+    private function calculateSalesRevenueAndProfit($rate, $invoices)
     {
-        $totalSalesArr = array_map(function ($sale) {
-            return $sale['total'];
-        }, $sales);
-
-        $totalSales = array_reduce($totalSalesArr, function ($a, $b) {
-            return $a + $b;
-        }) ?? 0;
-
+        $totalSales = $invoices->sum('amount');
 
         $commision = ($rate / 100) * $totalSales;
 
