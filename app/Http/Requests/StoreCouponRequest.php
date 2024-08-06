@@ -32,6 +32,8 @@ class StoreCouponRequest extends FormRequest
             'end_date_time' => ['required', 'date', 'after:start_date_time'],
             'type' => ['required', 'in:percentage,fixed'],
             'value' => ['required', 'numeric'],
+            'limit' => ['nullable', 'numeric', 'min:1'],
+            'referral_name' => ['nullable', 'string'],
         ];
     }
 }

@@ -19,7 +19,9 @@ class Coupon extends Model
         'value',
         'event_id',
         'user_id',
-        'status'
+        'status',
+        'referral_name',
+        'limit',
     ];
 
     public function event()
@@ -53,6 +55,5 @@ class Coupon extends Model
             return $amount * ($value / 100);
         }
         return $value;
-
     }
 }
