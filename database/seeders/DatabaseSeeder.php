@@ -2,11 +2,7 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\Event;
-use App\Models\EventCategory;
-use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -17,8 +13,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        User::factory(5)->create();
-        // EventCategory::factory(8)->create();
-        // Event::factory(100)->create();
+        $this->call([
+            UserSeeder::class,
+            EventCategorySeeder::class,
+            EventSeeder::class,
+        ]);
     }
 }
