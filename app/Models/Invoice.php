@@ -80,4 +80,8 @@ class Invoice extends Model
         return $this->hasMany(Sale::class);
     }
 
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class);
+    }
 }

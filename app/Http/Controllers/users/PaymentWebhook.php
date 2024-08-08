@@ -49,15 +49,20 @@ class PaymentWebhook extends Controller
         $amountInCart = ($this->getTotalAmount($invoice->cart_items) - (float)$invoice->coupon_amount) * 100;
 
         if ($amountInCart !== $amount) {
-            error_log('Amount in cart: ' . $amountInCart);
             return response(null, 200);
         }
 
-        error_log('Invoice verified');
 
         $invoice->update([
             'payment_status' => 'success'
         ]);
+
+        if ($invoice?->coupon && $invoice?->coupon->limit) {
+            $invoice?->coupon->update([
+                'limit' => $invoice?->coupon->limit - 1
+            ]);
+        }
+
         event(new InvoiceGenerated($invoice, $invoice->customer));
 
         return response(null, 200);
@@ -96,7 +101,5 @@ class PaymentWebhook extends Controller
         event(new InvoiceGenerated($invoice, $invoice->customer));
 
         return response(null, 200);
-
-
     }
 }

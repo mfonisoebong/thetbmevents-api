@@ -40,6 +40,11 @@ class Coupon extends Model
         return Carbon::now()->greaterThan($endDate);
     }
 
+    public function getHasReachedLimitAttribute(): bool
+    {
+        return !is_null($this->limit) && $this->limit === 0;
+    }
+
     public function getIsActiveAttribute(): bool
     {
         $startDate = Carbon::parse($this->start_date_time);

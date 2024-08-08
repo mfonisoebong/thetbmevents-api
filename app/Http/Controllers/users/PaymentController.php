@@ -56,6 +56,15 @@ class PaymentController extends Controller
             ->where('event_id', $ticket->event_id)
             ->where('status', 'active')
             ->first();
+
+        if ($coupon && $coupon->is_expired) {
+            return $this->failed(403, null, 'Coupon is not active');
+        }
+
+        if ($coupon && $coupon->has_reached_limit) {
+            return $this->failed(403, null, 'Coupon has been used up');
+        }
+
         $couponAmount = $coupon?->calculateValue($ticketsAmount) ?? 0;
 
         $total = $ticketsAmount - $couponAmount;
@@ -106,7 +115,6 @@ class PaymentController extends Controller
             return $res->json();
         }
         return $this->failed(500);
-
     }
 
 
@@ -114,7 +122,6 @@ class PaymentController extends Controller
     {
         try {
             $this->checkSellingDate($request->tickets);
-
         } catch (Exception $e) {
             if ($e->getCode() === 403) {
                 return $this->failed(403, null, $e->getMessage());
@@ -156,7 +163,6 @@ class PaymentController extends Controller
         event(new InvoiceGenerated($invoice, $customer));
 
         return $this->success(null, 'TotalAmount successfull');
-
     }
 
     private function checkSellingDate($tickets)
@@ -171,13 +177,11 @@ class PaymentController extends Controller
 
             if ($now->lt($ticketSellingStartDate)) {
                 throw new Exception('Ticket selling date has not begun', 403);
-
             }
 
             if ($now->gt($ticketSellingEndDate)) {
                 throw new Exception('Ticket selling date has ended', 403);
             }
-
         }
     }
 
@@ -205,8 +209,5 @@ class PaymentController extends Controller
         if ($coupon && $coupon->is_expired) {
             throw new \Exception('Coupon is not active', 403);
         }
-
     }
-
-
 }
