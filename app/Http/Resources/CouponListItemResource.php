@@ -15,6 +15,9 @@ class CouponListItemResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
+        $invoicesCount = $this->invoices()->count();
+
         return [
             'id' => (string)$this->id,
             'name' => $this->name,
@@ -25,7 +28,11 @@ class CouponListItemResource extends JsonResource
             'type' => $this->type,
             'value' => $this->value,
             'event' => $this->event->title,
-            'event_id' => $this->event_id
+            'event_id' => $this->event_id,
+            'limit' => $this->limit,
+            'referral_name' => $this->referral_name,
+            'is_expired' => $this->is_expired,
+            'invoices_count' => $invoicesCount,
         ];
     }
 }

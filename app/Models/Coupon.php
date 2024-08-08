@@ -61,4 +61,9 @@ class Coupon extends Model
         }
         return $value;
     }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
 }
