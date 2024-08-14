@@ -55,7 +55,6 @@ Route::prefix('events')->group(function () {
             Route::post('/{event}', [EventsController::class, 'update']);
             Route::delete('/{event}', [EventsController::class, 'destroy']);
         });
-
     });
     Route::get('/category', [EventsController::class, 'getEventsInCategory']);
     Route::get('/categories', [EventsController::class, 'getCategories']);
@@ -64,13 +63,12 @@ Route::prefix('events')->group(function () {
     Route::get('/location', [EventsController::class, 'getEventsByLocation']);
     Route::get('/slugs', [EventsController::class, 'getEventsSlugs']);
     Route::get('/{alias}', [EventsController::class, 'getEvent']);
-
-
 });
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('sales')->group(function () {
         Route::get('/', [SalesController::class, 'getSales']);
+        Route::post('/{sale}/resend-purchased-tickets', [SalesController::class, 'resendPurchasedTickets']);
     });
 
     Route::prefix('tickets')->group(function () {
@@ -78,9 +76,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/{event}', [TicketsController::class, 'update']);
         Route::delete('/{ticket}', [TicketsController::class, 'destroy']);
         Route::post('/verify/{ticket}', [TicketsController::class, 'verifyTicket']);
-//        Route::get('/purchased', [PurhcasedTicketsController::class, 'getPurhcasedTickets']);
-//        Route::get('/purchased/{ticket}', [PurhcasedTicketsController::class, 'getTicket']);
-//        Route::get('/qrcode/{ticket}', [PurhcasedTicketsController::class, 'getQrCode']);
+        //        Route::get('/purchased', [PurhcasedTicketsController::class, 'getPurhcasedTickets']);
+        //        Route::get('/purchased/{ticket}', [PurhcasedTicketsController::class, 'getTicket']);
+        //        Route::get('/qrcode/{ticket}', [PurhcasedTicketsController::class, 'getQrCode']);
     });
 
     Route::prefix('coupons')->group(function () {
@@ -90,8 +88,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{coupon}', [CouponController::class, 'destroy']);
         Route::patch('/{coupon}', [CouponController::class, 'update']);
     });
-
-
 });
 
 
@@ -102,7 +98,6 @@ Route::group(['prefix' => 'payments'], function () {
     Route::post('/free', [PaymentController::class, 'freePayment']);
 
     Route::get('/callback/{reference}', [PaymentController::class, 'callback']);
-
 });
 
 
@@ -216,7 +211,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum'], function () 
             Route::patch('/{category}', [AdminEventsController::class, 'update']);
             Route::delete('/{category}', [AdminEventsController::class, 'destroy']);
         });
-
     })->middleware('role:admin,manager');
 
     Route::prefix('newsletters')->group(function () {
@@ -265,5 +259,4 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum'], function () 
         Route::patch('/paystack', [PaymentMethodController::class, 'updatePaystackPaymentMethod']);
     })
         ->middleware('role:admin,manager');
-
 });
