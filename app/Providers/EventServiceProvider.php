@@ -8,6 +8,7 @@ use App\Events\RevenueOverview;
 use App\Events\UserRegistered;
 use App\Listeners\NotifyAdmin;
 use App\Listeners\NotifyAdminAndOrganizersOnPayment;
+use App\Listeners\NotifyCouponReferral;
 use App\Listeners\SendInvoice;
 use App\Listeners\SendOTPCode;
 use App\Listeners\SendPasswordResetEmail;
@@ -28,20 +29,21 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
-        UserRegistered::class=>[
+        UserRegistered::class => [
             SendWelcomeMail::class,
             NotifyAdmin::class,
         ],
-        InvoiceGenerated::class=>[
+        InvoiceGenerated::class => [
             UpdateTicketStats::class,
             NotifyAdminAndOrganizersOnPayment::class,
             UpdateOrganizerStats::class,
-            SendPurchasedTickets::class
+            SendPurchasedTickets::class,
+            NotifyCouponReferral::class
         ],
-        PasswordTokenCreated::class=> [
+        PasswordTokenCreated::class => [
             SendPasswordResetEmail::class
         ],
-        RevenueOverview::class=>[
+        RevenueOverview::class => [
             UpdateRevenueCommisionSnapshot::class
         ]
     ];

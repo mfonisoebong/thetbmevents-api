@@ -21,6 +21,7 @@ class Coupon extends Model
         'user_id',
         'status',
         'referral_name',
+        'referral_email',
         'limit',
     ];
 

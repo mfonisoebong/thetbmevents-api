@@ -11,6 +11,7 @@ use App\Models\Sale;
 use App\Traits\GetTotalAmountInCart;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Exception;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -63,7 +64,13 @@ class PaymentWebhook extends Controller
             ]);
         }
 
-        event(new InvoiceGenerated($invoice, $invoice->customer));
+        try {
+
+            event(new InvoiceGenerated($invoice, $invoice->customer));
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+        }
+
 
         return response(null, 200);
     }

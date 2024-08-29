@@ -34,6 +34,7 @@ class StoreCouponRequest extends FormRequest
             'value' => ['required', 'numeric'],
             'limit' => ['nullable', 'numeric', 'min:1'],
             'referral_name' => ['nullable', 'string'],
+            'referral_email' => ['nullable', 'string', 'email'],
         ];
     }
 }
