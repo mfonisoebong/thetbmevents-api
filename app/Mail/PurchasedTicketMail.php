@@ -18,7 +18,7 @@ class PurchasedTicketMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public $ticketDetails, public $customer)
+    public function __construct(public $ticketDetails, public $attendee)
     {
         //
     }

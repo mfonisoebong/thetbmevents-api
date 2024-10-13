@@ -237,7 +237,7 @@
                                       "
                                                     >
                                                         <p style="margin-bottom: 10px">
-                                                            Hi {{$customer->full_name}},
+                                                            Hi {{$attendee->full_name}},
                                                         </p>
 
                                                         <p>

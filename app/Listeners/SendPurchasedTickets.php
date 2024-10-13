@@ -31,7 +31,10 @@ class SendPurchasedTickets
         $customer = $event->customer;
         $attendees = $customer->attendees;
 
-        foreach ($purchasedTickets as $ticket) {
+        foreach ($attendees as $attendee) {
+
+            $ticket = $attendee->purchasedTicket;
+
             $datePurchased = Carbon::parse($ticket->invoice->created_at)
                 ->format('d/m/y');
             $timePurchased = Carbon::parse($ticket->invoice->created_at)
@@ -72,16 +75,9 @@ class SendPurchasedTickets
                 'qr_code' => $qrCodeUrl
             ];
 
-            Mail::to($ticket->customer->email)
-                ->send(new PurchasedTicketMail($data, $ticket->customer));
+            Mail::to($attendee->email)
+                ->send(new PurchasedTicketMail($data, $ticket->attendee));
 
-            foreach ($attendees as $attendee) {
-                if ($attendee->email !== $customer->email) {
-                    Mail::to($attendee->email)
-                        ->send(new PurchasedTicketMail($data, $attendee));
-                }
-
-            }
 
         }
 

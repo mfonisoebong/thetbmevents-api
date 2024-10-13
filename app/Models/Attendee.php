@@ -31,4 +31,9 @@ class Attendee extends Model
     {
         return $this->belongsTo(Ticket::class);
     }
+
+    public function purchasedTicket()
+    {
+        return $this->hasOne(PurchasedTicket::class);
+    }
 }

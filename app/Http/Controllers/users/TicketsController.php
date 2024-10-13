@@ -88,7 +88,7 @@ class TicketsController extends Controller
             return $this->failed(403, null, 'Event must have at least one ticket');
         }
 
-   
+
 
         $ticket->delete();
 
@@ -100,7 +100,7 @@ class TicketsController extends Controller
 
         $request->validated($request->all());
 
-        $eventId= $ticket->ticket->event_id;
+//        $eventId= $ticket->ticket->event_id;
 
 //        $event= Event::where('id', $eventId)
 //        ->first();

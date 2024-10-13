@@ -194,7 +194,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum'], function () 
             Route::patch('/organizers/deactivate/{organizer}', [UsersController::class, 'deactivateOrganizer']);
             Route::post('/organizers/login-as/{organizer}', [UsersController::class, 'loginAs']);
             Route::post('/export', [UsersController::class, 'exportUsersCSV']);
-            Route::get('/{user}', [UsersController::class, 'getUser']);
+        Route::get('/{user}', [UsersController::class, 'getUser']);
             Route::delete('/{user}', [UsersController::class, 'destroyUser']);
         });
     });

@@ -24,7 +24,7 @@ class UpdateTicketStats
     public function handle(InvoiceGenerated $event): void
     {
         $cartItems = json_decode($event->invoice->cart_items);
-        $customerId = $event->customer->id;
+        $attendees = $event->customer->attendees;
 
         foreach ($cartItems as $item) {
             $ticket = Ticket::where('id', '=', $item->id)
@@ -38,13 +38,17 @@ class UpdateTicketStats
                 $ticket->save();
             }
 
-            PurchasedTicket::create([
-                'ticket_id' => $item->id,
-                'customer_id' => $customerId,
-                'quantity' => $itemQuantity,
-                'price' => $itemQuantity * $ticket->price,
-                'invoice_id' => $event->invoice->id
-            ]);
+            foreach ($attendees as $attendee){
+                PurchasedTicket::create([
+                    'ticket_id' => $item->id,
+                    'attendee_id' => $attendee->id,
+                    'quantity' => $itemQuantity,
+                    'price' => $itemQuantity * $ticket->price,
+                    'invoice_id' => $event->invoice->id
+                ]);
+            }
+
+
 
         }
     }

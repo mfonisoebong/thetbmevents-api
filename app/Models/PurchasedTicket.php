@@ -12,7 +12,7 @@ class PurchasedTicket extends Model
 
     protected $fillable = [
         'ticket_id',
-        'customer_id',
+        'attendee_id',
         'quantity',
         'price',
         'used',
@@ -29,8 +29,8 @@ class PurchasedTicket extends Model
         return $this->belongsTo(Invoice::class);
     }
 
-    public function customer()
+    public function attendee()
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(Attendee::class);
     }
 }
