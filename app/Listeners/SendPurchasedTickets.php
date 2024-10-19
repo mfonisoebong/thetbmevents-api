@@ -77,6 +77,8 @@ class SendPurchasedTickets
 
             Mail::to($attendee->email)
                 ->send(new PurchasedTicketMail($data, $ticket->attendee));
+            Storage::disk('public')
+                ->delete($ticketPath);
 
 
         }
