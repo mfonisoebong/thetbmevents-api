@@ -48,6 +48,7 @@ class EventsController extends Controller
 
         ]);
     }
+
     public function filterEvents(Request $request)
     {
         $requiredFields = ['search', 'category', 'location', 'date'];
@@ -89,12 +90,14 @@ class EventsController extends Controller
             ->get();
         return $this->success($events);
     }
+
     public function getCategories()
     {
         $categories = EventCategory::all(['category', 'id']);
 
         return $this->success($categories);
     }
+
     public function getEventsByLocation(Request $request)
     {
         $ip = App::environment('production') ? $request->ip() : '41.203.78.171';
@@ -112,7 +115,7 @@ class EventsController extends Controller
         ]);
     }
 
-    public  function getUserEvent(Event $event, Request $request)
+    public function getUserEvent(Event $event, Request $request)
     {
         try {
             $this->checkEventAuth($event, $request);
@@ -160,7 +163,6 @@ class EventsController extends Controller
     public function store(StoreEventRequest $request)
     {
 
-
         $user = $request->user();
 
         DB::beginTransaction();
@@ -203,7 +205,7 @@ class EventsController extends Controller
             }
             DB::commit();
             return $this->success([
-                'event_id' => $event->id
+                'event' => $event
             ], 'Event created successfully');
         } catch (Exception $e) {
             DB::rollBack();
@@ -285,7 +287,8 @@ class EventsController extends Controller
                 ->failed(500, null, $e->getMessage());
         }
     }
-    public  function destroy(Event $event, Request $request)
+
+    public function destroy(Event $event, Request $request)
     {
 
         try {
@@ -301,6 +304,7 @@ class EventsController extends Controller
         return $this
             ->success(null, 'Event has been deleted successfully');
     }
+
     public function exportCsv(Request $request)
     {
 
@@ -339,7 +343,7 @@ class EventsController extends Controller
             }
 
             $headers = [
-                'Content-Type'  => 'text/csv',
+                'Content-Type' => 'text/csv',
                 'Content-Disposition' => 'attachment; filename="example.csv"',
             ];
 
@@ -347,7 +351,7 @@ class EventsController extends Controller
             $csvString = $csv->getContent();
             return response($csvString, 200, $headers);
         } catch (Exception $e) {
-            return  $this->failed(500, null, $e->getMessage());
+            return $this->failed(500, null, $e->getMessage());
         }
     }
 
@@ -410,7 +414,7 @@ WHERE events.id = :event_id
             }
 
             $headers = [
-                'Content-Type'  => 'text/csv',
+                'Content-Type' => 'text/csv',
                 'Content-Disposition' => 'attachment; filename="example.csv"',
             ];
 
@@ -418,7 +422,7 @@ WHERE events.id = :event_id
             $csvString = $csv->getContent();
             return response($csvString, 200, $headers);
         } catch (Exception $e) {
-            return  $this->failed(500, null, $e->getMessage());
+            return $this->failed(500, null, $e->getMessage());
         }
     }
 
