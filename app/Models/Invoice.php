@@ -123,10 +123,10 @@ class Invoice extends Model
 
             $data = [
                 'id' => $ticket->id,
-                'event_title' => $ticket->ticket->event->title,
+                'event_title' => $ticket->ticket->event?->title ?? '',
                 'organizer' => $ticket->ticket->organizer->full_name,
-                'event_logo' => $ticket->ticket->event->logo,
-                'name' => $ticket->ticket->name . ' - ' . $ticket->ticket->event->title,
+                'event_logo' => $ticket->ticket->event?->logo ?? '',
+                'name' => $ticket->ticket->name . ' - ' . $ticket->ticket->event?->title ?? '',
                 'price' => $ticket->quantity * $ticket->ticket->price,
                 'event_link' => $eventLink,
                 'event_location' => $eventLocation,
@@ -138,15 +138,8 @@ class Invoice extends Model
                 'qr_code' => $qrCodeUrl
             ];
 
-            Mail::to($ticket->customer->email)
-                ->send(new PurchasedTicketMail($data, $ticket->customer));
-
-            foreach ($attendees as $attendee) {
-                if ($attendee->email !== $customer->email) {
-                    Mail::to($attendee->email)
-                        ->send(new PurchasedTicketMail($data, $attendee));
-                }
-            }
+            Mail::to($ticket->attendee->email)
+                ->send(new PurchasedTicketMail($data, $ticket->attendee));
         }
     }
 }

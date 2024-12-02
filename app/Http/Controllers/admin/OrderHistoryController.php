@@ -13,18 +13,20 @@ use League\Csv\Writer;
 class OrderHistoryController extends Controller
 {
     use HttpResponses;
-    public function getOrderHistory(){
-        $orderHistory= PurchasedTicket::paginate(20);
-        $paginateMetaData= $orderHistory->toArray();
-        $ordersResource= OrderHistoryResource::collection($orderHistory);
-        $data= [...$paginateMetaData, 'data'=> $ordersResource];
+    public function getOrderHistory()
+    {
+        $orderHistory = PurchasedTicket::latest()->paginate(20);
+        $paginateMetaData = $orderHistory->toArray();
+        $ordersResource = OrderHistoryResource::collection($orderHistory);
+        $data = [...$paginateMetaData, 'data' => $ordersResource];
         return $this->success($data);
     }
 
-    public function exportAsCSV(ExportOrderHistoryRequest $request){
+    public function exportAsCSV(ExportOrderHistoryRequest $request)
+    {
 
-        $ids= explode(',',$request->ids);
-        $orderHistory= PurchasedTicket::whereIn('id',$ids)
+        $ids = explode(',', $request->ids);
+        $orderHistory = PurchasedTicket::whereIn('id', $ids)
             ->get();;
         $csv = Writer::createFromString('');
         $csv->insertOne([
@@ -35,11 +37,11 @@ class OrderHistoryController extends Controller
             'Ticket Price',
             'Organizer',
             'Created At',
-            ]);
-        $orders= OrderHistoryResource::collection($orderHistory)
+        ]);
+        $orders = OrderHistoryResource::collection($orderHistory)
             ->toArray($request);
 
-        foreach ($orders as $order){
+        foreach ($orders as $order) {
             $csv->insertOne([
                 $order['id'],
                 $order['ticket_no'],

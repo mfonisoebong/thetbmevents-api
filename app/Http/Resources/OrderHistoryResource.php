@@ -15,17 +15,17 @@ class OrderHistoryResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $event= Event::where('id', $this->ticket->event_id)
+        $event = Event::where('id', $this->ticket->event_id)
             ->first();
 
         return [
-            'id'=> $this->id,
-            'ticket_no'=> '#'.$this->id,
-            'event_name'=> $event->title,
-            'ticket_name'=> $this->ticket->name,
-            'ticket_price'=> $this->ticket->price,
-            'organizer'=> $event->user->buisness_name,
-            'created_at'=> $this->created_at
+            'id' => $this->id,
+            'ticket_no' => '#' . $this->id,
+            'event_name' => $event?->title ?? '',
+            'ticket_name' => $this->ticket->name,
+            'ticket_price' => $this->ticket->price,
+            'organizer' => $event?->user->buisness_name ?? '',
+            'created_at' => $this->created_at
         ];
     }
 }
