@@ -95,7 +95,6 @@ class Invoice extends Model
     {
         $purchasedTickets = $this->tickets;
         $customer = $this->customer;
-        $attendees = $customer->attendees;
 
         foreach ($purchasedTickets as $ticket) {
             $datePurchased = Carbon::parse($ticket->invoice->created_at)
