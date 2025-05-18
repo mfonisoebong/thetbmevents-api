@@ -16,11 +16,12 @@ class EventListResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'=> $this->id,
-            'title'=> Str::of($this->title)->limit(25) ?? $this->title,
-            'logo'=> $this->logo,
-            'created_at'=> $this->created_at,
-            'ticket_price'=>  count($this->tickets) < 1 ? null: $this->tickets[0]->price,
+            'id' => $this->id,
+            'alias' => $this->alias,
+            'title' => Str::of($this->title)->limit(25) ?? $this->title,
+            'logo' => $this->logo,
+            'created_at' => $this->created_at,
+            'ticket_price' => count($this->tickets) < 1 ? null : $this->tickets[0]->price,
 
         ];
     }
