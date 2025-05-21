@@ -202,6 +202,7 @@ class EventsController extends Controller
                 ]);
             }
             DB::commit();
+            $event->refresh();
             return $this->success([
                 'event' => $event
             ], 'Event created successfully');
