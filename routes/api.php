@@ -48,6 +48,7 @@ Route::prefix('events')->group(function () {
 
         Route::middleware(['auth:sanctum', 'role:organizer', 'account_state:active'])->group(function () {
             Route::post('/store', [EventsController::class, 'store']);
+            Route::post('/send-blast-email', [EventsController::class, 'sendBlastEmail']);
             Route::post('/export', [EventsController::class, 'exportCsv']);
             Route::post('/{event}/export/attendees', [EventsController::class, 'exportAttendeesCsv']);
             Route::post('/{event}', [EventsController::class, 'update']);
@@ -101,7 +102,8 @@ Route::group(['prefix' => 'payments'], function () {
 
 Route::prefix('/contact-messages')->group(function () {
     Route::post('/', [ContactMessagesController::class, 'store'])
-        ->middleware('validaterecaptcha');;
+        ->middleware('validaterecaptcha');
+    ;
 });
 
 Route::prefix('auth')->group(function () {

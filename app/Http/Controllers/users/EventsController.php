@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\users;
 
+use App\Http\Requests\SendBlastEmailRequest;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Http\Resources\EventListResource;
 use App\Http\Resources\EventsResource;
 use App\Http\Resources\TicketResource;
+use App\Mail\BlastMail;
 use App\Models\Event;
 use App\Models\EventCategory;
 use App\Models\Ticket;
@@ -17,6 +19,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use League\Csv\Writer;
 use PHPUnit\Exception;
@@ -192,9 +195,9 @@ class EventsController extends Controller
                 Ticket::create([
                     'event_id' => $event->id,
                     'name' => $ticket['name'],
-                    'price' => (float)$ticket['price'],
+                    'price' => (float) $ticket['price'],
                     'unlimited' => $ticket['unlimited'] === "true" ? true : false,
-                    'quantity' => (int)$ticket['quantity'],
+                    'quantity' => (int) $ticket['quantity'],
                     'selling_start_date_time' => $ticket['selling_start_date_time'],
                     'selling_end_date_time' => $ticket['selling_end_date_time'],
                     'description' => $ticket['description'] ?? null,
@@ -266,9 +269,9 @@ class EventsController extends Controller
                     Ticket::create([
                         'event_id' => $event->id,
                         'name' => $ticket['name'],
-                        'price' => (float)$ticket['price'],
+                        'price' => (float) $ticket['price'],
                         'unlimited' => $ticket['unlimited'] === "true" ? true : false,
-                        'quantity' => (int)$ticket['quantity'],
+                        'quantity' => (int) $ticket['quantity'],
                         'selling_start_date_time' => $ticket['selling_start_date_time'],
                         'selling_end_date_time' => $ticket['selling_end_date_time'],
                         'description' => $ticket['description'] ?? null,
@@ -356,39 +359,8 @@ class EventsController extends Controller
 
     public function exportAttendeesCsv(Event $event)
     {
-        $attendees = DB::select('
-        SELECT
-    purchased_tickets.id as purchased_ticket_id,
-    CONCAT(
-     customers.first_name,
-        " ",
-    customers.last_name
-    ) AS customer,
-
-    customers.email AS customer_email,
-    CONCAT(
-        customers.phone_dial_code,
-        " ",
-        customers.phone_number
-    ) AS customer_phone,
-    tickets.id AS ticket_id,
-    tickets.name AS ticket_name,
-    events.title AS event_title
-FROM
-    sales
-INNER JOIN events ON sales.event_id = events.id
-INNER JOIN invoices ON sales.invoice_id = invoices.id
-INNER JOIN purchased_tickets ON invoices.id = purchased_tickets.invoice_id
-INNER JOIN customers ON sales.customer_id = customers.id
-INNER JOIN tickets ON sales.ticket_id = tickets.id
-
-WHERE events.id = :event_id
-        ', [
-            'event_id' => $event->id
-        ]);
-
-
         try {
+            $attendees = $this->getEventattendees($event);
             $csv = Writer::createFromString('');
 
             $csv->insertOne([
@@ -423,6 +395,59 @@ WHERE events.id = :event_id
         } catch (Exception $e) {
             return $this->failed(500, null, $e->getMessage());
         }
+    }
+
+    public function sendBlastEmail(SendBlastEmailRequest $request)
+    {
+        $events = Event::whereIn('id', $request->event_ids)->get();
+
+        foreach ($events as $event) {
+            $attendees = $this->getEventattendees($event);
+            $emails = array_map(fn($attendee) => $attendee->customer_email, $attendees);
+            if (count($emails) === 0) {
+                continue;
+            }
+            Mail::to($emails, 'Organizer')
+                ->send(new BlastMail($request->subject, $request->email_content));
+        }
+
+        return $this->success(null, "Blast email send successfully");
+    }
+
+    private function getEventattendees(Event $event)
+    {
+        $attendees = DB::select('
+        SELECT
+    purchased_tickets.id as purchased_ticket_id,
+    CONCAT(
+     customers.first_name,
+        " ",
+    customers.last_name
+    ) AS customer,
+
+    customers.email AS customer_email,
+    CONCAT(
+        customers.phone_dial_code,
+        " ",
+        customers.phone_number
+    ) AS customer_phone,
+    tickets.id AS ticket_id,
+    tickets.name AS ticket_name,
+    events.title AS event_title
+FROM
+    sales
+INNER JOIN events ON sales.event_id = events.id
+INNER JOIN invoices ON sales.invoice_id = invoices.id
+INNER JOIN purchased_tickets ON invoices.id = purchased_tickets.invoice_id
+INNER JOIN customers ON sales.customer_id = customers.id
+INNER JOIN tickets ON sales.ticket_id = tickets.id
+
+WHERE events.id = :event_id
+        ', [
+            'event_id' => $event->id
+        ]);
+
+        return $attendees;
     }
 
     private function checkEventAuth(Event $event, Request $request)
