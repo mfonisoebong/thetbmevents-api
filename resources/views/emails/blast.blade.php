@@ -200,6 +200,7 @@
                                                             ">
 
                                                     </table>
+
                                                     <table class="text_block block-4" width="100%" border="0"
                                                         cellpadding="0" cellspacing="0" role="presentation" style="
                                                                 mso-table-lspace: 0;
@@ -232,6 +233,7 @@
                                                                 </div>
                                                             </td>
                                                         </tr>
+
                                                     </table>
                                                 </td>
                                             </tr>
@@ -382,6 +384,7 @@
                                                                         <a href="" style="
                                                                                     padding-left: 10px;
                                                                                     padding-right: 10px;
+                                                                                    text-decoration: none;
                                                                                 " target="_blank">
                                                                             <img src="https://statics.thetbmevents.com/images/facebook.png"
                                                                                 alt="Facebook" width="20" height="20" />
@@ -390,6 +393,7 @@
                                                                             style="
                                                                                     padding-left: 10px;
                                                                                     padding-right: 10px;
+                                                                                    text-decoration: none;
                                                                                 " target="_blank">
                                                                             <img src="https://statics.thetbmevents.com/images/twitter.png"
                                                                                 alt="Twitter" width="20" height="20" />
@@ -398,6 +402,7 @@
                                                                             style="
                                                                                     padding-left: 10px;
                                                                                     padding-right: 10px;
+                                                                                    text-decoration: none;
                                                                                 " target="_blank">
                                                                             <img src="https://statics.thetbmevents.com/images/instagram.png"
                                                                                 alt="Instagram" width="20"
