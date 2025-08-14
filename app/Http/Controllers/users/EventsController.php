@@ -401,6 +401,11 @@ class EventsController extends Controller
 
     public function sendBlastEmail(SendBlastEmailRequest $request)
     {
+        $request->validate([
+            'subject'=> ['required', 'string'],
+            'email_content'=> ['required', 'string']
+        ]);
+
         $events = Event::whereIn('id', $request->event_ids)->get();
 
         foreach ($events as $event) {
