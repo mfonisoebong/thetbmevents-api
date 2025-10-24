@@ -126,7 +126,9 @@ class AuthController extends Controller
 
         $user = User::create([
             'buisness_name' => $request->buisness_name,
-            'role' => 'organizer',
+            'role' => $request->role,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'email_verified_at' => now(),
@@ -144,7 +146,7 @@ class AuthController extends Controller
         event(new UserRegistered($user));
 
         $request->
-        session()
+            session()
             ->regenerate();
 
         return $this
@@ -312,7 +314,8 @@ class AuthController extends Controller
         $user = User::where('email', $email)
             ->first();
 
-        if (!$user) return false;
+        if (!$user)
+            return false;
 
         $passwordCheck = Hash::check($password, $user->password);
 

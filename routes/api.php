@@ -260,3 +260,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum'], function () 
     })
         ->middleware('role:admin,manager');
 });
+
+
+// Mobile routes
+require_once('mobile_api.php');
