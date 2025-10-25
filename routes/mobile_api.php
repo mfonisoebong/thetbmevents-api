@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\users\EventsController;
+use App\Http\Controllers\users\TicketsController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
