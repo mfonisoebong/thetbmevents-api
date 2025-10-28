@@ -13,8 +13,6 @@ class SalesController extends Controller
 
     public function getSales(Request $request)
     {
-
-
         $user = $request->user();
 
         $sales = Sale::where('organizer_id', $user->id)

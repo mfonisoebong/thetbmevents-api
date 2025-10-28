@@ -77,12 +77,18 @@ class User extends Authenticatable
         return $name;
     }
 
+    public function getAvatarPathAttribute()
+    {
+        return str_replace(config('app.url') . '/', '', $this->avatar);
+    }
+
     public function getAvatarAttribute($value)
     {
         $isGoogleAvatar = Str::isUrl($value);
-        $avatar = $isGoogleAvatar ? $value : env('APP_URL') . '/' . $value;
+        $avatar = $isGoogleAvatar ? $value : config('app.url') . '/' . $value;
         return !$value ? null : $avatar;
     }
+
 
     public function passwordResetTokens()
     {

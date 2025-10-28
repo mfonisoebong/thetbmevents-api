@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\users;
 
-use App\Http\Controllers;
 use App\Http\Requests\StoreCouponRequest;
 use App\Http\Resources\CouponListItemResource;
 use App\Models\Coupon;
-use App\Models\Event;
 use App\Traits\HttpResponses;
 use App\Traits\Pagination;
 use Illuminate\Http\Request;
@@ -19,13 +17,10 @@ class CouponController extends Controller
     {
         $user = $request->user();
 
-        if($user->role === 'admin'){
+        if ($user->role === 'admin') {
             $coupons = Coupon::paginate(12);
-
-        } else{
-
+        } else {
             $coupons = Coupon::where('user_id', $user->id)->paginate(12);
-
         }
 
         $couponList = CouponListItemResource::collection($coupons);

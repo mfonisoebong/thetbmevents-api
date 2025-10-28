@@ -25,6 +25,15 @@ class Sale extends Model
 
     public function scopeFilter(Builder $builder)
     {
+
+        $builder->when(request('search'), function ($builder) {
+            $builder->whereHas('customer', function ($query) {
+                $query->where('first_name', 'like', '%' . request('search') . '%')
+                    ->orWhere('last_name', 'like', '%' . request('search') . '%')
+                    ->orWhere('email', 'like', '%' . request('search') . '%');
+            });
+        });
+
         $builder->when(request('from'), function ($builder) {
             $startDate = Carbon::parse(request('from'));
             $endDate = Carbon::parse(request('to'));

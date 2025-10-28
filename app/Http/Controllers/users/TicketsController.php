@@ -10,28 +10,28 @@ use App\Models\PurchasedTicket;
 use App\Models\Ticket;
 use App\Traits\GetModelIds;
 use App\Traits\HttpResponses;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TicketsController extends Controller
 {
     use HttpResponses, GetModelIds;
 
-    public function store(StoreTicketRequest $request){
+    public function store(StoreTicketRequest $request)
+    {
 
         $request->validate($request->all());
-        $user= $request->user();
+        $user = $request->user();
         foreach ($request->tickets as $ticket) {
             Ticket::create([
-                'event_id'=> $ticket['event_id'],
-                'name'=> $ticket['name'],
-                'price'=> $ticket['price'],
-                'unlimited'=> $ticket['unlimited'],
-                'quantity'=> $ticket['quantity'],
-                'selling_start_date_time'=> $ticket['selling_start_date_time'],
-                'selling_end_date_time'=> $ticket['selling_end_date_time'],
-                'description'=> $ticket['description'] ?? null,
-                'organizer_id'=> $user->id
+                'event_id' => $ticket['event_id'],
+                'name' => $ticket['name'],
+                'price' => $ticket['price'],
+                'unlimited' => $ticket['unlimited'],
+                'quantity' => $ticket['quantity'],
+                'selling_start_date_time' => $ticket['selling_start_date_time'],
+                'selling_end_date_time' => $ticket['selling_end_date_time'],
+                'description' => $ticket['description'] ?? null,
+                'organizer_id' => $user->id
             ]);
         }
 
@@ -40,54 +40,51 @@ class TicketsController extends Controller
 
     }
 
-    public function update(Event $event ,UpdateTicketRequest $request){
+    public function update(Event $event, UpdateTicketRequest $request)
+    {
         $request->validate($request->all());
 
-        $user= $request->user();
+        $user = $request->user();
 
         foreach ($request->tickets as $ticket) {
-            $oldTicketId=$ticket['id'] ?? null;
+            $oldTicketId = $ticket['id'] ?? null;
 
 
-            $oldTicket= Ticket::where('id', $oldTicketId)
+            $oldTicket = Ticket::where('id', $oldTicketId)
                 ->first();
 
-            if(!$oldTicket){
+            if (!$oldTicket) {
                 Ticket::create([
-                    'event_id'=> $ticket['event_id'],
-                    'name'=> $ticket['name'],
-                    'price'=> $ticket['price'],
-                    'unlimited'=> $ticket['unlimited'],
-                    'quantity'=> $ticket['quantity'],
-                    'selling_start_date_time'=> $ticket['selling_start_date_time'],
-                    'selling_end_date_time'=> $ticket['selling_end_date_time'],
-                    'description'=> $ticket['description'] ?? null,
-                    'organizer_id'=> $user->id
+                    'event_id' => $ticket['event_id'],
+                    'name' => $ticket['name'],
+                    'price' => $ticket['price'],
+                    'unlimited' => $ticket['unlimited'],
+                    'quantity' => $ticket['quantity'],
+                    'selling_start_date_time' => $ticket['selling_start_date_time'],
+                    'selling_end_date_time' => $ticket['selling_end_date_time'],
+                    'description' => $ticket['description'] ?? null,
+                    'organizer_id' => $user->id
                 ]);
             }
-
-
-
         }
-
 
         return $this->success(null, 'Tickets updated successfully');
     }
 
-    public function destroy(Ticket $ticket, Request $request){
-        $user= $request->user();
+    public function destroy(Ticket $ticket, Request $request)
+    {
+        $user = $request->user();
 
-        if($ticket->organizer_id!== $user->id){
+        if ($ticket->organizer_id !== $user->id) {
             return $this->failed(401);
         }
-        if(count($ticket->sales) > 0){
+        if (count($ticket->sales) > 0) {
             return $this->failed(403, null, 'Ticket has been purchased already');
         }
 
-        if(count($ticket->event->tickets) < 2){
+        if (count($ticket->event->tickets) < 2) {
             return $this->failed(403, null, 'Event must have at least one ticket');
         }
-
 
 
         $ticket->delete();
@@ -96,7 +93,8 @@ class TicketsController extends Controller
 
     }
 
-    public function verifyTicket(PurchasedTicket $ticket, VerifyTicketRequest $request){
+    public function verifyTicket(PurchasedTicket $ticket, VerifyTicketRequest $request)
+    {
 
         $request->validated($request->all());
 
@@ -108,14 +106,14 @@ class TicketsController extends Controller
 //        $expiryDate= Carbon::parse($event->end_date.' '.$event->end_time);
 //        $hasExpired= Carbon::now()->gt($expiryDate);
 
-        $ticketInvoice= $ticket->invoice;
-        $unsettledPayment= $ticketInvoice->payment_status!=='success';
+        $ticketInvoice = $ticket->invoice;
+        $unsettledPayment = $ticketInvoice->payment_status !== 'success';
 
-        if($unsettledPayment){
-            return  $this
+        if ($unsettledPayment) {
+            return $this
                 ->failed(403,
                     null,
-                    'Your payment status for this ticket is/has '.$ticketInvoice->payment_status);
+                    'Your payment status for this ticket is/has ' . $ticketInvoice->payment_status);
         }
 
 //        if($hasExpired){
@@ -123,14 +121,14 @@ class TicketsController extends Controller
 //        }
 
 
-       if($ticket->used){
-        return $this->failed(400, null, 'Ticket has been verified already');
-       }
+        if ($ticket->used) {
+            return $this->failed(400, null, 'Ticket has been verified already');
+        }
 
-       $ticket->update([
-        'used'=> true
-       ]);
+        $ticket->update([
+            'used' => true
+        ]);
 
-       return $this->success(null, 'Ticket verified successfully');
+        return $this->success(null, 'Ticket verified successfully');
     }
 }

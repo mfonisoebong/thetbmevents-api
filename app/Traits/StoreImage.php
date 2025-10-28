@@ -1,25 +1,40 @@
 <?php
 namespace App\Traits;
-use Illuminate\Support\Str;use Intervention\Image\Facades\Image;
 
-trait StoreImage{
+use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 
-    protected $quality= 60;
-    protected $encoding= 'webp';
-    public function storeImage($path, $oldPath, $image){
-        if($oldPath){
-            $formatted= Str::isUrl($oldPath) ? str_replace(
-                env('APP_URL').'/',
+trait StoreImage
+{
+
+    protected $quality = 60;
+    protected $encoding = 'webp';
+
+    public function storeImage($path, $oldPath, $image)
+    {
+        if ($oldPath) {
+            $formatted = Str::isUrl($oldPath) ? str_replace(
+                env('APP_URL') . '/',
                 '',
                 $oldPath
-            ): $oldPath;
+            ) : $oldPath;
             unlink(public_path($formatted));
         }
 
-        $newPath= public_path($path);
+        $newPath = public_path($path);
         Image::make($image)
             ->encode('webp', 60)
             ->save($newPath);
+    }
+
+    public function removeFile($path)
+    {
+        $formatted = Str::isUrl($path) ? str_replace(
+            env('APP_URL') . '/',
+            '',
+            $path
+        ) : $path;
+        unlink(public_path($formatted));
     }
 }
 

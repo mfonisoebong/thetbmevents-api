@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Event;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCouponRequest extends FormRequest
@@ -34,7 +33,7 @@ class StoreCouponRequest extends FormRequest
             'value' => ['required', 'numeric'],
             'limit' => ['nullable', 'numeric', 'min:1'],
             'referral_name' => ['nullable', 'string'],
-            'referral_email' => ['nullable', 'string', 'email'],
+            'referral_email' => ['nullable', 'required_with:referral_name', 'email'],
         ];
     }
 }

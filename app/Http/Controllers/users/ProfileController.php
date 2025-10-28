@@ -4,16 +4,13 @@ namespace App\Http\Controllers\users;
 
 use App\Http\Requests\UploadAvatarRequest;
 use App\Models\Customer;
-use App\Models\Invoice;
 use App\Models\Sale;
-use App\Models\User;
 use App\Traits\CurrentDateTime;
 use App\Traits\HttpResponses;
 use App\Traits\StoreImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Intervention\Image\Facades\Image;
 
 class ProfileController extends Controller
 {
@@ -196,9 +193,16 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
+//        $completed = $this->removeFile($user->avatar_path);
+//        if (!$completed) {
+//            return $this->failed(500, null, 'An error occurred');
+//        }
+        $this->removeFile($user->avatar_path);
         $user->update([
             'avatar' => null
         ]);
+
+
         return $this->success(null, 'Avatar removed successfull');
     }
 

@@ -23,7 +23,7 @@ class UploadAvatarRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'avatar'=> ['required', File::image()],
+            'avatar' => ['required', File::image(), 'max:3072'],
         ];
     }
 }
