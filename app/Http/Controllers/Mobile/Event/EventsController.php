@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\Mobile\Event;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Mobile\Event\EventListResource;
 use App\Models\Event;
+use App\Traits\HttpResponses;
+use App\Traits\Pagination;
 use Illuminate\Http\Request;
 use League\Csv\Writer;
 
 class EventsController extends Controller
 {
+    use Pagination, HttpResponses;
+
     public function exportCsv(Request $request)
     {
 
@@ -100,6 +105,26 @@ class EventsController extends Controller
         } catch (\Exception $e) {
             return $this->failed(500, null, $e->getMessage());
         }
+    }
+
+    public function getFeaturedEvents()
+    {
+        $featuredEvents = Event::where('is_featured', true)->paginate(10);
+        $list = EventListResource::collection($featuredEvents);
+        $data = $this->paginatedData($featuredEvents, $list);
+
+        return $this->success($data);
+    }
+
+    public function getPopularEvents()
+    {
+        $popularEvents = Event::withCount('sales')
+            ->orderByDesc('sales_count')
+            ->paginate(10);
+        $list = EventListResource::collection($popularEvents);
+        $data = $this->paginatedData($popularEvents, $list);
+
+        return $this->success($data);
     }
 
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\users\AuthController;
 use App\Http\Controllers\users\CouponController;
 use App\Http\Controllers\users\EventsController;
 use App\Http\Controllers\users\ProfileController;
@@ -18,6 +19,8 @@ Route::group([
         Route::middleware('auth:sanctum')->group(function () {
             Route::post('/logout', 'Auth\AuthController@login');
             Route::get('/user', 'Auth\AuthController@user');
+            Route::patch('/user', [AuthController::class, 'update']);
+            Route::patch('/user/password', [AuthController::class, 'updatePassword']);
         });
     });
 
@@ -32,8 +35,10 @@ Route::group([
                 Route::post('/store', [EventsController::class, 'store']);
                 Route::post('/{event}', [EventsController::class, 'update']);
                 Route::delete('/{event}', [EventsController::class, 'destroy']);
-
             });
+
+        Route::get('/featured', 'Event\EventsController@getFeaturedEvents');
+        Route::get('/popular', 'Event\EventsController@getPopularEvents');
 
     });
 

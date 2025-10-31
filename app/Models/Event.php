@@ -29,7 +29,8 @@ class Event extends Model
         'timezone',
         'undisclose_location',
         'alias',
-        'location_tips'
+        'location_tips',
+        'is_featured'
     ];
 
     public function scopeFilter(Builder $builder)
