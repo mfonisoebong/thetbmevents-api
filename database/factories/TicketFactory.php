@@ -17,16 +17,18 @@ class TicketFactory extends Factory
      */
     public function definition(): array
     {
-        $event= Event::all()->random();
-        $unlimited= fake()->randomElement([true, false]);
+        $event = Event::all()->random();
+        $unlimited = fake()->randomElement([true, false]);
 
         return [
-            'organizer_id'=> $event->user_id,
-            'event_id'=> $event->id,
-            'name'=> fake()->randomElement(['Regular_d', 'VIP_d', 'VVIP_d']),
-            'price'=> fake()->randomElement([3000, 2300, 5000]),
-            'unlimited'=> $unlimited,
-            'quantity'=> $unlimited ? 0: fake()->randomElement([100,200,300]),
+            'organizer_id' => $event->user_id,
+            'event_id' => $event->id,
+            'name' => fake()->randomElement(['Regular_d', 'VIP_d', 'VVIP_d']),
+            'price' => fake()->randomElement([3000, 2300, 5000]),
+            'unlimited' => $unlimited,
+            'quantity' => $unlimited ? 0 : fake()->randomElement([100, 200, 300]),
+            'selling_start_date_time' => fake()->date(),
+            'selling_end_date_time' => fake()->date()
         ];
     }
 }

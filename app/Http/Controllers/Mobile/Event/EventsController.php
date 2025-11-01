@@ -9,10 +9,15 @@ use App\Traits\HttpResponses;
 use App\Traits\Pagination;
 use Illuminate\Http\Request;
 use League\Csv\Writer;
+use Stevebauman\Location\Facades\Location;
 
 class EventsController extends Controller
 {
     use Pagination, HttpResponses;
+
+    // Radius in kilometers
+    private const HARVESINE_RADIUS = 100;
+    private const HARVESINE = '*, ( 6371 * acos( cos( radians(?) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(?) ) + sin( radians(?) ) * sin( radians( latitude ) ) ) ) AS distance';
 
     public function exportCsv(Request $request)
     {
@@ -125,6 +130,102 @@ class EventsController extends Controller
         $data = $this->paginatedData($popularEvents, $list);
 
         return $this->success($data);
+    }
+
+    public function getRecommendations(Request $request)
+    {
+        $userInfo = $this->getUserInfo($request);
+
+        $events = Event::query();
+
+        if ($userInfo && $userInfo->latitude && $userInfo->longitude) {
+            $userLat = $userInfo->latitude;
+            $userLon = $userInfo->longitude;
+
+            // Haversine formula to calculate distance and find events within the radius.
+            $events->selectRaw(
+                self::HARVESINE,
+                [$userLat, $userLon, $userLat]
+            )
+                ->whereNotNull(['latitude', 'longitude'])
+                ->having('distance', '<', self::HARVESINE_RADIUS)
+                ->orderBy('distance');
+        } else {
+            // Fallback for when location is not available
+            $events->latest();
+        }
+
+        $paginatedData = $events->paginate(10);
+
+
+
+        if (!$paginatedData->total()) {
+            // If no events are found nearby, get random recent events as a fallback.
+            $events = Event::inRandomOrder()->latest();
+            $paginatedData = $events->paginate(10);
+        }
+
+        $list = EventListResource::collection($paginatedData);
+        $data = $this->paginatedData($paginatedData, $list);
+
+        return $this->success($data);
+    }
+
+    public function getUserRecommendations(Request $request)
+    {
+        $user = $request->user();
+        $userInfo = $this->getUserInfo($request);
+
+        $events = Event::query();
+
+        // Add location to events builder
+        if ($userInfo && $userInfo->latitude && $userInfo->longitude) {
+            $userLat = $userInfo->latitude;
+            $userLon = $userInfo->longitude;
+
+            // Haversine formula to calculate distance and find events within the radius.
+            $events->selectRaw(
+                self::HARVESINE,
+                [$userLat, $userLon, $userLat]
+            )
+                ->whereNotNull(['latitude', 'longitude'])
+                ->having('distance', '<', self::HARVESINE_RADIUS)
+                ->orderBy('distance');
+        } else {
+            // Fallback for when location is not available
+            $events->latest();
+        }
+
+        // Add previously bought event categories to builder
+        $purchasedTicketsCategories = $user->purchasedTickets()
+            ->latest()
+            ->take(12)
+            ->get()
+            ->map(fn($item) => $item->ticket->event->categories);
+
+        $events->orWhere(
+            'categories',
+            'like',
+            '%' . implode(',', $purchasedTicketsCategories) . '%'
+        );
+        $paginatedData = $events->paginate(10);
+
+        if (!$paginatedData->total()) {
+            $events = Event::inRandomOrder()->latest();
+            $paginatedData = $events->paginate(10);
+        }
+
+        $list = EventListResource::collection($paginatedData);
+        $data = $this->paginatedData($paginatedData, $list);
+
+        return $this->success($data);
+    }
+
+    private function getUserInfo(Request $request)
+    {
+        $ip = config('app.env') === 'production' ? $request->ip() : config('app.test_ip');
+        return Location::get($ip);
+
     }
 
 }

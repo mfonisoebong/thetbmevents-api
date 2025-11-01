@@ -58,6 +58,11 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'test_ip' => env('TEST_IP', '127.0.0.1'),
+
+    /*
+    |--------------------------------
+
     'asset_url' => env('ASSET_URL'),
 
     /*
@@ -161,7 +166,7 @@ return [
          * Package Service Providers...
          */
 
-         \Intervention\Image\ImageServiceProvider::class,
+        \Intervention\Image\ImageServiceProvider::class,
 
         /*
          * Application Service Providers...

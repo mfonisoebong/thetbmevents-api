@@ -30,7 +30,9 @@ class Event extends Model
         'undisclose_location',
         'alias',
         'location_tips',
-        'is_featured'
+        'is_featured',
+        'longitude',
+        'latitude',
     ];
 
     public function scopeFilter(Builder $builder)
