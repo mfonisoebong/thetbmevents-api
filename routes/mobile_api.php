@@ -39,9 +39,9 @@ Route::group([
 
         Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('/recommendations/user', 'Event\EventsController@getUserRecommendations');
-
         });
 
+        Route::get('/', 'Event\EventsController@view');
         Route::get('/featured', 'Event\EventsController@getFeaturedEvents');
         Route::get('/popular', 'Event\EventsController@getPopularEvents');
         Route::get('/recommendations', 'Event\EventsController@getRecommendations');

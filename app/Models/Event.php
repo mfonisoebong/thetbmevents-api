@@ -42,7 +42,6 @@ class Event extends Model
             $builder->where('title', 'like', '%' . request('search') . '%')
                 ->orWhere('categories', 'like', '%' . request('search') . '%')
                 ->orWhere('location', 'like', '%' . request('search') . '%');
-
         });
 
         $builder->when(request('category'), function ($builder) {
@@ -53,7 +52,7 @@ class Event extends Model
             $builder->where('location', 'like', '%' . request('location') . '%');
         });
         $builder->when(request('date'), function ($builder) {
-            $builder->where('commence_date', '=', request('date'));
+            $builder->where('event_date', '=', request('date'));
         });
 
     }

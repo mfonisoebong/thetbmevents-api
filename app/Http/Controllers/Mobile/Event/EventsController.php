@@ -221,6 +221,18 @@ class EventsController extends Controller
         return $this->success($data);
     }
 
+    public function view(Request $request)
+    {
+        $perPage = $request->get('per_page') ?? '10';
+
+        $events = Event::latest()->filter()->paginate((int) $perPage);
+        $list = EventListResource::collection($events);
+        $data = $this->paginatedData($events, $list);
+
+        return $this->success($data);
+
+    }
+
     private function getUserInfo(Request $request)
     {
         $ip = config('app.env') === 'production' ? $request->ip() : config('app.test_ip');
