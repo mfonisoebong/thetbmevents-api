@@ -46,6 +46,7 @@ Route::group([
         Route::get('/featured', 'Event\EventsController@getFeaturedEvents');
         Route::get('/popular', 'Event\EventsController@getPopularEvents');
         Route::get('/recommendations', 'Event\EventsController@getRecommendations');
+        Route::get('/{alias}', [EventsController::class, 'getEvent']);
 
     });
 

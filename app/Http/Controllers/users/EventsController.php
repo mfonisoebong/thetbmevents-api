@@ -139,7 +139,7 @@ class EventsController extends Controller
         return $this->success($events);
     }
 
-    public function getEvent($alias)
+    public function getEvent(string $alias)
     {
         $event = Event::where('alias', $alias)
             ->first();
@@ -195,9 +195,9 @@ class EventsController extends Controller
                 Ticket::create([
                     'event_id' => $event->id,
                     'name' => $ticket['name'],
-                    'price' => (float)$ticket['price'],
+                    'price' => (float) $ticket['price'],
                     'unlimited' => $ticket['unlimited'] === "true" ? true : false,
-                    'quantity' => (int)$ticket['quantity'],
+                    'quantity' => (int) $ticket['quantity'],
                     'selling_start_date_time' => $ticket['selling_start_date_time'],
                     'selling_end_date_time' => $ticket['selling_end_date_time'],
                     'description' => $ticket['description'] ?? null,
@@ -269,9 +269,9 @@ class EventsController extends Controller
                     Ticket::create([
                         'event_id' => $event->id,
                         'name' => $ticket['name'],
-                        'price' => (float)$ticket['price'],
+                        'price' => (float) $ticket['price'],
                         'unlimited' => $ticket['unlimited'] === "true" ? true : false,
-                        'quantity' => (int)$ticket['quantity'],
+                        'quantity' => (int) $ticket['quantity'],
                         'selling_start_date_time' => $ticket['selling_start_date_time'],
                         'selling_end_date_time' => $ticket['selling_end_date_time'],
                         'description' => $ticket['description'] ?? null,
@@ -402,8 +402,8 @@ class EventsController extends Controller
     public function sendBlastEmail(SendBlastEmailRequest $request)
     {
         $request->validate([
-            'subject'=> ['required', 'string'],
-            'email_content'=> ['required', 'string']
+            'subject' => ['required', 'string'],
+            'email_content' => ['required', 'string']
         ]);
 
         $events = Event::whereIn('id', $request->event_ids)->get();
