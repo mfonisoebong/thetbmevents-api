@@ -221,7 +221,7 @@ class EventsController extends Controller
         return $this->success($data);
     }
 
-    public function view(Request $request)
+    public function viewAll(Request $request)
     {
         $perPage = $request->get('per_page') ?? '10';
 
@@ -230,7 +230,38 @@ class EventsController extends Controller
         $data = $this->paginatedData($events, $list);
 
         return $this->success($data);
+    }
 
+    public function view(Event $event)
+    {
+        $eventData = [
+            'title' => $event->title,
+            'event_date' => $event->event_date,
+            'event_time' => $event->event_time,
+            'description' => $event->description,
+            'categories' => $event->categories,
+            'location' => $event->location,
+            'logo' => $event->logo,
+            'type' => $event->type,
+            'event_link' => $event->event_link,
+            'links_instagram' => $event->links_instagram,
+            'links_twitter' => $event->links_twitter,
+            'links_facebook' => $event->links_facebook,
+            'timezone' => $event->timezone,
+            'undisclose_location' => $event->undisclose_location,
+            'alias' => $event->alias,
+            'location_tips' => $event->location_tips,
+            'is_featured' => $event->is_featured,
+            'longitude' => $event->longitude,
+            'latitude' => $event->latitude,
+            'organizer' => [
+                'business_name' => $event->user->buisness_name,
+                'avatar' => $event->user->avatar,
+                'is_verified' => $event->user->account_state === 'active'
+            ]
+        ];
+
+        return $this->success($eventData);
     }
 
     private function getUserInfo(Request $request)

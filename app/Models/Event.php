@@ -52,8 +52,33 @@ class Event extends Model
             $builder->where('location', 'like', '%' . request('location') . '%');
         });
         $builder->when(request('date'), function ($builder) {
+
+            if (request('date') === 'today') {
+                $builder->where('event_date', '=', now()->format('Y-m-d'));
+                return;
+            }
+
+            if (request('date') === 'this_week') {
+                $today = now();
+                $builder->whereBetween('event_date', [
+                    $today->startOf('week'),
+                    $today->endOf('week')
+                ]);
+                return;
+            }
+
+            if (request('date') === 'this_month') {
+                $today = now();
+                $builder->whereBetween('event_date', [
+                    $today->startOf('month'),
+                    $today->endOf('month'),
+                ]);
+                return;
+            }
+
             $builder->where('event_date', '=', request('date'));
         });
+
 
     }
 

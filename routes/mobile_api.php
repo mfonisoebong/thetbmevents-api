@@ -3,6 +3,7 @@
 use App\Http\Controllers\users\AuthController;
 use App\Http\Controllers\users\CouponController;
 use App\Http\Controllers\users\EventsController;
+use App\Http\Controllers\users\PaymentController;
 use App\Http\Controllers\users\ProfileController;
 use App\Http\Controllers\users\SalesController;
 use App\Http\Controllers\users\TicketsController;
@@ -41,14 +42,24 @@ Route::group([
             Route::get('/recommendations/user', 'Event\EventsController@getUserRecommendations');
         });
 
-        Route::get('/', 'Event\EventsController@view');
+        Route::get('/', 'Event\EventsController@viewAll');
         Route::get('/categories', [EventsController::class, 'getCategories']);
         Route::get('/featured', 'Event\EventsController@getFeaturedEvents');
         Route::get('/popular', 'Event\EventsController@getPopularEvents');
         Route::get('/recommendations', 'Event\EventsController@getRecommendations');
-        Route::get('/{alias}', [EventsController::class, 'getEvent']);
+        Route::get('/{event}', 'Event\EventsController@view');
 
     });
+
+    Route::group(['prefix' => 'payments'], function () {
+
+        Route::post('/paystack', [PaymentController::class, 'paystackRedirectToGateway']);
+        Route::post('/vella/{reference}', [PaymentController::class, 'vellaGenerateInvoice']);
+        Route::post('/free', [PaymentController::class, 'freePayment']);
+
+        Route::get('/callback/{reference}', [PaymentController::class, 'callback']);
+    });
+
 
     Route::prefix('coupons')
         ->group(function () {

@@ -26,7 +26,8 @@ class EventListResource extends JsonResource
             'location' => $this->location,
             'event_date' => $this->event_date,
             'event_time' => $this->event_time,
-            'formatted_date' => Carbon::parse($this->event_date)->format('M d')
+            'formatted_date' => Carbon::parse($this->event_date)->format('M d'), // e.g., Nov 28
+            'date' => Carbon::parse($this->event_date)->format('D, d F Y') // e.g., Fri, 28 November 2026
         ];
     }
 }
