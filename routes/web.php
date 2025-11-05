@@ -1,5 +1,6 @@
 <?php
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,3 +19,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+Route::get('/pdf-welcome', function () {
+    $pdf = Pdf::loadView('welcome', [
+
+    ]);
+    return $pdf->download('welcome.pdf');
+
+});

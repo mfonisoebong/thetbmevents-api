@@ -7,12 +7,14 @@ use App\Http\Controllers\users\PaymentController;
 use App\Http\Controllers\users\ProfileController;
 use App\Http\Controllers\users\SalesController;
 use App\Http\Controllers\users\TicketsController;
+use App\Http\Middleware\AuthOrGuestMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
     'namespace' => 'App\Http\Controllers\Mobile',
     'prefix' => 'mobile',
 ], function () {
+
 
     Route::prefix('auth')->group(function () {
         Route::post('/login', 'Auth\AuthController@login');
@@ -48,15 +50,13 @@ Route::group([
         Route::get('/popular', 'Event\EventsController@getPopularEvents');
         Route::get('/recommendations', 'Event\EventsController@getRecommendations');
         Route::get('/{event}', 'Event\EventsController@view');
-
     });
 
     Route::group(['prefix' => 'payments'], function () {
-
-        Route::post('/paystack', [PaymentController::class, 'paystackRedirectToGateway']);
-        Route::post('/vella/{reference}', [PaymentController::class, 'vellaGenerateInvoice']);
-        Route::post('/free', [PaymentController::class, 'freePayment']);
-
+        Route::middleware(AuthOrGuestMiddleware::class)->group(function () {
+            Route::post('/paystack', [PaymentController::class, 'paystackRedirectToGateway']);
+            Route::post('/free', [PaymentController::class, 'freePayment']);
+        });
         Route::get('/callback/{reference}', [PaymentController::class, 'callback']);
     });
 
@@ -84,7 +84,7 @@ Route::group([
         });
     });
 
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('auth:sanctum', 'verified')->group(function () {
         Route::prefix('sales')->group(function () {
             Route::get('/', [SalesController::class, 'getSales']);
             Route::post('/{sale}/resend-purchased-tickets', [SalesController::class, 'resendPurchasedTickets']);
@@ -95,6 +95,12 @@ Route::group([
             Route::get('/finance/overview', [ProfileController::class, 'getFinanceOverview']);
             Route::post('/avatar/upload', [ProfileController::class, 'uploadAvatar']);
             Route::post('/avatar/remove', [ProfileController::class, 'removeAvatar']);
+        });
+
+        Route::prefix('invoices')->group(function () {
+            Route::get('/tickets', 'Invoice\InvoicesController@viewUserTickets');
+            Route::get('/tickets/{ticket}/booking-details', 'Invoice\InvoicesController@viewBookingDetails');
+            Route::get('/tickets/{ticket}/booking-details/download', 'Invoice\InvoicesController@downloadBookingDetails');
         });
 
     });

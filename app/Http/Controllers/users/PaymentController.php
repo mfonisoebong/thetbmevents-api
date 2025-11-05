@@ -3,20 +3,16 @@
 namespace App\Http\Controllers\users;
 
 use App\Events\InvoiceGenerated;
-use App\Http\Controllers;
 use App\Http\Requests\PaymentRequest;
 use App\Models\Attendee;
-use App\Models\CartItem;
 use App\Models\Coupon;
 use App\Models\Customer;
-use App\Models\Event;
 use App\Models\Invoice;
 use App\Models\PaymentMethod;
 use App\Models\Ticket;
 use App\Traits\GetTotalAmountInCart;
 use App\Traits\HttpResponses;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Mockery\Exception;
@@ -27,7 +23,6 @@ class PaymentController extends Controller
 
     public function paystackRedirectToGateway(PaymentRequest $request)
     {
-
         try {
             $this->checkSellingDate($request->tickets);
             $this->validateCoupon($request->coupon_code);
@@ -110,7 +105,8 @@ class PaymentController extends Controller
                 'transaction_reference' => $reference,
                 'payment_status' => 'pending',
                 'coupon_id' => $coupon?->id,
-                'coupon_amount' => $couponAmount
+                'coupon_amount' => $couponAmount,
+                'user_id' => $request->user()?->id
             ]);
             return $res->json();
         }
@@ -157,7 +153,8 @@ class PaymentController extends Controller
             'payment_method' => 'paystack',
             'cart_items' => json_encode($request->tickets),
             'transaction_reference' => $reference,
-            'payment_status' => 'success'
+            'payment_status' => 'success',
+            'user_id' => $request->user()?->id
         ]);
 
         event(new InvoiceGenerated($invoice, $customer));

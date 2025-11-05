@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Str;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 
 class Invoice extends Model
@@ -27,7 +27,8 @@ class Invoice extends Model
         'coupon_id',
         'coupon_amount',
         'amount',
-        'organizer_id'
+        'organizer_id',
+        'user_id'
     ];
 
     public function scopeFilter(Builder $builder)

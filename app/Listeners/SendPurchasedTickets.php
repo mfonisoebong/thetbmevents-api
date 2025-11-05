@@ -5,8 +5,6 @@ namespace App\Listeners;
 use App\Events\InvoiceGenerated;
 use App\Mail\PurchasedTicketMail;
 use Carbon\Carbon;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -34,7 +32,6 @@ class SendPurchasedTickets
         foreach ($attendees as $attendee) {
 
             $ticket = $attendee->purchasedTicket;
-
             $datePurchased = Carbon::parse($ticket->invoice->created_at)
                 ->format('d/m/y');
             $timePurchased = Carbon::parse($ticket->invoice->created_at)

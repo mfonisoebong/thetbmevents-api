@@ -3,17 +3,10 @@
 namespace App\Http\Controllers\users;
 
 use App\Events\InvoiceGenerated;
-use App\Mail\InvoiceMail;
-use App\Mail\TestMail;
 use App\Models\Invoice;
-use App\Models\PurchasedTicket;
-use App\Models\Sale;
 use App\Traits\GetTotalAmountInCart;
-use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 class PaymentWebhook extends Controller
 {

@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html
-    xmlns:v="urn:schemas-microsoft-com:vml"
-    xmlns:o="urn:schemas-microsoft-com:office:office"
     lang="en"
 >
 <head>
@@ -237,7 +235,7 @@
                                       "
                                                     >
                                                         <p style="margin-bottom: 10px">
-                                                            Hi {{$attendee->full_name}},
+                                                            Hi {{$attendee?->full_name}},
                                                         </p>
 
                                                         <p>

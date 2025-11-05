@@ -22,7 +22,7 @@ class AccountState
         $user = $request?->user();
 
         if ($user?->account_state !== $state) {
-            $this->failed(403, null, 'Account is not active');
+            $this->failed(403, null, "Account is not $state");
         }
 
         return $next($request);
