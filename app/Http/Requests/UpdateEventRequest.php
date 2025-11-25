@@ -13,9 +13,9 @@ class UpdateEventRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $user= request()->user();
-        $event= request()->route('event');
-        $isOwner= $user->id === $event->user_id;
+        $user = request()->user();
+        $event = request()->route('event');
+        $isOwner = $user->id === $event->user_id;
 
         return $isOwner;
     }
@@ -28,17 +28,18 @@ class UpdateEventRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'=> ['required'],
-            'type'=> ['required'],
-            'description'=> ['required'],
-            'event_date'=> ['required'],
-            'timezone'=> ['required'],
-            'undisclose_location'=> ['required', 'in:true,false'],
-            'logo'=> [File::image()],
-            'categories'=> ['required'],
-            'tickets.*'=> ['required'],
-            'tickets'=> ['array', 'required'],
-
+            'title' => ['required'],
+            'type' => ['required'],
+            'description' => ['required'],
+            'event_date' => ['required'],
+            'timezone' => ['required'],
+            'undisclose_location' => ['required', 'in:true,false'],
+            'logo' => [File::image()],
+            'categories' => ['required'],
+            'tickets.*' => ['required'],
+            'tickets' => ['array', 'required'],
+            'longitude' => ['required', 'numeric'],
+            'latitude' => ['required', 'numeric'],
         ];
     }
 }

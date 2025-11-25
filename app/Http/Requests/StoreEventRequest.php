@@ -24,17 +24,19 @@ class StoreEventRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'=> ['required'],
-            'type'=> ['required'],
-            'description'=> ['required'],
-            'event_date'=> ['required'],
-            'timezone'=> ['required'],
-            'undisclose_location'=> ['required', 'in:true,false'],
-            'logo'=> ['required', File::image()],
-            'categories'=> ['required'],
-            'tickets.*'=> ['required'],
-            'tickets'=> ['array', 'required'],
-         
+            'title' => ['required'],
+            'type' => ['required'],
+            'description' => ['required'],
+            'event_date' => ['required'],
+            'timezone' => ['required'],
+            'longitude' => ['required', 'numeric'],
+            'latitude' => ['required', 'numeric'],
+            'undisclose_location' => ['required', 'in:true,false'],
+            'logo' => ['required', File::image()],
+            'categories' => ['required'],
+            'tickets.*' => ['required'],
+            'tickets' => ['array', 'required'],
+
         ];
     }
 }

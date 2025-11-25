@@ -184,6 +184,8 @@ class EventsController extends Controller
                 'event_link' => $request->event_link ?? null,
                 'categories' => $request->categories,
                 'location' => $request->location,
+                'longitude' => $request->longitude,
+                'latitude' => $request->latitude,
                 'logo' => $logoFilepath,
                 'type' => $request->type,
                 'undisclose_location' => $request->undisclose_location === 'true' ? true : false,
