@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mobile\Event;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Mobile\Event\EventListResource;
 use App\Models\Event;
+use App\Models\PurchasedTicket;
 use App\Traits\HttpResponses;
 use App\Traits\Pagination;
 use Illuminate\Http\Request;
@@ -158,7 +159,6 @@ class EventsController extends Controller
         $paginatedData = $events->paginate(10);
 
 
-
         if (!$paginatedData->total()) {
             // If no events are found nearby, get random recent events as a fallback.
             $events = Event::inRandomOrder()->latest();
@@ -175,8 +175,12 @@ class EventsController extends Controller
     {
         $user = $request->user();
         $userInfo = $this->getUserInfo($request);
+        $userPreferences = $user->preferences->map(fn($item) => $item->category->category)->toArray();
+
 
         $events = Event::query();
+
+        $events->where('categories', 'like', '%' . implode(',', $userPreferences) . '%');
 
         // Add location to events builder
         if ($userInfo && $userInfo->latitude && $userInfo->longitude) {
@@ -197,11 +201,15 @@ class EventsController extends Controller
         }
 
         // Add previously bought event categories to builder
-        $purchasedTicketsCategories = $user->purchasedTickets()
+        $purchasedTicketsCategories = PurchasedTicket::whereHas('invoice', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })
             ->latest()
             ->take(12)
             ->get()
-            ->map(fn($item) => $item->ticket->event->categories);
+            ->map(fn($item) => $item->ticket->event->categories)
+            ->toArray();
+
 
         $events->orWhere(
             'categories',
@@ -225,7 +233,7 @@ class EventsController extends Controller
     {
         $perPage = $request->get('per_page') ?? '10';
 
-        $events = Event::latest()->filter()->paginate((int) $perPage);
+        $events = Event::latest()->filter()->paginate((int)$perPage);
         $list = EventListResource::collection($events);
         $data = $this->paginatedData($events, $list);
 

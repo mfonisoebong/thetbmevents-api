@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Mobile\Auth;
 use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Mobile\Auth\ProfileResource;
+use App\Models\EventCategory;
 use App\Models\User;
-use App\Traits\HttpResponses;
+use App\Models\UserPreferences;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -49,7 +50,7 @@ class AuthController extends Controller
         event(new UserRegistered($user));
 
         $request->
-            session()
+        session()
             ->regenerate();
 
         $data = [
@@ -105,5 +106,21 @@ class AuthController extends Controller
         $user->currentAccessToken()->delete();
 
         return $this->success(null, 'Logged out successfully');
+    }
+
+    public function setPreferences(Request $request)
+    {
+        $request->validate([
+            'category_ids' => ['required', 'array'],
+            'category_ids.*' => 'exists:event_categories,id'
+        ]);
+
+        $categories = EventCategory::whereIn('id', $request->category_ids)->get();
+        $categories->each(fn($category) => UserPreferences::create([
+            'event_category_id' => $category->id,
+            'user_id' => $request->user()->id
+        ]));
+
+        return $this->success(null, 'Preferences has been set');
     }
 }

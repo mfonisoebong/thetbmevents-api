@@ -23,6 +23,7 @@ Route::group([
         Route::middleware('auth:sanctum')->group(function () {
             Route::post('/logout', 'Auth\AuthController@login');
             Route::get('/user', 'Auth\AuthController@user');
+            Route::put('/preferences', 'Auth\AuthController@setPreferences');
             Route::patch('/user', [AuthController::class, 'update']);
             Route::patch('/user/password', [AuthController::class, 'updatePassword']);
         });

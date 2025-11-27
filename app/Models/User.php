@@ -7,6 +7,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -95,17 +97,17 @@ class User extends Authenticatable
         return $this->hasMany(PasswordResetToken::class);
     }
 
-    public function bankDetails()
+    public function bankDetails(): HasOne
     {
         return $this->hasOne(OrganizerBankDetails::class);
     }
 
-    public function coupons()
+    public function coupons(): HasMany
     {
         return $this->hasMany(Coupon::class);
     }
 
-    public function commision()
+    public function commision(): HasOne
     {
         return $this->hasOne(Commision::class);
     }
@@ -113,6 +115,11 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return $this->role === 'admin';
+    }
+
+    public function preferences(): HasMany
+    {
+        return $this->hasMany(UserPreferences::class);
     }
 
 

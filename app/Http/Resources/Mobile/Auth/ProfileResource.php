@@ -2,9 +2,11 @@
 
 namespace App\Http\Resources\Mobile\Auth;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/** @mixin User */
 class ProfileResource extends JsonResource
 {
     /**
@@ -18,6 +20,7 @@ class ProfileResource extends JsonResource
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'avatar_path' => $this->avatar_path,
+            'has_preferences' => $this->preferences()->count() > 0,
             'role' => $this->role,
             'country' => $this->country,
             'email' => $this->email,
