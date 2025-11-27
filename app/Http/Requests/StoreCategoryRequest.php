@@ -22,8 +22,9 @@ class StoreCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category'=> ['required', 'string'],
-            'slug'=> ['required', 'string']
+            'category' => ['required', 'string', 'unique:event_categories,category'],
+            'slug' => ['required', 'string', 'unique:event_categories,slug'],
+            'icon' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048']
         ];
     }
 }

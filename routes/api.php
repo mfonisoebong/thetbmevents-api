@@ -1,30 +1,30 @@
 <?php
 
-use App\Http\Controllers\users\AuthController;
-use App\Http\Controllers\users\HomePageController;
-use App\Http\Controllers\users\EventsController;
-use App\Http\Controllers\users\NewsletterController;
-use App\Http\Controllers\users\PaymentController;
-use App\Http\Controllers\users\NotificationsController;
-use App\Http\Controllers\users\ProfileController;
-use App\Http\Controllers\users\TicketsController;
-use App\Http\Controllers\users\SalesController;
-use App\Http\Controllers\users\CouponController;
-use App\Http\Controllers\users\ContactMessagesController;
-use App\Http\Controllers\users\PaymentMethodController as UserPaymentMethodController;
-use App\Http\Controllers\users\PaymentWebhook;
-use App\Http\Controllers\admin\OverviewController;
-use App\Http\Controllers\admin\UsersController;
-use App\Http\Controllers\admin\OrderHistoryController;
-use App\Http\Controllers\admin\FeaturesController;
-use App\Http\Controllers\admin\TestimoniesController;
 use App\Http\Controllers\admin\CommisionsController;
 use App\Http\Controllers\admin\EventsController as AdminEventsController;
+use App\Http\Controllers\admin\FeaturesController;
 use App\Http\Controllers\admin\FinancesController;
 use App\Http\Controllers\admin\NewslettersController as AdminNewsletterController;
+use App\Http\Controllers\admin\OrderHistoryController;
+use App\Http\Controllers\admin\OverviewController;
 use App\Http\Controllers\admin\PaymentMethodController;
 use App\Http\Controllers\admin\SlidersController;
+use App\Http\Controllers\admin\TestimoniesController;
+use App\Http\Controllers\admin\UsersController;
+use App\Http\Controllers\users\AuthController;
+use App\Http\Controllers\users\ContactMessagesController;
+use App\Http\Controllers\users\CouponController;
+use App\Http\Controllers\users\EventsController;
+use App\Http\Controllers\users\HomePageController;
+use App\Http\Controllers\users\NewsletterController;
+use App\Http\Controllers\users\NotificationsController;
 use App\Http\Controllers\users\OrganizerBankDetailsController;
+use App\Http\Controllers\users\PaymentController;
+use App\Http\Controllers\users\PaymentMethodController as UserPaymentMethodController;
+use App\Http\Controllers\users\PaymentWebhook;
+use App\Http\Controllers\users\ProfileController;
+use App\Http\Controllers\users\SalesController;
+use App\Http\Controllers\users\TicketsController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -102,8 +102,7 @@ Route::group(['prefix' => 'payments'], function () {
 
 Route::prefix('/contact-messages')->group(function () {
     Route::post('/', [ContactMessagesController::class, 'store'])
-        ->middleware('validaterecaptcha');
-    ;
+        ->middleware('validaterecaptcha');;
 });
 
 Route::prefix('auth')->group(function () {
@@ -208,8 +207,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum'], function () 
         Route::prefix('categories')->group(function () {
             Route::get('/', [AdminEventsController::class, 'getCategories']);
             Route::post('/', [AdminEventsController::class, 'store']);
-            Route::patch('/{category}', [AdminEventsController::class, 'update']);
+            Route::post('/{category}', [AdminEventsController::class, 'update']);
             Route::delete('/{category}', [AdminEventsController::class, 'destroy']);
+            Route::delete('/{category}/icon', [AdminEventsController::class, 'removeIcon']);
         });
     })->middleware('role:admin,manager');
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\EventsController as AdminEventsController;
 use App\Http\Controllers\users\AuthController;
 use App\Http\Controllers\users\CouponController;
 use App\Http\Controllers\users\EventsController;
@@ -45,12 +46,18 @@ Route::group([
         });
 
         Route::get('/', 'Event\EventsController@viewAll');
-        Route::get('/categories', [EventsController::class, 'getCategories']);
+        Route::get('/categories', 'Event\CategoriesController@viewAll');
         Route::get('/featured', 'Event\EventsController@getFeaturedEvents');
         Route::get('/popular', 'Event\EventsController@getPopularEvents');
         Route::get('/recommendations', 'Event\EventsController@getRecommendations');
         Route::get('/{event}', 'Event\EventsController@view');
     });
+
+    Route::prefix('categories')->group(function () {
+        Route::post('/', [AdminEventsController::class, 'store']);
+        Route::post('/{category}', [AdminEventsController::class, 'update']);
+        Route::delete('/{category}', [AdminEventsController::class, 'destroy']);
+    })->middleware(['auth:sanctum', 'role:admin,manager']);
 
     Route::group(['prefix' => 'payments'], function () {
         Route::middleware(AuthOrGuestMiddleware::class)->group(function () {

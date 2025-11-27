@@ -16,7 +16,7 @@ trait Pagination
                 'perPage' => $paginated->perPage(),
                 'lastPage' => $paginated->lastPage(),
                 'from' => $paginated->firstItem(),
-                'to' => $paginated->lastItem()
+                'to' => $paginated->lastItem(),
             ]
         ];
 

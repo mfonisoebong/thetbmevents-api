@@ -10,17 +10,24 @@ class EventCategory extends Model
 {
     use HasFactory;
 
-    protected $fillable= [
+    protected $fillable = [
         'category',
-        'slug'
+        'slug',
+        'icon'
     ];
-    public function scopeFilter(Builder $builder){
 
-        $builder->when(request('search'), function($builder){
-            $searchValue= '%'.request('search').'%';
+    public function scopeFilter(Builder $builder)
+    {
+
+        $builder->when(request('search'), function ($builder) {
+            $searchValue = '%' . request('search') . '%';
             $builder->where('category', 'like', $searchValue)
-            ->orWhere('slug', 'like', $searchValue);
+                ->orWhere('slug', 'like', $searchValue);
         });
-        
+    }
+
+    public function getIconUrlAttribute()
+    {
+        return $this->icon ? asset($this->icon) : null;
     }
 }
