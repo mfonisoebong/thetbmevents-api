@@ -48,4 +48,4 @@ jobs:
             rm backend.tar.gz
             composer install
             composer dump-autoload
-            php artisan migrate
+            php artisan migrate --force
