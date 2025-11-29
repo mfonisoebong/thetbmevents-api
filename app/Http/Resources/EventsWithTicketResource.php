@@ -16,23 +16,24 @@ class EventsWithTicketResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $sales= Sale::where('event_id', $this->id)
-        ->select('tickets_bought')
-        ->get()
-        ->toArray();
-        $ticketsSoldArr= array_map(function ($sale){
+        $sales = Sale::where('event_id', $this->id)
+            ->select('tickets_bought')
+            ->get()
+            ->toArray();
+        $ticketsSoldArr = array_map(function ($sale) {
             return $sale['tickets_bought'];
         }, $sales);
-        $ticketsSold= array_reduce($ticketsSoldArr, function ($a, $b){
-           return $a + $b;
+        $ticketsSold = array_reduce($ticketsSoldArr, function ($a, $b) {
+            return $a + $b;
         }) ?? 0;
 
         return [
-            'id'=> $this->id,
-            'title'=> Str::of($this->title)->limit(17) ?? $this->title,
-            'type'=> $this->type,
-            'logo'=> $this->logo,
-            'tickets_sold'=>$ticketsSold
+            'id' => $this->id,
+            'status' => $this->status,
+            'title' => Str::of($this->title)->limit(17) ?? $this->title,
+            'type' => $this->type,
+            'logo' => $this->logo,
+            'tickets_sold' => $ticketsSold
         ];
     }
 }

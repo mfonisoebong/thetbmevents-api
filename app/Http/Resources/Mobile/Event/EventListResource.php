@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources\Mobile\Event;
 
-use Illuminate\Http\Request;
 use App\Models\Event;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Carbon;
 
@@ -24,6 +24,7 @@ class EventListResource extends JsonResource
             'logo' => $this->logo,
             'categories' => $this->categories,
             'location' => $this->location,
+            'status' => $this->status,
             'event_date' => $this->event_date,
             'event_time' => $this->event_time,
             'formatted_date' => Carbon::parse($this->event_date)->format('M d'), // e.g., Nov 28

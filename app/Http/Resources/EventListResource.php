@@ -22,7 +22,7 @@ class EventListResource extends JsonResource
             'logo' => $this->logo,
             'created_at' => $this->created_at,
             'ticket_price' => count($this->tickets) < 1 ? null : $this->tickets[0]->price,
-
+            'status' => $this->status
         ];
     }
 }

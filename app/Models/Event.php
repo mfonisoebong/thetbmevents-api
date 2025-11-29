@@ -33,6 +33,7 @@ class Event extends Model
         'is_featured',
         'longitude',
         'latitude',
+        'status'
     ];
 
     public function scopeFilter(Builder $builder)
