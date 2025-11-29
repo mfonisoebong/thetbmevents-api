@@ -25,6 +25,12 @@ class EventListResource extends JsonResource
             'categories' => $this->categories,
             'location' => $this->location,
             'status' => $this->status,
+            'description' => $this->description,
+            'organizer' => [
+                'avatar' => $this->user->avatar,
+                'name' => $this->user->full_name
+            ],
+            'has_liked' => $this->likes()->where('user_id', $request->user()?->id)->exists(),
             'event_date' => $this->event_date,
             'event_time' => $this->event_time,
             'formatted_date' => Carbon::parse($this->event_date)->format('M d'), // e.g., Nov 28

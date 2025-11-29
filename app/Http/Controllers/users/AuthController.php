@@ -146,13 +146,11 @@ class AuthController extends Controller
         event(new UserRegistered($user));
 
         $request->
-            session()
+        session()
             ->regenerate();
 
         return $this
             ->success(['access_token' => $token], 'Logged in successfully');
-
-
     }
 
     public function googleLogin(Request $request)

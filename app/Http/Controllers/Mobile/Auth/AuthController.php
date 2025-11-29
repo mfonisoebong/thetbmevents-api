@@ -4,29 +4,18 @@ namespace App\Http\Controllers\Mobile\Auth;
 
 use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\Mobile\Auth\ProfileResource;
 use App\Models\EventCategory;
 use App\Models\User;
 use App\Models\UserPreferences;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $request->validate([
-            'first_name' => ['required_if:role,customer,admin', 'string', 'max:255'],
-            'last_name' => ['required_if:role,customer,admin', 'string', 'max:255'],
-            'role' => ['required', Rule::in(['admin', 'organizer', 'customer'])],
-            'buisness_name' => ['required_if:role,organizer', 'string', 'max:255'],
-            'phone_number' => ['required'],
-            'phone_dial_code' => ['required'],
-            'email' => ['required', 'email', Rule::unique('users', 'email')],
-            'password' => ['required', 'min:6', 'max:30', 'confirmed'],
-            'country' => ['required']
-        ]);
 
         $user = User::create([
             'buisness_name' => $request->buisness_name,
@@ -49,9 +38,7 @@ class AuthController extends Controller
 
         event(new UserRegistered($user));
 
-        $request->
-        session()
-            ->regenerate();
+        $request->session()->regenerate();
 
         $data = [
             'token' => $token,

@@ -43,7 +43,7 @@ class UpdateInvoices extends Command
 
                     $newAmount = $salesAmount - $couponAmount;
 
-                    $invoice->amount = $newAmount < 0 ? 0 : $newAmount;
+                    $invoice->amount = max($newAmount, 0);
                     $invoice->organizer_id = $organizer?->id;
 
                     $invoice->save();

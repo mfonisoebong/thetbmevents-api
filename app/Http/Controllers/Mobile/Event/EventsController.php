@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mobile\Event;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Mobile\Event\EventListResource;
 use App\Models\Event;
+use App\Models\Like;
 use App\Models\PurchasedTicket;
 use App\Traits\HttpResponses;
 use App\Traits\Pagination;
@@ -156,7 +157,7 @@ class EventsController extends Controller
             $events->latest();
         }
 
-        $paginatedData = $events->paginate(10);
+        $paginatedData = $events->inRandomOrder()->paginate(10);
 
 
         if (!$paginatedData->total()) {
@@ -270,6 +271,23 @@ class EventsController extends Controller
         ];
 
         return $this->success($eventData);
+    }
+
+    public function toggleLike(Event $event, Request $request)
+    {
+        $like = Like::where('user_id', $request->user()->id)
+            ->where('event_id', $event->id)
+            ->first();
+
+        if ($like) {
+            $like->delete();
+            return $this->success(null, 'Like removed successfully');
+        }
+        Like::create([
+            'user_id' => $request->user()->id,
+            'event_id' => $event->id
+        ]);
+        return $this->success(null, 'Liked successfully');
     }
 
     private function getUserInfo(Request $request)

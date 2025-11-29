@@ -61,7 +61,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function scopeFilter(Builder $builder)
+    public function scopeFilter(Builder $builder): void
     {
         $builder->when(request('search'), function ($builder) {
             $searchVal = '%' . request('search') . '%';
@@ -73,13 +73,12 @@ class User extends Authenticatable
 
     }
 
-    public function getFullNameAttribute()
+    public function getFullNameAttribute(): string
     {
-        $name = $this?->buisness_name ?? $this->first_name . ' ' . $this->last_name;
-        return $name;
+        return $this->buisness_name ?? $this->first_name . ' ' . $this->last_name;
     }
 
-    public function getAvatarPathAttribute()
+    public function getAvatarPathAttribute(): string
     {
         return str_replace(config('app.url') . '/', '', $this->avatar);
     }

@@ -44,13 +44,15 @@ Route::group([
 
         Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('/recommendations/user', 'Event\EventsController@getUserRecommendations');
+            Route::put('/{event}/likes', 'Event\EventsController@toggleLike');
         });
 
         Route::get('/', 'Event\EventsController@viewAll');
         Route::get('/categories', 'Event\CategoriesController@viewAll');
         Route::get('/featured', 'Event\EventsController@getFeaturedEvents');
         Route::get('/popular', 'Event\EventsController@getPopularEvents');
-        Route::get('/recommendations', 'Event\EventsController@getRecommendations');
+        Route::get('/recommendations', 'Event\EventsController@getRecommendations')
+            ->middleware([AuthOrGuestMiddleware::class]);
         Route::get('/{event}', 'Event\EventsController@view');
     });
 
