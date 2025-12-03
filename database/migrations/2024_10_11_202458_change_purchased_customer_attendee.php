@@ -11,13 +11,16 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('purchased_tickets', function (Blueprint $table) {
-            $table->dropForeign(['customer_id']);
-            $table->dropColumn('customer_id');
-            $table->unsignedBigInteger('attendee_id');
-            $table->foreign('attendee_id')
-                ->references('id')
-                ->on('attendees')
-                ->onDelete('cascade');
+
+            if (Schema::hasColumn('purchased_tickets', 'customer_id')) {
+                $table->dropForeign(['customer_id']);
+                $table->dropColumn('customer_id');
+                $table->unsignedBigInteger('attendee_id');
+                $table->foreign('attendee_id')
+                    ->references('id')
+                    ->on('attendees')
+                    ->onDelete('cascade');
+            }
         });
     }
 
