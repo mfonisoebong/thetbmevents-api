@@ -38,8 +38,8 @@ class UpdateEventRequest extends FormRequest
             'categories' => ['required'],
             'tickets.*' => ['required'],
             'tickets' => ['array', 'required'],
-            'longitude' => ['required', 'numeric'],
-            'latitude' => ['required', 'numeric'],
+            'longitude' => ['required_if:type,physical', 'numeric'],
+            'latitude' => ['required_if:type,physical', 'numeric'],
         ];
     }
 }
