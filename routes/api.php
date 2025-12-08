@@ -102,7 +102,8 @@ Route::group(['prefix' => 'payments'], function () {
 
 Route::prefix('/contact-messages')->group(function () {
     Route::post('/', [ContactMessagesController::class, 'store'])
-        ->middleware('validaterecaptcha');;
+        ->middleware('validaterecaptcha');
+    ;
 });
 
 Route::prefix('auth')->group(function () {
@@ -119,18 +120,18 @@ Route::prefix('auth')->group(function () {
 
     Route::group(['middleware' => 'guest'], function () {
         Route::post('/login', [AuthController::class, 'login'])
-            ->name('login')
-            ->middleware('validaterecaptcha');
+            ->name('login');
+        // ->middleware('validaterecaptcha');
         Route::post('/send-password-reset', [AuthController::class, 'sendPasswordReset']);
         Route::get('/password-reset/{token}', [AuthController::class, 'getResetTokenUser']);
         Route::post('/password-reset', [AuthController::class, 'resetPasswordWithToken']);
-        Route::post('/register', [AuthController::class, 'register'])
-            ->middleware('validaterecaptcha');
-        Route::get('/login/google', [AuthController::class, 'googleLogin'])
-            ->middleware('validaterecaptcha');
+        Route::post('/register', [AuthController::class, 'register']);
+        // ->middleware('validaterecaptcha');
+        Route::get('/login/google', [AuthController::class, 'googleLogin']);
+        // ->middleware('validaterecaptcha');
 
-        Route::get('/register/google', [AuthController::class, 'googleRegister'])
-            ->middleware('validaterecaptcha');
+        Route::get('/register/google', [AuthController::class, 'googleRegister']);
+        // ->middleware('validaterecaptcha');
 
         Route::get('/google/callback')
             ->middleware('googleregister')
