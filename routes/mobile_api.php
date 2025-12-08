@@ -16,7 +16,7 @@ Route::group([
     'prefix' => 'mobile',
 ], function () {
 
-    Route::get('/health', 'Health\HealthController');
+    Route::get('/', 'Health\HealthController');
 
     Route::prefix('auth')->group(function () {
         Route::post('/login', 'Auth\AuthController@login');
