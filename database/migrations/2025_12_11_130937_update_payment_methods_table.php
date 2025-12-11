@@ -23,15 +23,15 @@ return new class extends Migration {
             $table->string('flutterwave_live_key')->nullable();
         });
 
-        // Convert existing rows that used `vella` to `flutterwave` so the enum change succeeds.
-        DB::table('payment_methods')
-            ->where('gateway', 'vella')
-            ->update(['gateway' => 'flutterwave']);
-
         // Update enum values for `gateway` to include flutterwave instead of vella.
         // This uses a raw statement suitable for MySQL. If you use SQLite or another
         // driver you'll need to adjust this step accordingly.
         DB::statement("ALTER TABLE `payment_methods` MODIFY `gateway` ENUM('flutterwave','paystack') NOT NULL");
+
+        // Convert existing rows that used `vella` to `flutterwave` so the enum change succeeds.
+        DB::table('payment_methods')
+            ->where('gateway', 'vella')
+            ->update(['gateway' => 'flutterwave']);
     }
 
     public function down(): void
