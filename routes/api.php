@@ -93,7 +93,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::group(['prefix' => 'payments'], function () {
 
     Route::post('/paystack', [PaymentController::class, 'paystackRedirectToGateway']);
-    Route::post('/vella/{reference}', [PaymentController::class, 'vellaGenerateInvoice']);
+    Route::post('/flutterwave', [PaymentController::class, 'flutterwaveRedirectToGateway']);
     Route::post('/free', [PaymentController::class, 'freePayment']);
 
     Route::get('/callback/{reference}', [PaymentController::class, 'callback']);
@@ -157,7 +157,6 @@ Route::group(['prefix' => 'notifications', 'middleware' => 'auth:sanctum'], func
 // Webhooks
 
 Route::group(['prefix' => 'webhooks'], function () {
-    Route::post('/vella', [PaymentWebhook::class, 'vellaWebhook']);
     Route::post('/paystack', [PaymentWebhook::class, 'paystackWebhook']);
 });
 
