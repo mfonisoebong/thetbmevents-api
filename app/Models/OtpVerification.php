@@ -10,12 +10,14 @@ class OtpVerification extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $fillable= [
+    protected $fillable = [
         'user_id',
-        'otp'
+        'otp',
+        'type'
     ];
 
-    public function user(){
+    public function user()
+    {
         $this->belongsTo(User::class);
     }
 }

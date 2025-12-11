@@ -30,6 +30,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         UserRegistered::class => [
+            SendOTPCode::class,
             SendWelcomeMail::class,
             NotifyAdmin::class,
         ],

@@ -43,6 +43,10 @@ jobs:
             cd /var/www/thetbmevents-api
             tar -xzf backend.tar.gz
             rm backend.tar.gz
+            sudo chown -R www-data:www-data /var/www/thetbmevents-api/storage
+            sudo chown -R www-data:www-data /var/www/thetbmevents-api/bootstrap/cache
+            sudo chmod -R 775 /var/www/thetbmevents-api/storage
+            sudo chmod -R 775 /var/www/thetbmevents-api/bootstrap/cache
             composer install
             composer dump-autoload
             php artisan migrate --force

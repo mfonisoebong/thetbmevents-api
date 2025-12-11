@@ -25,15 +25,15 @@ class SendOTPCode
      */
     public function handle(UserRegistered $event): void
     {
-        $otpCode= random_int(100000, 999999);
+        $otpCode = random_int(100000, 999999);
 
-        $otp= OtpVerification::create([
-            'user_id'=> $event->user->id,
-            'otp'=> $otpCode
+        $otp = OtpVerification::create([
+            'user_id' => $event->user->id,
+            'otp' => $otpCode,
+            'type' => 'email_verification',
         ]);
 
-
-        Mail::to($event->user)
-        ->send(new OtpCode($event->user, $otp));
+        Mail::to($event->user->email)
+            ->send(new OtpCode($event->user, $otp));
     }
 }

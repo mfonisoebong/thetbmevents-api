@@ -29,9 +29,8 @@ class OtpCode extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'OTP Code',
-            from: env('MAIL_USERNAME'),
-            to: $this->user->email
+            subject: $this->otp->type === 'password_reset' ? 'Password Reset Code' : 'Email verification OTP Code',
+            to: $this->user->email,
         );
     }
 

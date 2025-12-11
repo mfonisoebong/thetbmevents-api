@@ -10,6 +10,7 @@ use App\Models\EventCategory;
 use App\Models\User;
 use App\Models\UserPreferences;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -17,36 +18,47 @@ class AuthController extends Controller
     public function register(RegisterRequest $request)
     {
 
-        $user = User::create([
-            'buisness_name' => $request->buisness_name,
-            'role' => $request->role,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'email_verified_at' => now(),
-            'country' => $request->country,
-            'phone_number' => $request->phone_number,
-            'phone_dial_code' => $request->phone_dial_code
-        ]);
+        DB::beginTransaction();
+        try {
+
+            $user = User::create([
+                'buisness_name' => $request->buisness_name,
+                'role' => $request->role,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'email_verified_at' => now(),
+                'country' => $request->country,
+                'phone_number' => $request->phone_number,
+                'phone_dial_code' => $request->phone_dial_code
+            ]);
 
 
-        $token = $user
-            ->createToken('Personal Access Token for ' . $request->email)
-            ->plainTextToken;
+            $token = $user
+                ->createToken('Personal Access Token for ' . $request->email)
+                ->plainTextToken;
 
 
-        event(new UserRegistered($user));
+            event(new UserRegistered($user));
 
-        $request->session()->regenerate();
+            DB::commit();
 
-        $data = [
-            'token' => $token,
-            'profile' => new ProfileResource($user),
-        ];
+            $request->session()->regenerate();
 
-        return $this
-            ->success($data, 'Logged in successfully');
+            $data = [
+                'token' => $token,
+                'profile' => new ProfileResource($user),
+            ];
+
+            return $this
+                ->success($data, 'Logged in successfully');
+        } catch (\Exception | \Throwable $e) {
+            DB::rollBack();
+            return $this->failed(500, $e->getTrace(), $e->getMessage());
+        }
+
+
     }
 
     public function login(Request $request)
