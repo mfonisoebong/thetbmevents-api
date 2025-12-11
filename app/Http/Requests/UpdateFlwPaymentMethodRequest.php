@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateVellaPaymentMethodRequest extends FormRequest
+class UpdateFlwPaymentMethodRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,6 @@ class UpdateVellaPaymentMethodRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'vella_tag'=> ['required', 'string'],
-            'webhook_url'=> ['required', 'string', 'url'],
             'live_key'=>['required', 'string'],
             'test_key'=>['required', 'string']
         ];

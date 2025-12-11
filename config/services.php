@@ -38,6 +38,9 @@ return [
     ],
     'paystack' => [
         'url' => env('PAYSTACK_API_URL')
-    ]
+    ],
+    'flutterwave' => [
+        'url' => env('FLUTTERWAVE_API_URL')
+    ],
 
 ];

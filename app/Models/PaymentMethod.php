@@ -11,14 +11,11 @@ class PaymentMethod extends Model
 
     protected $fillable= [
         'gateway',
-        'vella_tag',
-        'vella_webhook_url',
-        'vella_live_key',
-        'paystack_webhook_url',
-        'vella_test_key',
+        'flutterwave_live_key',
+        'flutterwave_test_key',
         'paystack_test_key',
         'paystack_live_key'
     ];
 
-    
+
 }
