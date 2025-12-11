@@ -22,7 +22,6 @@ class UpdatePaystackPaymentMethodRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'webhook_url'=> ['required', 'string', 'url'],
             'live_key'=>['required', 'string'],
             'test_key'=>['required', 'string']
         ];

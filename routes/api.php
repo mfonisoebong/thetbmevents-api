@@ -158,6 +158,7 @@ Route::group(['prefix' => 'notifications', 'middleware' => 'auth:sanctum'], func
 
 Route::group(['prefix' => 'webhooks'], function () {
     Route::post('/paystack', [PaymentWebhook::class, 'paystackWebhook']);
+    Route::post('/flutterwave', [PaymentWebhook::class, 'flutterwaveWebhook']);
 });
 
 Route::group(['prefix' => 'bank-details', 'middleware' => ['auth:sanctum', 'role:organizer']], function () {
@@ -255,7 +256,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum'], function () 
         ->middleware('role:admin,manager');
 
     Route::prefix('payment-methods')->group(function () {
-        Route::patch('/vella', [PaymentMethodController::class, 'updateVellaPaymentMethod']);
+        Route::patch('/flutterwave', [PaymentMethodController::class, 'updateFlutterwavePaymentMethod']);
         Route::patch('/paystack', [PaymentMethodController::class, 'updatePaystackPaymentMethod']);
     })
         ->middleware('role:admin,manager');

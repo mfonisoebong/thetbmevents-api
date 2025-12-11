@@ -23,6 +23,16 @@ class PaymentController extends Controller
 
     public function paystackRedirectToGateway(PaymentRequest $request)
     {
+        return $this->gatewayRedirectToGateway($request, 'paystack');
+    }
+
+    public function flutterwaveRedirectToGateway(PaymentRequest $request)
+    {
+        return $this->gatewayRedirectToGateway($request, 'flutterwave');
+    }
+
+    private function gatewayRedirectToGateway(PaymentRequest $request, string $gateway)
+    {
         try {
             $this->checkSellingDate($request->tickets);
             $this->validateCoupon($request->coupon_code);
@@ -33,19 +43,22 @@ class PaymentController extends Controller
             return $this->failed(500, null, $e->getMessage());
         }
 
-        $payment = PaymentMethod::where('gateway', 'paystack')
-            ->first();
-        $secretKey = config('app.env') === 'local' ?
-            $payment->paystack_test_key :
-            $payment->paystack_live_key;
+        $payment = PaymentMethod::where('gateway', $gateway)->first();
+
+        $testKeyAttr = $gateway . '_test_key';
+        $liveKeyAttr = $gateway . '_live_key';
+
+        $secretKey = config('app.env') === 'local'
+            ? ($payment->{$testKeyAttr} ?? null)
+            : ($payment->{$liveKeyAttr} ?? null);
 
         if (!$secretKey) {
-            return $this->failed(500, null, 'Paystack payment method is disabled');
+            return $this->failed(500, null, ucfirst($gateway) . ' payment method is disabled');
         }
+
         $ticketsAmount = $this->getTotalAmount($request->tickets);
 
-        $ticket = Ticket::where('id', $request->tickets[0]['id'])
-            ->first();
+        $ticket = Ticket::where('id', $request->tickets[0]['id'])->first();
 
         $coupon = Coupon::where('code', $request->coupon_code)
             ->where('event_id', $ticket->event_id)
@@ -75,22 +88,47 @@ class PaymentController extends Controller
 
         $email = $customer->email;
         $reference = Str::uuid()->toString();
+
         $data = [
             'email' => $email,
-            'amount' => (string)$payableAmount,
+            'amount' => (string) $payableAmount,
             'reference' => $reference,
             'callback_url' => config('app.url') . '/api/v1/payments/callback/' . $reference
         ];
-        $url = config('services.paystack.url') . '/transaction/initialize';
+
+        $serviceUrl = config('services.' . $gateway . '.url') ?? config('services.paystack.url');
+
+        if ($gateway === 'paystack') {
+            $url = $serviceUrl . '/transaction/initialize';
+        } elseif ($gateway === 'flutterwave') {
+            $data['amount'] /= 100; // Flutterwave expects amount in Naira
+
+            $url = $serviceUrl . '/v3/payments';
+
+            // rename callback_url to redirect_url for flutterwave
+            $data['redirect_url'] = $data['callback_url'];
+            unset($data['callback_url']);
+
+            // rename reference to tx_ref for flutterwave
+            $data['tx_ref'] = $data['reference'];
+            unset($data['reference']);
+
+            // move email inside customer object for flutterwave
+            $data['customer'] = [
+                'email' => $email,
+            ];
+            unset($data['email']);
+        } else {
+            return $this->failed(500, null, 'Unsupported payment gateway');
+        }
+
         $headers = [
             'Authorization' => 'Bearer ' . $secretKey
         ];
 
-        $res = Http::withHeaders($headers)
-            ->post($url, $data);
+        $res = Http::withHeaders($headers)->post($url, $data);
+
         if ($res->successful()) {
-
-
             $attendees = array_map(function ($a) use ($customer) {
                 return [...$a, 'customer_id' => $customer->id];
             }, $request->attendees);
@@ -100,7 +138,7 @@ class PaymentController extends Controller
                 'customer_id' => $customer->id,
                 'organizer_id' => $ticket->event->user_id,
                 'amount' => $total,
-                'payment_method' => 'paystack',
+                'payment_method' => $gateway,
                 'cart_items' => json_encode($request->tickets),
                 'transaction_reference' => $reference,
                 'payment_status' => 'pending',
@@ -108,8 +146,10 @@ class PaymentController extends Controller
                 'coupon_amount' => $couponAmount,
                 'user_id' => $request->user()?->id
             ]);
+
             return $res->json();
         }
+
         return $this->failed(500);
     }
 

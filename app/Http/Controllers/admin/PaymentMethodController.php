@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Requests\UpdatePaystackPaymentMethodRequest;
-use App\Http\Requests\UpdateVellaPaymentMethodRequest;
+use App\Http\Requests\UpdateFlwPaymentMethodRequest;
 use App\Models\PaymentMethod;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
@@ -15,33 +15,29 @@ class PaymentMethodController extends Controller
 
 
 
-    public function updateVellaPaymentMethod(UpdateVellaPaymentMethodRequest $request){
+    public function updateFlutterwavePaymentMethod(UpdateFlwPaymentMethodRequest $request){
         $request->validated($request->all());
 
-        $vella= PaymentMethod::where('gateway', 'vella')
+        $flutterwave= PaymentMethod::where('gateway', 'flutterwave')
         ->first();
 
-        if(!$vella){
+        if(!$flutterwave){
             $newVellaMethod= PaymentMethod::create([
-                'gateway'=> 'vella',
-                'vella_tag'=> $request->vella_tag,
-                'vella_webhook_url'=> $request->webhook_url,
-                'vella_live_key'=> $request->live_key,
-                'vella_test_key'=> $request->test_key
+                'gateway'=> 'flutterwave',
+                'flutterwave_live_key'=> $request->live_key,
+                'flutterwave_test_key'=> $request->test_key
             ]);
             return $this->success($newVellaMethod);
         }
 
-        $vella->update([
-            'vella_tag'=> $request->vella_tag,
-            'vella_webhook_url'=> $request->webhook_url,
-            'vella_live_key'=> $request->live_key,
-            'vella_test_key'=> $request->test_key
+        $flutterwave->update([
+            'flutterwave_live_key'=> $request->live_key,
+            'flutterwave_test_key'=> $request->test_key
         ]);
 
 
 
-            return $this->success($vella);
+            return $this->success($flutterwave);
 
     }
 
@@ -54,7 +50,6 @@ class PaymentMethodController extends Controller
         if(!$paystack){
             $newPaystackMethod= PaymentMethod::create([
                 'gateway'=> 'paystack',
-                'paystack_webhook_url'=> $request->webhook_url,
                 'paystack_live_key'=> $request->live_key,
                 'paystack_test_key'=> $request->test_key
             ]);
@@ -62,7 +57,6 @@ class PaymentMethodController extends Controller
         }
 
         $paystack->update([
-            'paystack_webhook_url'=> $request->webhook_url,
             'paystack_live_key'=> $request->live_key,
             'paystack_test_key'=> $request->test_key
         ]);
