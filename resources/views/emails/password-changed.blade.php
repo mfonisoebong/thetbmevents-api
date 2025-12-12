@@ -275,8 +275,7 @@
                                                                                 margin: 0;
                                                                             "
                                                     >
-                                                        Hello
-                                                        👋,
+                                                        Hello {{$user->full_name}}👋,
                                                     </p>
                                                 </div>
                                             </td>
@@ -302,9 +301,8 @@
                                                                         width: 100%;
                                                                     "
                                             >
-                                                @if($otp->type === 'email_verification')
-                                                    <h1
-                                                        style="
+                                                <h1
+                                                    style="
                                                                             margin: 0;
                                                                             color: #555;
                                                                             direction: ltr;
@@ -321,34 +319,9 @@
                                                                             margin-top: 0;
                                                                             margin-bottom: 0;
                                                                         "
-                                                    >
-                                                        Confirm
-                                                        Your
-                                                        Identity
-                                                    </h1>
-                                                @else
-                                                    <h1
-                                                        style="
-                                                                            margin: 0;
-                                                                            color: #555;
-                                                                            direction: ltr;
-                                                                            font-family: Arial,
-                                                                                Helvetica
-                                                                                    Neue,
-                                                                                Helvetica,
-                                                                                sans-serif;
-                                                                            font-size: 17px;
-                                                                            font-weight: 700;
-                                                                            letter-spacing: normal;
-                                                                            line-height: 120%;
-                                                                            text-align: left;
-                                                                            margin-top: 0;
-                                                                            margin-bottom: 0;
-                                                                        "
-                                                    >
-                                                        Reset your password
-                                                    </h1>
-                                                @endif
+                                                >
+                                                    Your password has been reset
+                                                </h1>
 
                                             </td>
                                         </tr>
@@ -394,31 +367,6 @@
                                                                                 line-height: 1.2;
                                                                             "
                                                     >
-                                                        @if($otp->type === 'email_verification')
-                                                            <p
-                                                                style="
-                                                                                    margin: 0;
-                                                                                    font-size: 13px;
-                                                                                    text-align: left;
-                                                                                    mso-line-height-alt: 15.6px;
-                                                                                "
-                                                            >
-                                                                                <span
-                                                                                    style="
-                                                                                        font-size: 13px;
-                                                                                    "
-                                                                                >Thank
-                                                                                    you
-                                                                                    for
-                                                                                    signing
-                                                                                    up
-                                                                                    to
-                                                                                    TBM
-                                                                                    Events.</span>
-                                                            </p>
-                                                        @endif
-
-
                                                         <p
                                                             style="
                                                                                     margin: 0;
@@ -431,12 +379,9 @@
                                                                                     style="
                                                                                         font-size: 13px;
                                                                                     "
-                                                                                >Here’s
-                                                                                    your
-                                                                                    One
-                                                                                    Time
-                                                                                    Password
-                                                                                    (OTP)
+                                                                                >
+                                                                                    If this wasn't you please contact our support team: <a
+                                                                                        href="mailto:admin@tbmevents.com ">admin@tbmevents.com</a>
                                                                                     </span>
                                                         </p>
                                                     </div>
@@ -527,21 +472,6 @@
                                                                         "
                                                     align="center"
                                                 >
-                                                    <div
-                                                        class="our-class"
-                                                        style="
-                                                                                margin-top: 20px;
-                                                                                margin-bottom: 20px;
-                                                                                background: #518e99;
-                                                                                font-size: 16px;
-                                                                                text-align: center;
-                                                                                padding-top: 10px;
-                                                                                padding-bottom: 10px;
-                                                                                font-weight: 600;
-                                                                            "
-                                                    >
-                                                        {{$otp->otp}}
-                                                    </div>
 
                                                     <div
                                                         style="

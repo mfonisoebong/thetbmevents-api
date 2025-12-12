@@ -21,9 +21,14 @@ Route::group([
     Route::prefix('auth')->group(function () {
         Route::post('/login', 'Auth\AuthController@login');
         Route::post('/register', 'Auth\AuthController@register');
+        Route::post('/reset-password', 'Auth\AuthController@resetPassword');
+
         Route::middleware('auth:sanctum')->group(function () {
             Route::post('/logout', 'Auth\AuthController@login');
             Route::get('/user', 'Auth\AuthController@user');
+            Route::post('/verify-email', 'Auth\AuthController@verifyEmail');
+            Route::post('/resend-email-verification', 'Auth\AuthController@resendEmailVerification');
+            Route::post('/send-password-reset-code', 'Auth\AuthController@sendResetPasswordCode');
             Route::put('/preferences', 'Auth\AuthController@setPreferences');
             Route::patch('/user', [AuthController::class, 'update']);
             Route::patch('/user/password', [AuthController::class, 'updatePassword']);

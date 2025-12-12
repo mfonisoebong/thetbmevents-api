@@ -5,7 +5,6 @@ namespace App\Mail;
 use App\Models\OtpVerification;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -29,8 +28,8 @@ class OtpCode extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->otp->type === 'password_reset' ? 'Password Reset Code' : 'Email verification OTP Code',
             to: $this->user->email,
+            subject: $this->otp->type === 'password_reset' ? 'Password Reset Code' : 'Email verification OTP Code',
         );
     }
 

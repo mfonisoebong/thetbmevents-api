@@ -3,13 +3,13 @@
 namespace App\Providers;
 
 use App\Events\InvoiceGenerated;
+use App\Events\Mobile\UserRegisteredEvent as MobileUserRegistered;
 use App\Events\PasswordTokenCreated;
 use App\Events\RevenueOverview;
 use App\Events\UserRegistered;
 use App\Listeners\NotifyAdmin;
 use App\Listeners\NotifyAdminAndOrganizersOnPayment;
 use App\Listeners\NotifyCouponReferral;
-use App\Listeners\SendInvoice;
 use App\Listeners\SendOTPCode;
 use App\Listeners\SendPasswordResetEmail;
 use App\Listeners\SendPurchasedTickets;
@@ -17,9 +17,7 @@ use App\Listeners\SendWelcomeMail;
 use App\Listeners\UpdateOrganizerStats;
 use App\Listeners\UpdateRevenueCommisionSnapshot;
 use App\Listeners\UpdateTicketStats;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -30,7 +28,11 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         UserRegistered::class => [
-                // SendOTPCode::class,
+            SendWelcomeMail::class,
+            NotifyAdmin::class,
+        ],
+        MobileUserRegistered::class => [
+            SendOTPCode::class,
             SendWelcomeMail::class,
             NotifyAdmin::class,
         ],

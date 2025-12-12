@@ -153,7 +153,7 @@ class User extends Authenticatable
     }
 
 
-    public function otpCodes()
+    public function otpVerifications(): HasMany
     {
         return $this->hasMany(OtpVerification::class);
     }
