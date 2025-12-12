@@ -18,7 +18,10 @@ trait StoreImage
                 '',
                 $oldPath
             ) : $oldPath;
-            unlink(public_path($formatted));
+            try {
+                unlink(public_path($formatted));
+            } catch (\Throwable $e) {
+            }
         }
 
         $newPath = public_path($path);
@@ -34,7 +37,10 @@ trait StoreImage
             '',
             $path
         ) : $path;
-        unlink(public_path($formatted));
+        try {
+            unlink(public_path($formatted));
+        } catch (\Throwable $e) {
+        }
     }
 }
 
