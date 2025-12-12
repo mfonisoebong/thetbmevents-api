@@ -141,6 +141,7 @@ class EventsController extends Controller
     public function getEvent(string $alias)
     {
         $event = Event::where('alias', $alias)
+            ->orWhere('id', $alias)
             ->first();
 
         if (!$event) {
@@ -195,9 +196,9 @@ class EventsController extends Controller
                 Ticket::create([
                     'event_id' => $event->id,
                     'name' => $ticket['name'],
-                    'price' => (float) $ticket['price'],
+                    'price' => (float)$ticket['price'],
                     'unlimited' => $ticket['unlimited'] === "true" ? true : false,
-                    'quantity' => (int) $ticket['quantity'],
+                    'quantity' => (int)$ticket['quantity'],
                     'selling_start_date_time' => $ticket['selling_start_date_time'],
                     'selling_end_date_time' => $ticket['selling_end_date_time'],
                     'description' => $ticket['description'] ?? null,
@@ -269,9 +270,9 @@ class EventsController extends Controller
                     Ticket::create([
                         'event_id' => $event->id,
                         'name' => $ticket['name'],
-                        'price' => (float) $ticket['price'],
+                        'price' => (float)$ticket['price'],
                         'unlimited' => $ticket['unlimited'] === "true" ? true : false,
-                        'quantity' => (int) $ticket['quantity'],
+                        'quantity' => (int)$ticket['quantity'],
                         'selling_start_date_time' => $ticket['selling_start_date_time'],
                         'selling_end_date_time' => $ticket['selling_end_date_time'],
                         'description' => $ticket['description'] ?? null,

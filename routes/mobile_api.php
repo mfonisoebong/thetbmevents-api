@@ -59,7 +59,7 @@ Route::group([
         Route::get('/popular', 'Event\EventsController@getPopularEvents');
         Route::get('/recommendations', 'Event\EventsController@getRecommendations')
             ->middleware([AuthOrGuestMiddleware::class]);
-        Route::get('/{event}', 'Event\EventsController@view');
+        Route::get('/{event}', [EventsController::class, 'getEvent']);
     });
 
     Route::prefix('categories')->group(function () {
