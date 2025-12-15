@@ -43,7 +43,7 @@ Route::group([
                 Route::get('/user/{event}', [EventsController::class, 'getUserEvent']);
                 Route::post('/export', 'Event\EventsController@exportCsv');
                 Route::post('/{event}/export/attendees', 'Event\EventsController@exportAttendeesCsv');
-                Route::post('/store', [EventsController::class, 'store']);
+                Route::post('/', [EventsController::class, 'store']);
                 Route::post('/{event}', [EventsController::class, 'update']);
                 Route::delete('/{event}', [EventsController::class, 'destroy']);
             });
