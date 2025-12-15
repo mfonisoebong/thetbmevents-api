@@ -23,7 +23,7 @@ class SendPurchasedTickets
     /**
      * Handle the event.
      */
-    public function handle(InvoiceGenerated $event): void
+    public function handle(InvoiceGenerated $event, string $email = null): void
     {
         $purchasedTickets = $event->invoice->tickets;
         $customer = $event->customer;
@@ -72,7 +72,7 @@ class SendPurchasedTickets
                 'qr_code' => $qrCodeUrl
             ];
 
-            Mail::to($attendee->email)
+            Mail::to($email ?: $attendee->email)
                 ->send(new PurchasedTicketMail($data, $ticket->attendee));
 
 

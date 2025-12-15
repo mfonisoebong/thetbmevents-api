@@ -23,15 +23,18 @@ class ResendTicketEmailFromIdCommand extends Command
             create sendpurchase ticket and call handle() passing the previous created obj
         */
         $invoices = ['49b864e5-7205-4627-94f6-8975ab84304c'];
+        $correctEmails = ['heritageoluwole2@gmail.com'];
 
-        foreach ($invoices as $invoice) {
+        for ($i = 0; $i < count($invoices); $i++) {
+            $invoice = $invoices[$i];
+            $email = $correctEmails[$i];
             try {
-                $invoice = Invoice::where('id', $invoice)->firstOrFail();
-                $invoiceGeneratedEvent = new InvoiceGenerated($invoice, $invoice->customer);
+                $_invoice = Invoice::where('id', $invoice)->firstOrFail();
+                $invoiceGeneratedEvent = new InvoiceGenerated($_invoice, $_invoice->customer);
                 $sendPurchasedTicketsListener = new SendPurchasedTickets();
-                $sendPurchasedTicketsListener->handle($invoiceGeneratedEvent);
+                $sendPurchasedTicketsListener->handle($invoiceGeneratedEvent, $email);
             } catch (Exception $e) {
-                $this->error("Failed to resend ticket email to {$invoice->customer->email}: " . $e->getMessage());
+                $this->error("Failed to resend ticket email to $email: " . $e->getMessage());
             }
         }
 
