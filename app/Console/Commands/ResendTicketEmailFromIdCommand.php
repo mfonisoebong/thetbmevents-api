@@ -29,7 +29,7 @@ class ResendTicketEmailFromIdCommand extends Command
             $invoice = $invoices[$i];
             $email = $correctEmails[$i];
             try {
-                $_invoice = Invoice::where('id', $invoice)->firstOrFail();
+                $_invoice = Invoice::where('transaction_reference', $invoice)->firstOrFail();
                 $invoiceGeneratedEvent = new InvoiceGenerated($_invoice, $_invoice->customer);
                 $sendPurchasedTicketsListener = new SendPurchasedTickets();
                 $sendPurchasedTicketsListener->handle($invoiceGeneratedEvent, $email);
