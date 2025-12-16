@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Events\InvoiceGenerated;
+use App\Events\TicketPurchaseCompleted;
 use App\Listeners\SendPurchasedTickets;
 use App\Models\Invoice;
 use Exception;
@@ -30,7 +30,7 @@ class ResendTicketEmailFromIdCommand extends Command
             $email = $correctEmails[$i];
             try {
                 $_invoice = Invoice::where('transaction_reference', $invoice)->firstOrFail();
-                $invoiceGeneratedEvent = new InvoiceGenerated($_invoice, $_invoice->customer);
+                $invoiceGeneratedEvent = new TicketPurchaseCompleted($_invoice, $_invoice->customer);
                 $sendPurchasedTicketsListener = new SendPurchasedTickets();
                 $sendPurchasedTicketsListener->handle($invoiceGeneratedEvent, $email);
             } catch (Exception $e) {

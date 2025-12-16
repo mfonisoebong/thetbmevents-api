@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\InvoiceGenerated;
+use App\Events\TicketPurchaseCompleted;
 use App\Models\PurchasedTicket;
 use App\Models\Ticket;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -21,7 +21,7 @@ class UpdateTicketStats
     /**
      * Handle the event.
      */
-    public function handle(InvoiceGenerated $event): void
+    public function handle(TicketPurchaseCompleted $event): void
     {
         $cartItems = json_decode($event->invoice->cart_items);
         $attendees = $event->customer->attendees;

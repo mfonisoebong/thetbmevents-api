@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\InvoiceGenerated;
+use App\Events\TicketPurchaseCompleted;
 use App\Mail\PurchasedTicketMail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
@@ -23,7 +23,7 @@ class SendPurchasedTickets
     /**
      * Handle the event.
      */
-    public function handle(InvoiceGenerated $event, string $email = null): void
+    public function handle(TicketPurchaseCompleted $event, string $email = null): void
     {
         $purchasedTickets = $event->invoice->tickets;
         $customer = $event->customer;

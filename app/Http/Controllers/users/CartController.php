@@ -3,15 +3,7 @@
 
 namespace App\Http\Controllers\users;
 
-use App\Events\InvoiceGenerated;
-use App\Http\Requests\VerifyPaymentRequest;
-use App\Mail\InvoiceMail;
-use App\Models\Invoice;
-use App\Models\PurchasedTicket;
 use App\Traits\GetModelIds;
-use App\Traits\GetTotalAmountInCard;
-use Barryvdh\DomPDF\Facade\Pdf;
-use App\Http\Controllers;
 use App\Http\Requests\StoreCartRequest;
 use App\Http\Requests\UpdateCartRequest;
 use App\Http\Resources\CartItemResource;

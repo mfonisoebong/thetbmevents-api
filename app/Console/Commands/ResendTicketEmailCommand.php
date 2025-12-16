@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Events\InvoiceGenerated;
+use App\Events\TicketPurchaseCompleted;
 use App\Listeners\SendPurchasedTickets;
 use App\Models\Customer;
 use Exception;
@@ -23,13 +23,13 @@ class ResendTicketEmailCommand extends Command
             create invoice geenrated object
             create sendpurchase ticket and call handle() passing the previous created obj
         */
-        $emails = ['Busayofrank@yahoo.com', 'kayodeelizabeth2000@gmail.com', 'donmarley012@gmail.com'];
+        $emails = ['heritageoluwole2@gmail.com'];
 
         foreach ($emails as $email) {
             try {
                 $customer = Customer::where('email', $email)->orderByDesc('id')->firstOrFail();
                 $invoice = $customer->invoice;
-                $invoiceGeneratedEvent = new InvoiceGenerated($invoice, $customer);
+                $invoiceGeneratedEvent = new TicketPurchaseCompleted($invoice, $customer);
                 $sendPurchasedTicketsListener = new SendPurchasedTickets();
                 $sendPurchasedTicketsListener->handle($invoiceGeneratedEvent);
             } catch (Exception $e) {

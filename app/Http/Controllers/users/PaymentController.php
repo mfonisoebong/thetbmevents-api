@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\users;
 
-use App\Events\InvoiceGenerated;
+use App\Events\TicketPurchaseCompleted;
 use App\Http\Requests\PaymentRequest;
 use App\Models\Attendee;
 use App\Models\Coupon;
@@ -197,7 +197,7 @@ class PaymentController extends Controller
             'user_id' => $request->user()?->id
         ]);
 
-        event(new InvoiceGenerated($invoice, $customer));
+        event(new TicketPurchaseCompleted($invoice, $customer));
 
         return $this->success(null, 'TotalAmount successfull');
     }

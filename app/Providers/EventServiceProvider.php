@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Events\InvoiceGenerated;
+use App\Events\TicketPurchaseCompleted;
 use App\Events\Mobile\UserRegisteredEvent as MobileUserRegistered;
 use App\Events\PasswordTokenCreated;
 use App\Events\RevenueOverview;
@@ -36,7 +36,7 @@ class EventServiceProvider extends ServiceProvider
             SendWelcomeMail::class,
             NotifyAdmin::class,
         ],
-        InvoiceGenerated::class => [
+        TicketPurchaseCompleted::class => [
             UpdateTicketStats::class,
             NotifyAdminAndOrganizersOnPayment::class,
             UpdateOrganizerStats::class,

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\users;
 
-use App\Events\InvoiceGenerated;
+use App\Events\TicketPurchaseCompleted;
 use App\Models\Invoice;
 use App\Traits\GetTotalAmountInCart;
 use Exception;
@@ -94,7 +94,7 @@ class PaymentWebhook extends Controller
         }
 
         try {
-            event(new InvoiceGenerated($invoice, $invoice->customer));
+            event(new TicketPurchaseCompleted($invoice, $invoice->customer));
         } catch (Exception $e) {
             error_log($e->getMessage());
         }

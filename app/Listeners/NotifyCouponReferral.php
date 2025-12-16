@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\InvoiceGenerated;
+use App\Events\TicketPurchaseCompleted;
 use App\Mail\CouponReferralMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -21,7 +21,7 @@ class NotifyCouponReferral
     /**
      * Handle the event.
      */
-    public function handle(InvoiceGenerated $event): void
+    public function handle(TicketPurchaseCompleted $event): void
     {
         $referralEmail = $event->invoice->coupon?->referral_email;
 

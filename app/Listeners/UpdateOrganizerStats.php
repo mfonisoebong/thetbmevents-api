@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\InvoiceGenerated;
+use App\Events\TicketPurchaseCompleted;
 use App\Models\Event;
 use App\Models\Sale;
 use App\Models\Ticket;
@@ -22,7 +22,7 @@ class UpdateOrganizerStats
     /**
      * Handle the event.
      */
-    public function handle(InvoiceGenerated $event): void
+    public function handle(TicketPurchaseCompleted $event): void
     {
         $invoice = $event->invoice;
         $userCart = json_decode($invoice->cart_items);
