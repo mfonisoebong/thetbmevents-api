@@ -33,7 +33,7 @@ class AuthController extends Controller
                 'last_name' => $request->last_name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'email_verified_at' => now(),
+                'email_verified_at' => null,
                 'country' => $request->country,
                 'phone_number' => $request->phone_number,
                 'phone_dial_code' => $request->phone_dial_code
@@ -57,7 +57,7 @@ class AuthController extends Controller
 
             return $this
                 ->success($data, 'Logged in successfully');
-        } catch (\Exception|\Throwable $e) {
+        } catch (\Exception | \Throwable $e) {
             DB::rollBack();
             return $this->failed(500, $e->getTrace(), $e->getMessage());
         }
@@ -107,7 +107,7 @@ class AuthController extends Controller
             });
 
             return $this->success(null, 'Email verification code sent successfully');
-        } catch (\Exception|\Throwable $e) {
+        } catch (\Exception | \Throwable $e) {
             return $this->failed(500, $e->getTrace(), $e->getMessage());
         }
     }
@@ -130,7 +130,7 @@ class AuthController extends Controller
             });
 
             return $this->success(null, 'Password reset code sent successfully');
-        } catch (\Exception|\Throwable $e) {
+        } catch (\Exception | \Throwable $e) {
             return $this->failed(500, null, $e->getMessage());
         }
     }

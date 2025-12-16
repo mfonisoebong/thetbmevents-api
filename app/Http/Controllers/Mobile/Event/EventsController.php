@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mobile\Event;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Mobile\Event\EventListResource;
+use App\Http\Resources\TicketResource;
 use App\Models\Event;
 use App\Models\Like;
 use App\Models\PurchasedTicket;
@@ -234,7 +235,7 @@ class EventsController extends Controller
     {
         $perPage = $request->get('per_page') ?? '10';
 
-        $events = Event::latest()->filter()->paginate((int)$perPage);
+        $events = Event::latest()->filter()->paginate((int) $perPage);
         $list = EventListResource::collection($events);
         $data = $this->paginatedData($events, $list);
 
@@ -244,30 +245,33 @@ class EventsController extends Controller
     public function view(Event $event)
     {
         $eventData = [
-            'title' => $event->title,
-            'event_date' => $event->event_date,
-            'event_time' => $event->event_time,
-            'description' => $event->description,
-            'categories' => $event->categories,
-            'location' => $event->location,
-            'logo' => $event->logo,
-            'type' => $event->type,
-            'event_link' => $event->event_link,
-            'links_instagram' => $event->links_instagram,
-            'links_twitter' => $event->links_twitter,
-            'links_facebook' => $event->links_facebook,
-            'timezone' => $event->timezone,
-            'undisclose_location' => $event->undisclose_location,
-            'alias' => $event->alias,
-            'location_tips' => $event->location_tips,
-            'is_featured' => $event->is_featured,
-            'longitude' => $event->longitude,
-            'latitude' => $event->latitude,
-            'organizer' => [
-                'business_name' => $event->user->buisness_name,
-                'avatar' => $event->user->avatar,
-                'is_verified' => $event->user->account_state === 'active'
-            ]
+            'event' => [
+                'title' => $event->title,
+                'event_date' => $event->event_date,
+                'event_time' => $event->event_time,
+                'description' => $event->description,
+                'categories' => $event->categories,
+                'location' => $event->location,
+                'logo' => $event->logo,
+                'type' => $event->type,
+                'event_link' => $event->event_link,
+                'links_instagram' => $event->links_instagram,
+                'links_twitter' => $event->links_twitter,
+                'links_facebook' => $event->links_facebook,
+                'timezone' => $event->timezone,
+                'undisclose_location' => $event->undisclose_location,
+                'alias' => $event->alias,
+                'location_tips' => $event->location_tips,
+                'is_featured' => $event->is_featured,
+                'longitude' => $event->longitude,
+                'latitude' => $event->latitude,
+                'organizer' => [
+                    'business_name' => $event->user->buisness_name,
+                    'avatar' => $event->user->avatar,
+                    'is_verified' => $event->user->account_state === 'active'
+                ]
+            ],
+            'tickets' => TicketResource::collection($event->tickets)
         ];
 
         return $this->success($eventData);
