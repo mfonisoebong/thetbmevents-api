@@ -57,7 +57,7 @@ class AuthController extends Controller
 
             return $this
                 ->success($data, 'Logged in successfully');
-        } catch (\Exception | \Throwable $e) {
+        } catch (\Throwable $e) {
             DB::rollBack();
             return $this->failed(500, $e->getTrace(), $e->getMessage());
         }
@@ -107,7 +107,7 @@ class AuthController extends Controller
             });
 
             return $this->success(null, 'Email verification code sent successfully');
-        } catch (\Exception | \Throwable $e) {
+        } catch (\Throwable $e) {
             return $this->failed(500, $e->getTrace(), $e->getMessage());
         }
     }
@@ -130,7 +130,7 @@ class AuthController extends Controller
             });
 
             return $this->success(null, 'Password reset code sent successfully');
-        } catch (\Exception | \Throwable $e) {
+        } catch (\Throwable $e) {
             return $this->failed(500, null, $e->getMessage());
         }
     }

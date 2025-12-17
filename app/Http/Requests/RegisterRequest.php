@@ -15,14 +15,12 @@ class RegisterRequest extends FormRequest
         return true;
     }
 
-    public function prepareForValidation()
+    public function prepareForValidation(): void
     {
         // make role optional with default value 'organizer'
-        if (!$this->has('role')) {
-            $this->merge([
-                'role' => 'organizer',
-            ]);
-        }
+        $this->merge([
+            'role' => $this->input('role', 'organizer'),
+        ]);
     }
 
     /**
