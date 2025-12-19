@@ -15,6 +15,14 @@ class RegisterRequest extends FormRequest
         return true;
     }
 
+    public function prepareForValidation(): void
+    {
+        // make role optional with default value 'organizer'
+        $this->merge([
+            'role' => $this->input('role', 'organizer'),
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
