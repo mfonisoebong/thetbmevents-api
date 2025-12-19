@@ -173,6 +173,16 @@ class EventsController extends Controller
         return $this->success($data);
     }
 
+    public function getUserEvents(Request $request)
+    {
+        $user = $request->user();
+        $events = $user->events()->latest()->paginate(10);
+        $list = EventListResource::collection($events);
+        $data = $this->paginatedData($events, $list);
+
+        return $this->success($data);
+    }
+
     public function getUserRecommendations(Request $request)
     {
         $user = $request->user();
