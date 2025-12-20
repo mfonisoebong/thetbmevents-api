@@ -150,7 +150,7 @@ class PaymentController extends Controller
             return $res->json();
         }
 
-        return $this->failed(500);
+        return $this->failed(500, $res->json(), 'Payment initialization failed');
     }
 
 
