@@ -153,7 +153,6 @@ class EventsController extends Controller
 
     public function getUserEvents(Request $request)
     {
-
         $user = $request->user();
         $events = EventListResource::collection($user->events);
 

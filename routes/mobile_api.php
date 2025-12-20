@@ -39,7 +39,7 @@ Route::group([
         Route::middleware(['auth:sanctum', 'role:organizer', 'account_state:active'])
             ->group(function () {
                 Route::post('/send-blast-email', [EventsController::class, 'sendBlastEmail']);
-                Route::get('/user', [EventsController::class, 'getUserEvents']);
+                Route::get('/user', 'Event\EventsController@getUserEvents');
                 Route::get('/user/{event}', [EventsController::class, 'getUserEvent']);
                 Route::post('/export', 'Event\EventsController@exportCsv');
                 Route::post('/{event}/export/attendees', 'Event\EventsController@exportAttendeesCsv');
@@ -104,6 +104,10 @@ Route::group([
         Route::prefix('sales')->group(function () {
             Route::get('/', [SalesController::class, 'getSales']);
             Route::post('/{sale}/resend-purchased-tickets', [SalesController::class, 'resendPurchasedTickets']);
+        });
+
+        Route::prefix('dashboard')->group(function () {
+            Route::get('/event-summary', 'Dashboard\DashboardController@eventSummary');
         });
 
         Route::prefix('profile')->group(function () {

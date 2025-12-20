@@ -33,6 +33,9 @@ class EventListResource extends JsonResource
             'has_liked' => $this->likes()->where('user_id', $request->user()?->id)->exists(),
             'event_date' => $this->event_date,
             'event_time' => $this->event_time,
+            'tickets' => [
+                'available_units' => (int) $this->tickets()->sum('quantity'),
+            ],
             'formatted_date' => Carbon::parse($this->event_date)->format('M d'), // e.g., Nov 28
             'date' => Carbon::parse($this->event_date)->format('D, d F Y') // e.g., Fri, 28 November 2026
         ];
