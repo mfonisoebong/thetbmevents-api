@@ -160,7 +160,7 @@ class PaymentController extends Controller
             $this->checkSellingDate($request->tickets);
         } catch (Exception $e) {
             if ($e->getCode() === 403) {
-                return $this->failed(403, null, $e->getMessage());
+                return $this->failed(403, $e->getTrace(), $e->getMessage());
             }
             return $this->failed(500, null, $e->getMessage());
         }
