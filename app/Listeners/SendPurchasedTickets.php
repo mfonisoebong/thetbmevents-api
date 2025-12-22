@@ -23,14 +23,12 @@ class SendPurchasedTickets
     /**
      * Handle the event.
      */
-    public function handle(TicketPurchaseCompleted $event/*, string $email = null*/): void
+    public function handle(TicketPurchaseCompleted $event): void
     {
-        $purchasedTickets = $event->invoice->tickets;
         $customer = $event->customer;
         $attendees = $customer->attendees;
 
         foreach ($attendees as $attendee) {
-
             $ticket = $attendee->purchasedTicket;
             $datePurchased = Carbon::parse($ticket->invoice->created_at)
                 ->format('d/m/y');
@@ -54,7 +52,6 @@ class SendPurchasedTickets
                 ->put($ticketPath, $qrCode);
             $qrCodeUrl = config('app.url') . '/storage/' . $ticketPath;
 
-
             $data = [
                 'id' => $ticket->id,
                 'event_title' => $ticket->ticket->event->title,
@@ -72,12 +69,7 @@ class SendPurchasedTickets
                 'qr_code' => $qrCodeUrl
             ];
 
-            Mail::to(/*$email ?: */$attendee->email)
-                ->send(new PurchasedTicketMail($data, $ticket->attendee));
-
-
+            Mail::to($attendee->email)->send(new PurchasedTicketMail($data, $ticket->attendee));
         }
-
-
     }
 }
