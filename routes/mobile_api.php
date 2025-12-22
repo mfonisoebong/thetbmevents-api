@@ -102,8 +102,10 @@ Route::group([
 
     Route::middleware('auth:sanctum', 'verified')->group(function () {
         Route::prefix('sales')->group(function () {
-            Route::get('/', [SalesController::class, 'getSales']);
-            Route::post('/{sale}/resend-purchased-tickets', [SalesController::class, 'resendPurchasedTickets']);
+            Route::get('/', 'Sales\SalesController@getSales');
+            Route::get('/overview', 'Sales\SalesController@overview');
+            Route::get('/event/{event}', 'Sales\SalesController@getEventSales');
+            Route::post('/{sale}/resend-purchased-tickets', 'Sales\SalesController@resendPurchasedTickets');
         });
 
         Route::prefix('dashboard')->group(function () {
