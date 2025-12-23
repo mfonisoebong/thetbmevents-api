@@ -76,7 +76,8 @@ class PaymentController extends Controller
         $couponAmount = $coupon?->calculateValue($ticketsAmount) ?? 0;
 
         $total = $ticketsAmount - $couponAmount;
-        $payableAmount = $total * 100;
+
+        $chargedAmount = $total + $this->getFees($total, $gateway);
 
         $customer = Customer::create([
             "first_name" => $request->customer_first_name,
@@ -91,7 +92,7 @@ class PaymentController extends Controller
 
         $data = [
             'email' => $email,
-            'amount' => (string) $payableAmount,
+            'amount' => $chargedAmount * 100, // paystack wants it in kobo,
             'reference' => $reference,
             'callback_url' => config('app.url') . '/api/v1/payments/callback/' . $reference
         ];
@@ -138,6 +139,7 @@ class PaymentController extends Controller
                 'customer_id' => $customer->id,
                 'organizer_id' => $ticket->event->user_id,
                 'amount' => $total,
+                'charged_amount' => $chargedAmount,
                 'payment_method' => $gateway,
                 'cart_items' => json_encode($request->tickets),
                 'transaction_reference' => $reference,
@@ -246,5 +248,34 @@ class PaymentController extends Controller
         if ($coupon && $coupon->is_expired) {
             throw new \Exception('Coupon is not active', 403);
         }
+    }
+
+    private function getFees($amount, $gateway)
+    {
+        if ($gateway === 'flutterwave') {
+            return $amount * 0.02;
+        }
+
+        if ($gateway === 'paystack') {
+            $flatFee = $amount >= 2500 ? 100 : 0;
+            $feeCap = 2000;
+            $decFee = 0.015;
+
+            $appFee = round((($decFee * $amount) + $flatFee), 2);
+
+            if ($appFee > $feeCap) {
+                return $feeCap;
+            }
+
+            $finalPrice = round((($amount + $flatFee) / (1 - $decFee)) + 0.01, 2);
+
+            if ($amount < 2500 && $finalPrice >= 2500) {
+                $finalPrice += 120;
+            }
+
+            return round($finalPrice - $amount, 2);
+        }
+
+        return  0;
     }
 }

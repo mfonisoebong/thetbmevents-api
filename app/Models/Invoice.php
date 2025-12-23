@@ -27,6 +27,7 @@ class Invoice extends Model
         'coupon_id',
         'coupon_amount',
         'amount',
+        'charged_amount',
         'organizer_id',
         'user_id'
     ];

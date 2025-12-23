@@ -7,15 +7,15 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::table('otp_verifications', function (Blueprint $table) {
-            $table->timestamp('expires_at')->nullable();
+        Schema::table('invoices', function (Blueprint $table) {
+            $table->decimal('charged_amount', 15)->after('amount')->default(0);
         });
     }
 
     public function down(): void
     {
-        Schema::table('otp_verifications', function (Blueprint $table) {
-            $table->dropColumn('expires_at');
+        Schema::table('invoices', function (Blueprint $table) {
+            $table->dropColumn('charged_amount');
         });
     }
 };
