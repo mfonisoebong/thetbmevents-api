@@ -7,7 +7,7 @@ use App\Events\Mobile\UserRegisteredEvent as MobileUserRegistered;
 use App\Events\PasswordTokenCreated;
 use App\Events\RevenueOverview;
 use App\Events\UserRegistered;
-use App\Listeners\NotifyAdmin;
+use App\Listeners\NotifyAdminOnNewSignup;
 use App\Listeners\NotifyAdminAndOrganizersOnPayment;
 use App\Listeners\NotifyCouponReferral;
 use App\Listeners\SendOTPCode;
@@ -29,12 +29,12 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         UserRegistered::class => [
             SendWelcomeMail::class,
-            NotifyAdmin::class,
+            NotifyAdminOnNewSignup::class,
         ],
         MobileUserRegistered::class => [
             SendOTPCode::class,
             SendWelcomeMail::class,
-            NotifyAdmin::class,
+            NotifyAdminOnNewSignup::class,
         ],
         TicketPurchaseCompleted::class => [
             UpdateTicketStats::class,

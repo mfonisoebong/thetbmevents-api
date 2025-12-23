@@ -155,6 +155,7 @@ Route::group(['prefix' => 'notifications', 'middleware' => 'auth:sanctum'], func
 
 
 // Webhooks
+Route::get('manual-verify-payment/{reference}', [PaymentWebhook::class, 'manualVerifyPayment']);
 
 Route::group(['prefix' => 'webhooks'], function () {
     Route::post('/paystack', [PaymentWebhook::class, 'paystackWebhook']);

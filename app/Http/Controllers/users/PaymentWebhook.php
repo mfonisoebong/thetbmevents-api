@@ -7,6 +7,7 @@ use App\Models\Invoice;
 use App\Traits\GetTotalAmountInCart;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class PaymentWebhook extends Controller
 {
@@ -100,5 +101,64 @@ class PaymentWebhook extends Controller
         }
 
         return response(null, 200);
+    }
+
+    public function manualVerifyPayment($reference)
+    {
+        $invoice = Invoice::where('transaction_reference', $reference)->first();
+
+        if (!$invoice) {
+            return response()->json(['message' => 'Invoice not found'], 404);
+        }
+
+        if ($invoice->payment_status === 'success') {
+            return response()->json(['message' => 'Payment already verified']);
+        }
+
+        if ($invoice->payment_status === 'pending') {
+            $gateway = $invoice->payment_method;
+
+            if ($gateway === 'paystack') {
+                $secret = config('services.paystack.secret', env('PAYSTACK_SECRET'));
+                $verifyUrl = "https://api.paystack.co/transaction/verify/{$reference}";
+
+                try {
+                    $res = Http::withToken($secret)
+                        ->acceptJson()
+                        ->get($verifyUrl);
+                } catch (\Exception $e) {
+                    return response()->json(['message' => 'Verification request failed: ' . $e], 502);
+                }
+
+                if (!$res->successful()) {
+                    return response()->json(['message' => 'Verification failed'], 400);
+                }
+
+                $payload = $res->json();
+
+                if ($payload['data']['status'] === 'success') {
+                    echo "success";
+                    return $this->finishUp($invoice);
+                }
+            } elseif ($gateway === 'flutterwave') {
+                $secret = config('services.flutterwave.secret', env('FLUTTERWAVE_SECRET'));
+                $verifyUrl = "https://api.flutterwave.com/v3/transactions/verify_by_reference?tx_ref=$reference";
+                try {
+                    $res = Http::withToken($secret)
+                        ->acceptJson()
+                        ->get($verifyUrl);
+                } catch (\Exception $e) {
+                    return response()->json(['message' => 'Verification request failed: ' . $e], 502);
+                }
+                if (!$res->successful()) {
+                    return response()->json(['message' => 'Verification failed'], 400);
+                }
+                $payload = $res->json();
+                if ($payload['data']['status'] === 'successful') {
+                    echo "success";
+                    return $this->finishUp($invoice);
+                }
+            }
+        }
     }
 }

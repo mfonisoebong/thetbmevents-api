@@ -7,7 +7,7 @@ use App\Events\UserRegistered;
 use App\Mail\NotifyAdminForNewUser;
 use Illuminate\Support\Facades\Mail;
 
-class NotifyAdmin
+class NotifyAdminOnNewSignup
 {
     /**
      * Create the event listener.
