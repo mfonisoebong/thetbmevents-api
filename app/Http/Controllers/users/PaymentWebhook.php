@@ -149,7 +149,7 @@ class PaymentWebhook extends Controller
                     return response()->json(['message' => 'Verification request failed: ' . $e], 502);
                 }
                 if (!$res->successful()) {
-                    return response()->json(['message' => 'Verification failed'], 400);
+                    return response()->json(['message' => 'Verification failed', 'data' => $res->json()], 400);
                 }
                 $payload = $res->json();
                 if ($payload['data']['status'] === 'successful') {
