@@ -32,6 +32,11 @@ class Invoice extends Model
         'user_id'
     ];
 
+    protected $casts = [
+        'amount' => 'float',
+        'charged_amount' => 'float',
+    ];
+
     public function scopeFilter(Builder $builder)
     {
         $builder->when(request('from'), function ($builder) {
