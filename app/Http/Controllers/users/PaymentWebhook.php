@@ -72,9 +72,8 @@ class PaymentWebhook extends Controller
             return response(null, 200);
         }
 
-        $amountInCart = $this->getTotalAmount($invoice->cart_items) - (float)$invoice->coupon_amount;
 
-        if ($amountInCart !== $amount || $data['status'] !== 'successful') {
+        if ($invoice->amount !== $amount || $data['status'] !== 'successful') {
             return response(null, 200);
         }
 
