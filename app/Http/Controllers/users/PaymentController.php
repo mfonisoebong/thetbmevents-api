@@ -102,7 +102,7 @@ class PaymentController extends Controller
         if ($gateway === 'paystack') {
             $url = $serviceUrl . '/transaction/initialize';
         } elseif ($gateway === 'flutterwave') {
-            $data['amount'] /= 100; // Flutterwave expects amount in Naira
+            $data['amount'] = $total;
 
             $url = $serviceUrl . '/v3/payments';
 
