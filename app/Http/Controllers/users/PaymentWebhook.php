@@ -41,9 +41,8 @@ class PaymentWebhook extends Controller
         if ($invoice->payment_status === 'success') {
             return response(null, 200);
         }
-        $amountInCart = ($this->getTotalAmount($invoice->cart_items) - (float)$invoice->coupon_amount) * 100;
 
-        if ($amountInCart !== $amount) {
+        if (round($invoice->charged_amount * 100, 2) !== $amount) {
             return response(null, 200);
         }
 
