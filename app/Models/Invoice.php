@@ -35,6 +35,7 @@ class Invoice extends Model
     protected $casts = [
         'amount' => 'float',
         'charged_amount' => 'float',
+        'cart_items' => 'array',
     ];
 
     public function scopeFilter(Builder $builder)

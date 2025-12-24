@@ -87,6 +87,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{coupon}', [CouponController::class, 'destroy']);
         Route::patch('/{coupon}', [CouponController::class, 'update']);
     });
+
+    Route::get('/verify-sales-email/{event}/{email}', [SalesController::class, 'verifySalesEmail']);
 });
 
 
@@ -156,7 +158,6 @@ Route::group(['prefix' => 'notifications', 'middleware' => 'auth:sanctum'], func
 
 // Webhooks
 Route::get('manual-verify-payment/{reference}', [PaymentWebhook::class, 'manualVerifyPayment']);
-
 Route::group(['prefix' => 'webhooks'], function () {
     Route::post('/paystack', [PaymentWebhook::class, 'paystackWebhook']);
     Route::post('/flutterwave', [PaymentWebhook::class, 'flutterwaveWebhook']);
