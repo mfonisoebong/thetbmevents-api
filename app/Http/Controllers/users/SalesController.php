@@ -45,7 +45,7 @@ class SalesController extends Controller
         $attendees = Attendee::where('email', $email)->whereIn('ticket_id', $tickets->pluck('id'))->orderByDesc('id')->get();
 
         if (!$attendees->count()) {
-            return $this->failed(404, 'Attendee not found' );
+            return $this->failed(404, null, 'Attendee not found' );
         }
 
         $data = [];
