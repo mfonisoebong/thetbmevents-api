@@ -198,6 +198,7 @@ class ResendTicketEmailFromIdCommand extends Command
             } catch (Exception $e) {
                 $this->error("Failed to resend ticket email. Reference id $invoice: " . $e->getMessage());
             }
+            $this->info("Resent ticket email for Invoice Reference ID: $invoice");
         }
 
         $this->info('Ticket emails resent successfully.');
