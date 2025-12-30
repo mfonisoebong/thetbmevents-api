@@ -6,7 +6,6 @@ use App\Http\Controllers\users\CouponController;
 use App\Http\Controllers\users\EventsController;
 use App\Http\Controllers\users\PaymentController;
 use App\Http\Controllers\users\ProfileController;
-use App\Http\Controllers\users\SalesController;
 use App\Http\Controllers\users\TicketsController;
 use App\Http\Middleware\AuthOrGuestMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -107,6 +106,7 @@ Route::group([
             Route::get('/event/{event}', 'Sales\SalesController@getEventSales');
             Route::post('/{sale}/resend-purchased-tickets', 'Sales\SalesController@resendPurchasedTickets');
         });
+        
 
         Route::prefix('dashboard')->group(function () {
             Route::get('/event-summary', 'Dashboard\DashboardController@eventSummary');

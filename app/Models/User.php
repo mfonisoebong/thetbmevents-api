@@ -83,7 +83,7 @@ class User extends Authenticatable
         return str_replace(config('app.url') . '/', '', $this->avatar);
     }
 
-    public function getAvatarAttribute($value)
+    public function getAvatarAttribute($value): ?string
     {
         $isGoogleAvatar = Str::isUrl($value);
         $avatar = $isGoogleAvatar ? $value : config('app.url') . '/' . $value;
@@ -111,7 +111,7 @@ class User extends Authenticatable
         return $this->hasOne(Commision::class);
     }
 
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->role === 'admin';
     }
@@ -122,32 +122,32 @@ class User extends Authenticatable
     }
 
 
-    public function invoices()
+    public function invoices(): HasMany
     {
         return $this->hasMany(Invoice::class, 'organizer_id');
     }
 
-    public function events()
+    public function events(): HasMany
     {
         return $this->hasMany(Event::class);
     }
 
-    public function cartItems()
+    public function cartItems(): HasMany
     {
         return $this->hasMany(CartItem::class);
     }
 
-    public function notifications()
+    public function notifications(): HasMany
     {
         return $this->hasMany(Notification::class);
     }
 
-    public function billingInfo()
+    public function billingInfo(): HasOne
     {
         return $this->hasOne(BillingInfo::class);
     }
 
-    public function createdTickets()
+    public function createdTickets(): HasMany
     {
         return $this->hasMany(Ticket::class, 'organizer_id');
     }
@@ -158,17 +158,17 @@ class User extends Authenticatable
         return $this->hasMany(OtpVerification::class);
     }
 
-    public function sales()
+    public function sales(): HasMany
     {
         return $this->hasMany(Sale::class, 'organizer_id');
     }
 
-    public function purchasedTickets()
+    public function purchasedTickets(): HasMany
     {
         return $this->hasMany(PurchasedTicket::class, 'user_id');
     }
 
-    public function usersPurhcasedTickets()
+    public function usersPurhcasedTickets(): HasMany
     {
         return $this->hasMany(PurchasedTicket::class, 'organizer_id');
     }
