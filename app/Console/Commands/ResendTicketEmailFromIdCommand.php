@@ -22,7 +22,7 @@ class ResendTicketEmailFromIdCommand extends Command
             create invoice generated object
             create sendpurchase ticket and call handle() passing the previous created obj
         */
-        $invoices = ['4855b3de-d068-4a33-b72e-d1efb3a151a3'];
+        $invoices = [''];
 
         for ($i = 0; $i < count($invoices); $i++) {
             $invoice = $invoices[$i];
@@ -34,6 +34,7 @@ class ResendTicketEmailFromIdCommand extends Command
             } catch (Exception $e) {
                 $this->error("Failed to resend ticket email. Reference id $invoice: " . $e->getMessage());
             }
+            $this->info("Resent ticket email for Invoice Reference ID: $invoice");
         }
 
         $this->info('Ticket emails resent successfully.');
