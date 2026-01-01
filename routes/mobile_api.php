@@ -4,6 +4,7 @@ use App\Http\Controllers\admin\EventsController as AdminEventsController;
 use App\Http\Controllers\users\AuthController;
 use App\Http\Controllers\users\CouponController;
 use App\Http\Controllers\users\EventsController;
+use App\Http\Controllers\users\OrganizerBankDetailsController;
 use App\Http\Controllers\users\PaymentController;
 use App\Http\Controllers\users\ProfileController;
 use App\Http\Controllers\users\TicketsController;
@@ -87,6 +88,13 @@ Route::group([
             });
         });
 
+    Route::prefix('payouts')
+        ->group(function () {
+            Route::middleware(['auth:sanctum', 'role:organizer', 'account_state:active'])->group(function () {
+                Route::post('/', 'Payout\PayoutsController@store');
+            });
+        });
+
     Route::prefix('tickets')->group(function () {
         Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('/', [TicketsController::class, 'store']);
@@ -99,6 +107,13 @@ Route::group([
         });
     });
 
+    Route::group(['prefix' => 'bank-details', 'middleware' => ['auth:sanctum', 'role:organizer']], function () {
+        Route::get('/', [OrganizerBankDetailsController::class, 'getBankDetails']);
+        Route::post('/', [OrganizerBankDetailsController::class, 'store']);
+        Route::patch('/', [OrganizerBankDetailsController::class, 'update']);
+        Route::delete('/', [OrganizerBankDetailsController::class, 'destroy']);
+    });
+
     Route::middleware('auth:sanctum', 'verified')->group(function () {
         Route::prefix('sales')->group(function () {
             Route::get('/', 'Sales\SalesController@getSales');
@@ -106,10 +121,11 @@ Route::group([
             Route::get('/event/{event}', 'Sales\SalesController@getEventSales');
             Route::post('/{sale}/resend-purchased-tickets', 'Sales\SalesController@resendPurchasedTickets');
         });
-        
+
 
         Route::prefix('dashboard')->group(function () {
             Route::get('/event-summary', 'Dashboard\DashboardController@eventSummary');
+            Route::get('/event-preview', 'Dashboard\DashboardController@eventsPreview');
         });
 
         Route::prefix('profile')->group(function () {

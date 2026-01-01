@@ -104,8 +104,7 @@ Route::group(['prefix' => 'payments'], function () {
 
 Route::prefix('/contact-messages')->group(function () {
     Route::post('/', [ContactMessagesController::class, 'store'])
-        ->middleware('validaterecaptcha');
-    ;
+        ->middleware('validaterecaptcha');;
 });
 
 Route::prefix('auth')->group(function () {
@@ -166,7 +165,6 @@ Route::group(['prefix' => 'webhooks'], function () {
 Route::group(['prefix' => 'bank-details', 'middleware' => ['auth:sanctum', 'role:organizer']], function () {
     Route::get('/', [OrganizerBankDetailsController::class, 'getBankDetails']);
     Route::post('/', [OrganizerBankDetailsController::class, 'store']);
-    Route::patch('/', [OrganizerBankDetailsController::class, 'update']);
     Route::delete('/', [OrganizerBankDetailsController::class, 'destroy']);
 });
 

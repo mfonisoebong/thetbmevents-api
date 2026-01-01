@@ -46,6 +46,10 @@ class Event extends Model
                 ->orWhere('location', 'like', '%' . request('search') . '%');
         });
 
+        $builder->when(request('status'), function ($builder) {
+            $builder->where('status', request('status'));
+        });
+
         $builder->when(request('category'), function ($builder) {
             $builder->where('categories', 'like', '%' . request('category') . '%');
         });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Mobile\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Mobile\Event\EventListResource;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -26,6 +27,14 @@ class DashboardController extends Controller
             'tickets_sold' => $user->sales->sum('tickets_bought'),
             'total_attendees' => $attendees,
         ];
+
+        return $this->success($data);
+    }
+
+    public function eventsPreview(Request $request)
+    {
+        $events = $request->user()->events()->latest()->take(3)->get();
+        $data = EventListResource::collection($events);
 
         return $this->success($data);
     }

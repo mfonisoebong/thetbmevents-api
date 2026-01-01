@@ -176,7 +176,7 @@ class EventsController extends Controller
     public function getUserEvents(Request $request)
     {
         $user = $request->user();
-        $events = $user->events()->latest()->paginate(10);
+        $events = $user->events()->filter()->latest()->paginate(10);
         $list = EventListResource::collection($events);
         $data = $this->paginatedData($events, $list);
 
@@ -245,7 +245,7 @@ class EventsController extends Controller
     {
         $perPage = $request->get('per_page') ?? '10';
 
-        $events = Event::latest()->filter()->paginate((int) $perPage);
+        $events = Event::latest()->filter()->paginate((int)$perPage);
         $list = EventListResource::collection($events);
         $data = $this->paginatedData($events, $list);
 
