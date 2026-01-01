@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -14,6 +15,13 @@ class Payout extends Model
         'organizer_bank_details_id',
         'status',
     ];
+
+    public function scopeFilter(Builder $builder)
+    {
+        $builder->when(request('status'), function ($builder) {
+            $builder->where('status', request('status'));
+        });
+    }
 
     public function user(): BelongsTo
     {

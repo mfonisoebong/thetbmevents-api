@@ -91,7 +91,9 @@ Route::group([
     Route::prefix('payouts')
         ->group(function () {
             Route::middleware(['auth:sanctum', 'role:organizer', 'account_state:active'])->group(function () {
-                Route::post('/', 'Payout\PayoutsController@store');
+                Route::post('/', 'Wallet\PayoutsController@store');
+                Route::get('/', 'Wallet\PayoutsController@viewAll');
+                Route::get('/wallet-info', 'Wallet\PayoutsController@viewWalletInfo');
             });
         });
 
