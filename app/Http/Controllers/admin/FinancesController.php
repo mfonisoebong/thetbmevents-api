@@ -6,7 +6,7 @@ use App\Events\RevenueOverview;
 use App\Models\Commision;
 use App\Models\Customer;
 use App\Models\Event;
-use App\Models\Invoice;
+use App\Models\Transaction;
 use App\Models\RevenueCommisionSnapshot;
 use App\Models\Sale;
 use App\Models\User;
@@ -25,7 +25,7 @@ class FinancesController extends Controller
     public function getRevenueOverview()
     {
         $revenueSnapshot = RevenueCommisionSnapshot::first();
-        $netSales = Invoice::where('payment_status', 'success');
+        $netSales = Transaction::where('payment_status', 'success');
 
         $netRevenueCommisions = $this->calculateNetRevenueAndCommision($netSales);
 
@@ -60,7 +60,7 @@ class FinancesController extends Controller
     {
 
         $allThroughTheYearStats = array_map(function ($month) {
-            $sales = Invoice::whereYear('created_at', $this->getCurrentYear())
+            $sales = Transaction::whereYear('created_at', $this->getCurrentYear())
                 ->whereMonth('created_at', $month);
 
             return $this->calculateNetRevenueAndCommision($sales);

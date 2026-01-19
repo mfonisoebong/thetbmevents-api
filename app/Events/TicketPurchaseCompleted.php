@@ -3,7 +3,7 @@
 namespace App\Events;
 
 use App\Models\Customer;
-use App\Models\Invoice;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -20,7 +20,7 @@ class TicketPurchaseCompleted
     /**
      * Create a new event instance.
      */
-    public function __construct(public Invoice $invoice, public Customer $customer)
+    public function __construct(public Transaction $invoice, public Customer $customer)
     {
     }
 

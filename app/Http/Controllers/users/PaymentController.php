@@ -7,7 +7,7 @@ use App\Http\Requests\PaymentRequest;
 use App\Models\Attendee;
 use App\Models\Coupon;
 use App\Models\Customer;
-use App\Models\Invoice;
+use App\Models\Transaction;
 use App\Models\PaymentMethod;
 use App\Models\Ticket;
 use App\Traits\GetTotalAmountInCart;
@@ -135,7 +135,7 @@ class PaymentController extends Controller
             }, $request->attendees);
             Attendee::insert($attendees);
 
-            Invoice::create([
+            Transaction::create([
                 'customer_id' => $customer->id,
                 'organizer_id' => $ticket->event->user_id,
                 'amount' => $total,
@@ -189,7 +189,7 @@ class PaymentController extends Controller
         $ticket = Ticket::where('id', $request->tickets[0]['id'])
             ->first();
 
-        $invoice = Invoice::create([
+        $invoice = Transaction::create([
             'customer_id' => $customer->id,
             'organizer_id' => $ticket->event->user_id,
             'payment_method' => 'paystack',
@@ -226,7 +226,7 @@ class PaymentController extends Controller
 
     public function callback($reference)
     {
-        $invoice = Invoice::where('transaction_reference', $reference)
+        $invoice = Transaction::where('transaction_reference', $reference)
             ->first();
 
         if (!$invoice) {

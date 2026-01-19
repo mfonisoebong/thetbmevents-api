@@ -69,7 +69,7 @@ class Sale extends Model
 
     public function invoice()
     {
-        return $this->belongsTo(Invoice::class);
+        return $this->belongsTo(Transaction::class);
     }
 
     public function organizer()

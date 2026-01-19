@@ -6,7 +6,7 @@ use App\Http\Resources\EventsWithTicketResource;
 use App\Models\Commision;
 use App\Models\Customer;
 use App\Models\Event;
-use App\Models\Invoice;
+use App\Models\Transaction;
 use App\Models\Sale;
 use App\Models\User;
 use App\Traits\CurrentDateTime;
@@ -31,7 +31,7 @@ class OverviewController extends Controller
             ->get();
 
         $allThroughTheYearStats = array_map(function ($month) {
-            $sales = Invoice::whereYear('created_at', $this->getCurrentYear())
+            $sales = Transaction::whereYear('created_at', $this->getCurrentYear())
                 ->whereMonth('created_at', $month)
                 ->where('payment_status', 'success');
             return $this->calculateNetRevenueAndCommision($sales);
@@ -90,7 +90,7 @@ class OverviewController extends Controller
 
     public function getNetRevenue(Request $request)
     {
-        $netSales = Invoice::whereYear('created_at', $this->getCurrentYear())
+        $netSales = Transaction::whereYear('created_at', $this->getCurrentYear())
             ->whereMonth('created_at', request('month'))
             ->where('payment_status', 'success');
 

@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\Invoice;
+use App\Models\Transaction;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Attachment;
@@ -19,7 +19,7 @@ class InvoiceMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public Invoice $invoice, $pdfPath)
+    public function __construct(public Transaction $invoice, $pdfPath)
     {
         $this->pdfPath= $pdfPath;
     }
@@ -30,7 +30,7 @@ class InvoiceMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'TBM Tickets Invoice',
+            subject: 'TBM Tickets Transaction',
         );
     }
 

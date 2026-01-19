@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('invoices', function (Blueprint $table) {
+        Schema::table('transactions', function (Blueprint $table) {
 
             $table
                 ->string('organizer_id')

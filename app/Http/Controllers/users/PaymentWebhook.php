@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\users;
 
 use App\Events\TicketPurchaseCompleted;
-use App\Models\Invoice;
+use App\Models\Transaction;
 use App\Traits\GetTotalAmountInCart;
 use Exception;
 use Illuminate\Http\Request;
@@ -30,7 +30,7 @@ class PaymentWebhook extends Controller
 
         $data = $request->data;
         $reference = $data['reference'];
-        $invoice = Invoice::where('transaction_reference', '=', $reference)->first();
+        $invoice = Transaction::where('transaction_reference', '=', $reference)->first();
         $amount = (float)$data['amount'];
 
 
@@ -60,7 +60,7 @@ class PaymentWebhook extends Controller
 
         $data = $request->data;
         $reference = $data['tx_ref'];
-        $invoice = Invoice::where('transaction_reference', '=', $reference)->first();
+        $invoice = Transaction::where('transaction_reference', '=', $reference)->first();
         $amount = (float) $data['amount'];
 
 
@@ -80,7 +80,7 @@ class PaymentWebhook extends Controller
         return $this->finishUp($invoice);
     }
 
-    public function finishUp(Invoice $invoice)
+    public function finishUp(Transaction $invoice)
     {
         $invoice->update([
             'payment_status' => 'success'
@@ -103,10 +103,10 @@ class PaymentWebhook extends Controller
 
     public function manualVerifyPayment($reference)
     {
-        $invoice = Invoice::where('transaction_reference', $reference)->first();
+        $invoice = Transaction::where('transaction_reference', $reference)->first();
 
         if (!$invoice) {
-            return response()->json(['message' => 'Invoice not found'], 404);
+            return response()->json(['message' => 'Transaction not found'], 404);
         }
 
         if ($invoice->payment_status === 'success') {
