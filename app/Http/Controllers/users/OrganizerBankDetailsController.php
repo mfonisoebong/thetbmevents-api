@@ -20,11 +20,12 @@ class OrganizerBankDetailsController extends Controller
         $user = $request->user();
 
         $bankDetails = $user?->bankDetails ? [
-            'bank_name' => $user?->bankDetails->bank_name,
-            'account_number' => $user?->bankDetails->account_number,
-            'account_name' => $user?->bankDetails->account_name,
-            'swift_code' => $user?->bankDetails->swift_code,
-            'iban' => $user?->bankDetails->iban,
+            'id' => $user->bankDetails->id,
+            'bank_name' => $user->bankDetails->bank_name,
+            'account_number' => $user->bankDetails->account_number,
+            'account_name' => $user->bankDetails->account_name,
+            'swift_code' => $user->bankDetails->swift_code,
+            'iban' => $user->bankDetails->iban,
         ] : null;
         return $this->success($bankDetails);
     }
