@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Events\TicketPurchaseCompleted;
 use App\Listeners\SendPurchasedTickets;
-use App\Models\Invoice;
+use App\Models\Transaction;
 use Exception;
 use Illuminate\Console\Command;
 
@@ -18,7 +18,7 @@ class ResendTicketEmailFromIdCommand extends Command
     {
         /*
             PLAN:
-            Get Invoice from id
+            Get Transaction from id
             create invoice generated object
             create sendpurchase ticket and call handle() passing the previous created obj
         */
@@ -27,14 +27,14 @@ class ResendTicketEmailFromIdCommand extends Command
         for ($i = 0; $i < count($invoices); $i++) {
             $invoice = $invoices[$i];
             try {
-                $_invoice = Invoice::where('transaction_reference', $invoice)->firstOrFail();
+                $_invoice = Transaction::where('transaction_reference', $invoice)->firstOrFail();
                 $invoiceGeneratedEvent = new TicketPurchaseCompleted($_invoice, $_invoice->customer);
                 $sendPurchasedTicketsListener = new SendPurchasedTickets();
                 $sendPurchasedTicketsListener->handle($invoiceGeneratedEvent);
             } catch (Exception $e) {
                 $this->error("Failed to resend ticket email. Reference id $invoice: " . $e->getMessage());
             }
-            $this->info("Resent ticket email for Invoice Reference ID: $invoice");
+            $this->info("Resent ticket email for Transaction Reference ID: $invoice");
         }
 
         $this->info('Ticket emails resent successfully.');

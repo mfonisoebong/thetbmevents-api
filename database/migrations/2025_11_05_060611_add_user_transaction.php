@@ -5,25 +5,20 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::table('invoices', function (Blueprint $table) {
-            $table->unsignedDecimal('amount')
-                ->after('payment_status')
-                ->default(0);
+        Schema::table('transactions', function (Blueprint $table) {
+            $table->string('user_id')
+                ->nullable()
+                ->default(null)
+                ->after('customer_id');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('invoices', function (Blueprint $table) {
-            $table->dropColumn('amount');
+            $table->dropColumn('user_id');
         });
     }
 };

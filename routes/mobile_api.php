@@ -138,9 +138,9 @@ Route::group([
         });
 
         Route::prefix('invoices')->group(function () {
-            Route::get('/tickets', 'Invoice\InvoicesController@viewUserTickets');
-            Route::get('/tickets/{ticket}/booking-details', 'Invoice\InvoicesController@viewBookingDetails');
-            Route::get('/tickets/{ticket}/booking-details/download', 'Invoice\InvoicesController@downloadBookingDetails');
+            Route::get('/tickets', 'Transaction\InvoicesController@viewUserTickets');
+            Route::get('/tickets/{ticket}/booking-details', 'Transaction\InvoicesController@viewBookingDetails');
+            Route::get('/tickets/{ticket}/booking-details/download', 'Transaction\InvoicesController@downloadBookingDetails');
         });
 
     });

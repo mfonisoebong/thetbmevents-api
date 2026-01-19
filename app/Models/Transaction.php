@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 
-class Invoice extends Model
+class Transaction extends Model
 {
     use HasFactory, HasUuids;
 

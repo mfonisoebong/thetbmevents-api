@@ -35,7 +35,7 @@ class SalesController extends Controller
 
         $invoice->sendInvoice();
 
-        return $this->success(null, 'Invoice has been resent');
+        return $this->success(null, 'Transaction has been resent');
     }
 
     public function overview(Request $request)

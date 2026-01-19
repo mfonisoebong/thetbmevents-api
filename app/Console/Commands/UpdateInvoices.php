@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Invoice;
+use App\Models\Transaction;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +32,7 @@ class UpdateInvoices extends Command
         try {
             DB::transaction(function () {
 
-                $invoices = Invoice::all();
+                $invoices = Transaction::all();
 
                 foreach ($invoices as $invoice) {
 

@@ -25,7 +25,7 @@ class Customer extends Model
 
     public function invoice()
     {
-        return $this->hasOne(Invoice::class);
+        return $this->hasOne(Transaction::class);
     }
 
     public function attendees()

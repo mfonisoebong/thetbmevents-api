@@ -19,7 +19,7 @@ class ResendTicketEmailCommand extends Command
         /*
             PLAN:
             Get customer by email
-            Get Invoice by customer_id
+            Get Transaction by customer_id
             create invoice geenrated object
             create sendpurchase ticket and call handle() passing the previous created obj
         */

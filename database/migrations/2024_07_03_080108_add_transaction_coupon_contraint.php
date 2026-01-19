@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('general_settings', function (Blueprint $table) {
-            $table->id();
-            $table->string('site_name');
-            $table->string('site_description');
-            $table->string('site_logo_light');
-            $table->string('site_logo_dark');
-            $table->timestamps();
+        Schema::table('transactions', function(Blueprint $table){
+            $table->foreign('coupon_id')
+            ->references('id')
+            ->on('coupons')
+            ->onDelete('set null');
         });
     }
 
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('general_settings');
+        $table->dropForeign('coupon_id');
     }
 };

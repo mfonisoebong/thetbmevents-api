@@ -7,15 +7,15 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::table('invoices', function (Blueprint $table) {
-            $table->decimal('charged_amount', 15)->after('amount')->default(0);
+        Schema::table('transactions', function (Blueprint $table) {
+            DB::statement("ALTER TABLE `invoices` MODIFY `payment_method` ENUM('flutterwave','paystack', 'vella') NOT NULL");
         });
     }
 
     public function down(): void
     {
         Schema::table('invoices', function (Blueprint $table) {
-            $table->dropColumn('charged_amount');
+            //
         });
     }
 };

@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\Invoice;
+use App\Models\Transaction;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -17,7 +17,7 @@ class CouponReferralMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public Invoice $invoice)
+    public function __construct(public Transaction $invoice)
     {
         //
     }
