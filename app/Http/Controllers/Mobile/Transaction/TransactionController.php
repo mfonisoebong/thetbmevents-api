@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Mobile\Invoice;
+namespace App\Http\Controllers\Mobile\Transaction;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Mobile\Invoice\TicketResource;
@@ -11,7 +11,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
-class InvoicesController extends Controller
+class TransactionController extends Controller
 {
     use HttpResponses, Pagination;
 
@@ -61,7 +61,7 @@ class InvoicesController extends Controller
         $qrCode = QrCode::format('png')
             ->size(150)
             ->generate($qrCodeData);
-        
+
         $pdf = Pdf::loadView('pdf.ticket', [
             'ticket' => $ticket,
             'qrCode' => 'data:image/png;base64,' . base64_encode($qrCode),
