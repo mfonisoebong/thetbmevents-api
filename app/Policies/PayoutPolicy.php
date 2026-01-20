@@ -18,7 +18,7 @@ class PayoutPolicy
 
     public function create(User $user): bool
     {
-        $bankDetailsId = request()->get('organizer_bank_details_id');
+        $bankDetailsId = request()->input('organizer_bank_details_id');
         return $user->bankDetails()->where('id', $bankDetailsId)->exists();
     }
 
@@ -26,5 +26,5 @@ class PayoutPolicy
     {
         return $user?->admin_role === $payout->user_id;
     }
-    
+
 }
