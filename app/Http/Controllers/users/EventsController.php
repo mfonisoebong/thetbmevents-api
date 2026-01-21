@@ -443,8 +443,8 @@ class EventsController extends Controller
 FROM
     sales
 INNER JOIN events ON sales.event_id = events.id
-INNER JOIN invoices ON sales.invoice_id = invoices.id
-INNER JOIN purchased_tickets ON invoices.id = purchased_tickets.invoice_id
+INNER JOIN transactions ON sales.invoice_id = transactions.id
+INNER JOIN purchased_tickets ON transactions.id = purchased_tickets.invoice_id
 INNER JOIN customers ON sales.customer_id = customers.id
 INNER JOIN tickets ON sales.ticket_id = tickets.id
 
