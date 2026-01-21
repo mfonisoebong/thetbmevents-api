@@ -17,12 +17,6 @@ class Customer extends Model
         "phone_number"
     ];
 
-    public function getFullNameAttribute()
-    {
-        $name = $this->first_name . ' ' . $this->last_name;
-        return $name;
-    }
-
     public function invoice()
     {
         return $this->hasOne(Transaction::class);

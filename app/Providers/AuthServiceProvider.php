@@ -3,10 +3,6 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
-use App\Models\BankAccountDetails;
-use App\Models\Payout;
-use App\Policies\BankAccountDetailsPolicy;
-use App\Policies\PayoutPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -18,8 +14,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         //
-        BankAccountDetails::class => BankAccountDetailsPolicy::class,
-        Payout::class => PayoutPolicy::class,
     ];
 
     /**

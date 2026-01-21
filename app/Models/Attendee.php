@@ -17,12 +17,6 @@ class Attendee extends Model
         "customer_id"
     ];
 
-    public function getFullNameAttribute()
-    {
-        $name = $this->first_name . ' ' . $this->last_name;
-        return $name;
-    }
-
     public function customer()
     {
         return $this->belongsTo(Customer::class);

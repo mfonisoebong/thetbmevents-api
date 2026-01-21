@@ -32,7 +32,6 @@ class ProfileResource extends JsonResource
             'auth_provider' => $this->auth_provider,
             'buisness_name' => $this->buisness_name,
             'email_verified_at' => $this->email_verified_at,
-            'admin_role' => $this->admin_role,
         ];
     }
 }

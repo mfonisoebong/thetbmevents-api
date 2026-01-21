@@ -24,22 +24,18 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'first_name',
-        'last_name',
+        'full_name',
         'role',
         'country',
         'email',
         'phone_number',
         'account_state',
-        'phone_dial_code',
         'avatar',
         'completed_profile',
         'auth_provider',
         'buisness_name',
         'password',
         'email_verified_at',
-        'admin_role',
-        'super_admin',
     ];
 
     /**
@@ -65,17 +61,11 @@ class User extends Authenticatable
     {
         $builder->when(request('search'), function ($builder) {
             $searchVal = '%' . request('search') . '%';
-            $builder->where('first_name', 'like', $searchVal)
-                ->orWhere('last_name', 'like', $searchVal)
+            $builder->where('full_name', 'like', $searchVal)
                 ->orWhere('email', 'like', $searchVal)
                 ->orWhere('buisness_name', 'like', $searchVal);
         });
 
-    }
-
-    public function getFullNameAttribute(): string
-    {
-        return $this->buisness_name ?? $this->first_name . ' ' . $this->last_name;
     }
 
     public function getAvatarPathAttribute(): string

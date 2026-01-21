@@ -20,22 +20,16 @@ class UserFactory extends Factory
     {
         $userRole= fake()->randomElement(['organizer', 'admin']);
 
-        $name= $userRole !=='organizer' ? [
-            'first_name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
+        $name= $userRole !== 'organizer' ? [
+            'full_name' => trim(fake()->firstName() . ' ' . fake()->lastName()),
         ]: [
             'buisness_name'=> fake()->company()
         ];
-
-        $adminAttr= $userRole === 'admin' ? [
-            'admin_role'=> fake()->randomElement(['super_admin', 'support', 'manager']),
-        ]: [];
 
         return [
             'phone_dial_code'=> '+234',
             'phone_number'=> '332423432423',
             ...$name,
-            ...$adminAttr,
             'role'=> $userRole,
             'country'=> fake()->country(),
             'email' => fake()->unique()->safeEmail(),

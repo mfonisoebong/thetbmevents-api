@@ -65,8 +65,9 @@ class UsersController extends Controller
         return $this->success($data);
     }
 
+    // @deprecated
     public function store(StoreAdminUserRequest $request){
-        $request->validated($request->all());
+        /*$request->validated($request->all());
         $user= User::create([
             'first_name'=> $request->first_name,
             'last_name'=> $request->last_name,
@@ -87,7 +88,7 @@ class UsersController extends Controller
         'user_id'=> $user->id
     ]);
     event(new UserRegistered($user));
-    event(new PasswordTokenCreated($resetToken));
+    event(new PasswordTokenCreated($resetToken));*/
 
     return $this->success(null, 'Admin created successfully');
 
