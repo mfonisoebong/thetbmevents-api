@@ -23,7 +23,7 @@ class UpdateTicketStats
      */
     public function handle(TicketPurchaseCompleted $event): void
     {
-        $cartItems = json_decode($event->invoice->cart_items);
+        $cartItems = $event->invoice->cart_items;
         $attendees = $event->customer->attendees;
 
         foreach ($cartItems as $item) {
