@@ -26,7 +26,7 @@ return new class extends Migration {
     public function down(): void
     {
 
-        Schema::table('invoices', function (Blueprint $table) {
+        Schema::table('transactions', function (Blueprint $table) {
             $table->dropColumn('coupon_id');
             $table->dropColumn('coupon_amount');
         });

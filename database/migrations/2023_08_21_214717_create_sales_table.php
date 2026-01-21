@@ -24,7 +24,7 @@ return new class extends Migration {
 
             $table->foreign('invoice_id')
                 ->references('id')
-                ->on('invoices')
+                ->on('transactions')
                 ->onDelete('cascade');
             $table->foreign('event_id')
                 ->references('id')
