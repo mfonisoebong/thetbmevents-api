@@ -141,7 +141,7 @@ class PaymentController extends Controller
                 'amount' => $total,
                 'charged_amount' => $chargedAmount,
                 'payment_method' => $gateway,
-                'cart_items' => json_encode($request->tickets),
+                'cart_items' => $request->tickets,
                 'transaction_reference' => $reference,
                 'payment_status' => 'pending',
                 'coupon_id' => $coupon?->id,
@@ -193,7 +193,7 @@ class PaymentController extends Controller
             'customer_id' => $customer->id,
             'organizer_id' => $ticket->event->user_id,
             'payment_method' => 'paystack',
-            'cart_items' => json_encode($request->tickets),
+            'cart_items' => $request->tickets,
             'transaction_reference' => $reference,
             'payment_status' => 'success',
             'user_id' => $request->user()?->id
