@@ -31,7 +31,12 @@ class AuthController extends Controller
 
     public function getUser(Request $request)
     {
-        return new UsersResource($request->user());
+        $user = $request->user();
+        $user-> first_name = explode(' ', $user->full_name)[0] ?? null;
+        $user-> last_name = explode(' ', $user->full_name)[1] ?? null;
+        $user->admin_role = $user->role === 'admin' ? 'super_admin' : null;
+
+        return $user;
     }
 
     public function update(UpdateUserRequest $request)
