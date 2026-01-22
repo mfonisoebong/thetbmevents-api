@@ -12,6 +12,7 @@ use App\Http\Requests\SendPasswordResetLinkRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\VerifyOtpRequest;
+use App\Http\Resources\UsersResource;
 use App\Mail\OtpCode;
 use App\Models\OtpVerification;
 use App\Models\PasswordResetToken;
@@ -30,8 +31,7 @@ class AuthController extends Controller
 
     public function getUser(Request $request)
     {
-        $user = $request->user();
-        return $user;
+        return new UsersResource($request->getUser());
     }
 
     public function update(UpdateUserRequest $request)
