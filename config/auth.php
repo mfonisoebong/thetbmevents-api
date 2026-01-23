@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'api',
+        'guard' => 'web', // todo: change to 'api'
         'passwords' => 'users',
     ],
 
@@ -41,7 +41,7 @@ return [
             'provider' => 'users',
         ],
         'api'=> [
-            'driver'=> 'sanctum', // todo: change to jwt
+            'driver'=> 'jwt',
             'provider' => 'users',
         ]
     ],
