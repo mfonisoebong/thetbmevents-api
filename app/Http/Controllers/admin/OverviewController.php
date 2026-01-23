@@ -9,6 +9,7 @@ use App\Models\Event;
 use App\Models\Transaction;
 use App\Models\Sale;
 use App\Models\User;
+use App\Traits\ApiResponses;
 use App\Traits\CurrentDateTime;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ use Illuminate\Support\Str;
 
 class OverviewController extends Controller
 {
-    use CurrentDateTime, HttpResponses;
+    use CurrentDateTime, HttpResponses, ApiResponses;
 
     private $default_rate = 0;
 

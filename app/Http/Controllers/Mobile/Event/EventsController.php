@@ -8,6 +8,7 @@ use App\Http\Resources\TicketResource;
 use App\Models\Event;
 use App\Models\Like;
 use App\Models\PurchasedTicket;
+use App\Traits\ApiResponses;
 use App\Traits\HttpResponses;
 use App\Traits\Pagination;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ use Stevebauman\Location\Facades\Location;
 
 class EventsController extends Controller
 {
-    use Pagination, HttpResponses;
+    use Pagination, HttpResponses, ApiResponses;
 
     // Radius in kilometers
     private const HARVESINE_RADIUS = 100;

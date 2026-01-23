@@ -9,7 +9,7 @@ use App\Models\Event;
 use App\Models\Transaction;
 use App\Models\RevenueCommisionSnapshot;
 use App\Models\Sale;
-use App\Models\User;
+use App\Traits\ApiResponses;
 use App\Traits\CurrentDateTime;
 use App\Traits\HttpResponses;
 use Illuminate\Routing\Controller;
@@ -18,7 +18,7 @@ use Illuminate\Support\Str;
 
 class FinancesController extends Controller
 {
-    use CurrentDateTime, HttpResponses;
+    use CurrentDateTime, HttpResponses, ApiResponses;
 
     public $default_rate = 0;
 

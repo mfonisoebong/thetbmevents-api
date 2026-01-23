@@ -10,6 +10,7 @@ use App\Models\Customer;
 use App\Models\Transaction;
 use App\Models\PaymentMethod;
 use App\Models\Ticket;
+use App\Traits\ApiResponses;
 use App\Traits\GetTotalAmountInCart;
 use App\Traits\HttpResponses;
 use Carbon\Carbon;
@@ -19,7 +20,7 @@ use Mockery\Exception;
 
 class PaymentController extends Controller
 {
-    use GetTotalAmountInCart, HttpResponses;
+    use GetTotalAmountInCart, HttpResponses, ApiResponses;
 
     public function paystackRedirectToGateway(PaymentRequest $request)
     {
