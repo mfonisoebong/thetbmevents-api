@@ -34,9 +34,9 @@ class EventsController extends Controller
     public function getLatestEvents()
     {
         $topEvents = Event::where('attendees', '>=', 400)->limit(3)->get();
-        $freeEvents = Event::where('categories', 'like', '%free%')->limit(8)->get();
-        $paidEvents = Event::where('categories', 'like', '%paid%')->limit(8)->get();
-        $onlineEvents = Event::where('categories', 'like', '%online%')->limit(8)->get();
+        $freeEvents = Event::where('category', 'like', '%free%')->limit(8)->get();
+        $paidEvents = Event::where('category', 'like', '%paid%')->limit(8)->get();
+        $onlineEvents = Event::where('category', 'like', '%online%')->limit(8)->get();
         $latestEvents = Event::latest()->limit(12)->get();
         return $this->success([
             'top_events' => EventsResource::collection($topEvents),
@@ -78,7 +78,7 @@ class EventsController extends Controller
             return $this->failed(400, [], 'No category was provided');
         }
 
-        $eventsQuery = Event::where('categories', 'like', $category)
+        $eventsQuery = Event::where('category', 'like', $category)
             ->limit(20);
 
         if (!$exludeEventId) {
@@ -179,7 +179,7 @@ class EventsController extends Controller
                 'timezone' => $request->timezone,
                 'currency' => $request->currency,
                 'event_link' => $request->event_link ?? null,
-                'categories' => $request->categories,
+                'category' => $request->categories,
                 'location' => $request->location,
                 'longitude' => $request->longitude ?? 0,
                 'latitude' => $request->latitude ?? 0,

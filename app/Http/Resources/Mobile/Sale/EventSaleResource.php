@@ -25,7 +25,7 @@ class EventSaleResource extends JsonResource
             'title' => $this->title,
             'logo' => $this->logo,
             'event_date' => Carbon::parse($this->event_date)->format('D, d M Y'),
-            'categories' => $this->categories,
+            'categories' => $this->category,
             'tickets_sold' => (int) $this->sales()->sum('tickets_bought'),
             'total_tickets' => $totalTickets,
             'percent_sold' => $totalTickets > 0 ? round(((int) $this->sales()->sum('tickets_bought') / $totalTickets) * 100, 2) : 0,

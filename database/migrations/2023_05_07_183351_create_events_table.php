@@ -47,7 +47,7 @@ return new class extends Migration {
 
             $table->boolean('undisclose_location');
             $table->longText('logo')->default(null)->nullable();
-            $table->string('categories')->nullable();
+            $table->string('category')->nullable();
             $table->timestamps();
             $table->foreign('user_id')
                 ->references('id')

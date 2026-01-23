@@ -24,7 +24,7 @@ class CartItemResource extends JsonResource
             'event'=>[
                 'id'=> $event->id,
                 'logo'=> $event->logo,
-                'category'=> $event->categories,
+                'category'=> $event->category,
                 'title'=> $event->title
             ],
             'ticket'=> [

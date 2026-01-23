@@ -193,7 +193,7 @@ class EventsController extends Controller
 
         $events = Event::query();
 
-        $events->where('categories', 'like', '%' . implode(',', $userPreferences) . '%');
+        $events->where('category', 'like', '%' . implode(',', $userPreferences) . '%');
 
         // Add location to events builder
         if ($userInfo && $userInfo->latitude && $userInfo->longitude) {
@@ -220,12 +220,12 @@ class EventsController extends Controller
             ->latest()
             ->take(12)
             ->get()
-            ->map(fn($item) => $item->ticket->event->categories)
+            ->map(fn($item) => $item->ticket->event->category)
             ->toArray();
 
 
         $events->orWhere(
-            'categories',
+            'category',
             'like',
             '%' . implode(',', $purchasedTicketsCategories) . '%'
         );
@@ -261,7 +261,7 @@ class EventsController extends Controller
                 'event_date' => $event->event_date,
                 'event_time' => $event->event_time,
                 'description' => $event->description,
-                'categories' => $event->categories,
+                'categories' => $event->category,
                 'location' => $event->location,
                 'logo' => $event->logo,
                 'type' => $event->type,

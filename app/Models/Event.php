@@ -19,7 +19,8 @@ class Event extends Model
         'event_date',
         'event_time',
         'description',
-        'categories',
+        'category',
+        'tags',
         'location',
         'logo',
         'type',
@@ -37,12 +38,17 @@ class Event extends Model
         'status'
     ];
 
+    protected $casts = [
+        'tags' => 'array',
+        'undisclose_location' => 'boolean',
+    ];
+
     public function scopeFilter(Builder $builder)
     {
 
         $builder->when(request('search'), function ($builder) {
             $builder->where('title', 'like', '%' . request('search') . '%')
-                ->orWhere('categories', 'like', '%' . request('search') . '%')
+                ->orWhere('category', 'like', '%' . request('search') . '%')
                 ->orWhere('location', 'like', '%' . request('search') . '%');
         });
 
@@ -51,7 +57,7 @@ class Event extends Model
         });
 
         $builder->when(request('category'), function ($builder) {
-            $builder->where('categories', 'like', '%' . request('category') . '%');
+            $builder->where('category', 'like', '%' . request('category') . '%');
         });
 
         $builder->when(request('location'), function ($builder) {

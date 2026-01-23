@@ -29,7 +29,7 @@ class EventFactory extends Factory
             'event_date' => fake()->date(),
             'event_time' => fake()->time(),
             'undisclose_location' => fake()->boolean(),
-            'categories' => fake()->randomElement(['free,online', 'online,paid', 'online', 'free', null])
+            'category' => fake()->randomElement(['free,online', 'online,paid', 'online', 'free', null])
         ];
     }
 }
