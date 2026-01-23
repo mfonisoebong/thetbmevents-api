@@ -18,24 +18,14 @@ return new class extends Migration
             $table->string('name');
             $table->dateTime('selling_start_date_time');
             $table->dateTime('selling_end_date_time');
-            $table->text('description')
-            ->nullable()
-            ->default(null);
+            $table->text('description')->nullable();
+            $table->enum('currency', ['NGN', 'USD'])->default('NGN');
             $table->unsignedDouble('price');
-            $table->boolean('unlimited')
-            ->default(true);
-            $table->bigInteger('quantity')
-            ->default(0);
-            $table->bigInteger('sold')
-            ->default(0);
-            $table->foreign('event_id')
-            ->references('id')
-            ->on('events')
-            ->onDelete('cascade');
-            $table->foreign('organizer_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
+            $table->boolean('unlimited')->default(true);
+            $table->bigInteger('quantity')->default(0);
+            $table->bigInteger('sold')->default(0);
+            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
+            $table->foreign('organizer_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

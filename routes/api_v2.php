@@ -12,6 +12,7 @@ Route::group(
         Route::post('/signup', 'AuthController@signup');
         Route::post('/login', 'AuthController@login');
 
+        // todo:implement
         Route::post('/forgot-password', 'PasswordResetController@sendResetOTPEmail');
         Route::post('/forgot-password/reset', 'PasswordResetController@resetByOTP');
 
@@ -25,4 +26,6 @@ Route::group(
             Route::post('/change-password', 'PasswordResetController@changePassword');
         });
     });
+
+    Route::get('/events', 'EventController@listRecentEvents');
 });

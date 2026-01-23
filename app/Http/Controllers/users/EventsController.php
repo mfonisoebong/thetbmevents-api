@@ -177,7 +177,7 @@ class EventsController extends Controller
                 'event_time' => Str::length($request->event_time ?? "") === 0 ? null : $request->event_time,
                 'location_tips' => $request->location_tips,
                 'timezone' => $request->timezone,
-                'currency' => $request->currency,
+                'currency' => $request->currency,// todo: remove everywhere including db
                 'event_link' => $request->event_link ?? null,
                 'category' => $request->categories,
                 'location' => $request->location,
