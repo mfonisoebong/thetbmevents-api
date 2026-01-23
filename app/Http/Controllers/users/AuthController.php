@@ -127,21 +127,16 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        $request->validated($request->all());
-
         $user = User::create([
             'business_name' => $request->business_name,
             'role' => $request->role,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
+            'full_name' => $request->first_name . ' ' . $request->last_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'email_verified_at' => now(),
             'country' => $request->country,
             'phone_number' => $request->phone_number,
-            'phone_dial_code' => $request->phone_dial_code
         ]);
-
 
         $token = $user
             ->createToken('Personal Access Token for ' . $request->email)
@@ -150,12 +145,9 @@ class AuthController extends Controller
 
         event(new UserRegistered($user));
 
-        $request->
-        session()
-            ->regenerate();
+        $request->session()->regenerate();
 
-        return $this
-            ->success(['access_token' => $token], 'Logged in successfully');
+        return $this->success(['access_token' => $token], 'Logged in successfully');
     }
 
     public function googleLogin(Request $request)

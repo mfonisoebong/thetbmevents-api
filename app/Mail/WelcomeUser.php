@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -27,9 +26,8 @@ class WelcomeUser extends Mailable
         public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Welcome User',
-            from: env('MAIL_USERNAME'),
-            to: $this->user->email
+            to: $this->user->email,
+            subject: 'Welcome to TBM - Your Journey Begins Here!',
         );
     }
 
@@ -39,7 +37,7 @@ class WelcomeUser extends Mailable
         public function content(): Content
     {
         return new Content(
-            view: 'emails.welcome',
+            view: $this->user->role === 'organizer' ? 'emails.welcome_organizer' : 'emails.welcome_customer',
         );
     }
 

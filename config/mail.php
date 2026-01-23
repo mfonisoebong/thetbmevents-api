@@ -121,4 +121,8 @@ return [
         ],
     ],
 
+    'admin_email' => env('ADMIN_MAIL_ADDRESS'),
+
+    'support_email' => env('SUPPORT_MAIL_ADDRESS'),
+
 ];

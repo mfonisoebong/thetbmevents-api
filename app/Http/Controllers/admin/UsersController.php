@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Events\PasswordTokenCreated;
-use App\Events\UserRegistered;
 use App\Http\Requests\ExportUsersRequest;
 use App\Http\Requests\StoreAdminUserRequest;
 use App\Http\Requests\UpdateOrganizerSettingsRequest;

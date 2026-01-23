@@ -2,9 +2,8 @@
 
 namespace App\Listeners;
 
-use App\Events\Mobile\UserRegisteredEvent as MobileUserRegistered;
 use App\Events\UserRegistered;
-use App\Mail\NotifyAdminForNewUser;
+use App\Mail\NotifyAdminOnNewSignup;
 use Illuminate\Support\Facades\Mail;
 
 class NotifyAdminOnNewSignup
@@ -20,9 +19,8 @@ class NotifyAdminOnNewSignup
     /**
      * Handle the event.
      */
-    public function handle(UserRegistered|MobileUserRegistered $event): void
+    public function handle(UserRegistered $event): void
     {
-        Mail::to(env('ADMIN_MAIL_ADDRESS'))
-            ->send(new NotifyAdminForNewUser($event->user));
+        Mail::to(config('mail.admin_email'))->send(new NotifyAdminOnNewSignup($event->user));
     }
 }

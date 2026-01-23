@@ -60,7 +60,7 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $middlewareAliases = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth:sanctum' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
@@ -73,7 +73,6 @@ class Kernel extends HttpKernel
         'googleregister' => RegisterGoogleCallback::class,
         'googlelogin' => LoginGoogleCallback::class,
         'validaterecaptcha' => ValidateRecaptcha::class,
-        'validateticketid' => ValidateTicketId::class,
         'account_state' => \App\Http\Middleware\AccountState::class,
         'role' => \App\Http\Middleware\RoleAuthenticate::class,
         'active' => \App\Http\Middleware\EnsureUserIsActive::class,

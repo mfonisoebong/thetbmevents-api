@@ -28,7 +28,7 @@ class OtpCode extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            to: $this->user->email,
+            to: $this->user->email, // I want to test: what will happen if I remove this line
             subject: $this->otp->type === 'password_reset' ? 'Password Reset Code' : 'Email verification OTP Code',
         );
     }

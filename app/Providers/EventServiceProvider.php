@@ -2,13 +2,12 @@
 
 namespace App\Providers;
 
-use App\Events\TicketPurchaseCompleted;
-use App\Events\Mobile\UserRegisteredEvent as MobileUserRegistered;
 use App\Events\PasswordTokenCreated;
 use App\Events\RevenueOverview;
+use App\Events\TicketPurchaseCompleted;
 use App\Events\UserRegistered;
-use App\Listeners\NotifyAdminOnNewSignup;
 use App\Listeners\NotifyAdminAndOrganizersOnPayment;
+use App\Listeners\NotifyAdminOnNewSignup;
 use App\Listeners\NotifyCouponReferral;
 use App\Listeners\SendOTPCode;
 use App\Listeners\SendPasswordResetEmail;
@@ -28,10 +27,6 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         UserRegistered::class => [
-            SendWelcomeMail::class,
-            NotifyAdminOnNewSignup::class,
-        ],
-        MobileUserRegistered::class => [
             SendOTPCode::class,
             SendWelcomeMail::class,
             NotifyAdminOnNewSignup::class,

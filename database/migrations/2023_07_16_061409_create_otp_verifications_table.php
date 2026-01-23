@@ -14,11 +14,7 @@ return new class extends Migration
         Schema::create('otp_verifications', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('user_id');
-            $table
-            ->foreign('user_id')
-            ->references('id')
-            ->on('users')
-            ->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('otp', 6);
             $table->timestamps();
         });

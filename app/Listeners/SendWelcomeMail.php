@@ -2,7 +2,6 @@
 
 namespace App\Listeners;
 
-use App\Events\Mobile\UserRegisteredEvent as MobileUserRegistered;
 use App\Events\UserRegistered;
 use App\Mail\WelcomeUser;
 use Illuminate\Support\Facades\Mail;
@@ -21,9 +20,8 @@ class SendWelcomeMail
     /**
      * Handle the event.
      */
-    public function handle(UserRegistered|MobileUserRegistered $event): void
+    public function handle(UserRegistered $event): void
     {
-        Mail::to($event->user->email)
-            ->send(new WelcomeUser($event->user));
+        Mail::to($event->user->email)->send(new WelcomeUser($event->user));
     }
 }

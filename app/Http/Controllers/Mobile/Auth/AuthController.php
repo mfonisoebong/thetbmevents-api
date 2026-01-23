@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Mobile\Auth;
 
-use App\Events\Mobile\UserRegisteredEvent;
+use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\Mobile\Auth\ProfileResource;
@@ -29,14 +29,11 @@ class AuthController extends Controller
             $user = User::create([
                 'business_name' => $request->business_name,
                 'role' => $request->role,
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
+                'full_name' => $request->first_name . ' ' . $request->last_name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'email_verified_at' => null,
                 'country' => $request->country,
                 'phone_number' => $request->phone_number,
-                'phone_dial_code' => $request->phone_dial_code
             ]);
 
 
@@ -46,7 +43,7 @@ class AuthController extends Controller
 
             DB::commit();
 
-            event(new UserRegisteredEvent($user));
+            event(new UserRegistered($user));
 
             $request->session()->regenerate();
 

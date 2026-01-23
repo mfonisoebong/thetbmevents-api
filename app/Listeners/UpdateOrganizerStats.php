@@ -25,7 +25,7 @@ class UpdateOrganizerStats
     public function handle(TicketPurchaseCompleted $event): void
     {
         $invoice = $event->invoice;
-        $userCart = json_decode($invoice->cart_items);
+        $userCart = $invoice->cart_items;
 
         foreach ($userCart as $item) {
             $ticket = Ticket::where('id', $item->id)

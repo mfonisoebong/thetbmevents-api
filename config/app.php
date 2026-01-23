@@ -198,4 +198,5 @@ return [
         'QrCode' => QrCode::class,
     ])->toArray(),
 
+    'client_url' => env('CLIENT_URL', 'http://localhost:3000'),
 ];

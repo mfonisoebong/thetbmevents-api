@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V2;
 
+use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V2\SignUpRequest;
 use App\Http\Resources\UserResource;
@@ -14,7 +15,14 @@ class AuthController extends Controller
     {
         $user = User::create($request->validated());
 
-        OTPController::generateAndSendOtp($user);
+        /*$otp = $user->otpVerifications()->create([
+            'otp' => rand(100000, 999999),
+            'type' => 'email_verification'
+        ]);
+
+        Mail::to($user)->send(new OtpCode($user, $otp));*/
+
+        event(new UserRegistered($user));
 
         return response()->json([
             'message' => 'User successfully registered',

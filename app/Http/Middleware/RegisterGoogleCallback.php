@@ -6,10 +6,7 @@ use App\Events\UserRegistered;
 use App\Models\User;
 use App\Traits\HttpResponses;
 use Closure;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
 use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpFoundation\Response;
 

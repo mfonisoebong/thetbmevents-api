@@ -4,13 +4,12 @@ namespace App\Mail;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class NotifyAdminForNewUser extends Mailable
+class NotifyAdminOnNewSignup extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -28,9 +27,8 @@ class NotifyAdminForNewUser extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
+            to: config('mail.admin_email'),
             subject: 'A new user just signed up on TBM',
-            from: env('MAIL_FROM_ADDRESS'),
-            to: env('ADMIN_MAIL')
         );
     }
 
