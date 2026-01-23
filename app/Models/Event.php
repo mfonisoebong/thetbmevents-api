@@ -120,7 +120,7 @@ class Event extends Model
 
     public function getLogoAttribute($value)
     {
-        $logo = env('APP_URL') . '/' . $value;
+        $logo = config('app.url') . '/' . $value;
         return $logo;
     }
 

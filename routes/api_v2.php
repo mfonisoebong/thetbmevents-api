@@ -28,4 +28,5 @@ Route::group(
     });
 
     Route::get('/events', 'EventController@listRecentEvents');
+    Route::get('/events/{category}', 'EventController@listRecentEventsByCategory');
 });
