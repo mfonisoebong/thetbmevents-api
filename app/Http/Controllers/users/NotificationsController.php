@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\users;
 
 use App\Models\Notification;
+use App\Traits\ApiResponses;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use App\Http\Resources\NotificationResource;
 
 class NotificationsController extends Controller
 {
-    use HttpResponses;
+    use HttpResponses, ApiResponses;
     public function getNotifications(Request $request){
 
         $notifications= NotificationResource::collection(

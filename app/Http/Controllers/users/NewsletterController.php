@@ -4,11 +4,12 @@ namespace App\Http\Controllers\users;
 
 use App\Http\Requests\NewsletterRequest;
 use App\Models\Newsletter;
+use App\Traits\ApiResponses;
 use App\Traits\HttpResponses;
 
 class NewsletterController extends Controller
 {
-    use HttpResponses;
+    use HttpResponses, ApiResponses;
     public function store(NewsletterRequest $request){
         $request->validated($request->all());
 

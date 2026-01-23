@@ -13,6 +13,7 @@ use App\Models\Commision;
 use App\Models\OrganizerBankDetails;
 use App\Models\PasswordResetToken;
 use App\Models\User;
+use App\Traits\ApiResponses;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -22,7 +23,7 @@ use League\Csv\Writer;
 
 class UsersController extends Controller
 {
-    use HttpResponses;
+    use HttpResponses, ApiResponses;
     public function getUsers(){
 
         $users= User::filter()

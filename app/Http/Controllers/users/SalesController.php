@@ -6,12 +6,13 @@ use App\Http\Resources\SalesResource;
 use App\Models\Attendee;
 use App\Models\Event;
 use App\Models\Sale;
+use App\Traits\ApiResponses;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 
 class SalesController extends Controller
 {
-    use HttpResponses;
+    use HttpResponses, ApiResponses;
 
     public function getSales(Request $request)
     {

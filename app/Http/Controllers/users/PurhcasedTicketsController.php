@@ -4,6 +4,7 @@ namespace App\Http\Controllers\users;
 
 use App\Http\Resources\PurchasedTicketResource;
 use App\Models\PurchasedTicket;
+use App\Traits\ApiResponses;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\HtmlString;
@@ -11,7 +12,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class PurhcasedTicketsController extends Controller
 {
-    use HttpResponses;
+    use HttpResponses, ApiResponses;
     public function getPurhcasedTickets(Request $request){
         $user= $request->user();
         $tickets= PurchasedTicketResource::collection($user->purchasedTickets ?? []);

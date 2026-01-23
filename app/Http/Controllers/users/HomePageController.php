@@ -8,10 +8,11 @@ use App\Models\Feature;
 use App\Models\PageHeader;
 use App\Models\Slider;
 use App\Models\Testimony;
+use App\Traits\ApiResponses;
 use App\Traits\HttpResponses;
 class HomePageController extends Controller
 {
-    use HttpResponses;
+    use HttpResponses, ApiResponses;
     public function getHomePageData(){
         $upcomingEvents= Slider::all();
         $slides= SliderResource::collection($upcomingEvents);

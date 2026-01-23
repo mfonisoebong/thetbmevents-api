@@ -6,13 +6,14 @@ use App\Http\Requests\UpdateSliderRequest;
 use App\Http\Resources\SliderResource;
 use App\Models\Event;
 use App\Models\Slider;
+use App\Traits\ApiResponses;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class SlidersController extends Controller
 {
-    use HttpResponses;
+    use HttpResponses, ApiResponses;
 
     public function getSliders(){
         $sliders= Slider::all();
@@ -39,6 +40,6 @@ class SlidersController extends Controller
         }
 
         return $this->success(null, 'Sliders updated successfully');
-        
+
     }
 }

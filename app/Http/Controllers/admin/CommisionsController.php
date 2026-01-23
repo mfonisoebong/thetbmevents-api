@@ -6,12 +6,13 @@ use App\Http\Requests\StoreCommisionRequest;
 use App\Http\Requests\UpdateCommisionRequest;
 use App\Models\Commision;
 use App\Models\User;
+use App\Traits\ApiResponses;
 use App\Traits\HttpResponses;
 use Illuminate\Routing\Controller;
 
 class CommisionsController extends Controller
 {
-    use HttpResponses;
+    use HttpResponses, ApiResponses;
 
     public function store(StoreCommisionRequest $request){
         $request->validated($request->all());

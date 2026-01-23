@@ -5,13 +5,14 @@ namespace App\Http\Controllers\admin;
 use App\Http\Requests\UpdatePaystackPaymentMethodRequest;
 use App\Http\Requests\UpdateFlwPaymentMethodRequest;
 use App\Models\PaymentMethod;
+use App\Traits\ApiResponses;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class PaymentMethodController extends Controller
 {
-    use HttpResponses;
+    use HttpResponses, ApiResponses;
 
 
 

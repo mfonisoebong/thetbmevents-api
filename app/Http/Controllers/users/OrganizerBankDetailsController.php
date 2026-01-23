@@ -7,13 +7,14 @@ use App\Http\Requests\StoreOrganizerBankDetailsRequest;
 use App\Http\Requests\UpdateOrganizerBankDetailsRequest;
 use App\Http\Resources\OrganizerBankDetailsResource;
 use App\Models\OrganizerBankDetails;
+use App\Traits\ApiResponses;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class OrganizerBankDetailsController extends Controller
 {
-    use HttpResponses;
+    use HttpResponses, ApiResponses;
 
     public function getBankDetails(Request $request)
     {

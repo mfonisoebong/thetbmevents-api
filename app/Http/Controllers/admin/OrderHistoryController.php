@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Requests\ExportOrderHistoryRequest;
 use App\Http\Resources\OrderHistoryResource;
 use App\Models\PurchasedTicket;
+use App\Traits\ApiResponses;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -12,7 +13,7 @@ use League\Csv\Writer;
 
 class OrderHistoryController extends Controller
 {
-    use HttpResponses;
+    use HttpResponses, ApiResponses;
     public function getOrderHistory()
     {
         $orderHistory = PurchasedTicket::latest()->paginate(20);

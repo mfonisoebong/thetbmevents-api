@@ -17,6 +17,7 @@ use App\Mail\OtpCode;
 use App\Models\OtpVerification;
 use App\Models\PasswordResetToken;
 use App\Models\User;
+use App\Traits\ApiResponses;
 use App\Traits\HttpResponses;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
-    use HttpResponses;
+    use HttpResponses, ApiResponses;
 
     public function getUser(Request $request)
     {
