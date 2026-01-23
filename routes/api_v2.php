@@ -10,14 +10,13 @@ Route::group(
     , function () {
     Route::prefix('auth')->group(function () {
         Route::post('/signup', 'AuthController@signup');
-        Route::post('/{role}/login', 'AuthController@login');
         Route::post('/login', 'AuthController@login');
 
         Route::post('/forgot-password', 'PasswordResetController@sendResetOTPEmail');
         Route::post('/forgot-password/reset', 'PasswordResetController@resetByOTP');
 
-        Route::post('/resend-email-otp', 'OTPController@resendOtp');
-        Route::post('/verify-email', 'OTPController@verifyOtp');
+        Route::post('/resend-email-otp', 'AuthController@resendEmailOtp');
+        Route::post('/verify-email-otp', 'AuthController@verifyEmailOtp');
 
         Route::middleware('auth')->group(function () {
             Route::post('/logout', 'AuthController@logout');

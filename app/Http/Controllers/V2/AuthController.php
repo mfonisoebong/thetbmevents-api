@@ -6,7 +6,11 @@ use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V2\SignUpRequest;
 use App\Http\Resources\UserResource;
+use App\Mail\OtpCode;
+use App\Models\OtpVerification;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -15,17 +19,10 @@ class AuthController extends Controller
     {
         $user = User::create($request->validated());
 
-        /*$otp = $user->otpVerifications()->create([
-            'otp' => rand(100000, 999999),
-            'type' => 'email_verification'
-        ]);
-
-        Mail::to($user)->send(new OtpCode($user, $otp));*/
-
         event(new UserRegistered($user));
 
         return response()->json([
-            'message' => 'User successfully registered',
+            'message' => 'Successfully registered. Verify your email to complete registration',
             'user' => new UserResource($user)
         ], 201);
     }
@@ -43,17 +40,11 @@ class AuthController extends Controller
             return response()->json(['message' => 'Incorrect email or password'], 401);
         }
 
-        // If role is provided, check if the user has the role
-        $user = JWTAuth::user();
-        if ($role && !$user->hasRole($role)) {
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
-
 
         // 43200 minutes == 30 days
-        $TTL = request()->remember ? 43200 : ($role !== null ? 1440 : auth()->factory()->getTTL());
+        $TTL = request()->remember ? 43200 : auth()->factory()->getTTL();
 
-        return $this->respondWithToken(request()->has('remember') || $role !== null ? $this->longToken($TTL) : $token, $TTL);
+        return $this->respondWithToken(request()->has('remember') ? $this->longToken($TTL) : $token, $TTL);
     }
 
 
@@ -108,5 +99,49 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => !$customTTL ? auth()->factory()->getTTL() * 60 : $customTTL * 60
         ]);
+    }
+
+    public function resendEmailOtp(Request $request)
+    {
+        $request->validate([
+            'email' => ['required', 'email', 'exists:users,email']
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        $user->otpVerifications()->where('type', 'email_verification')->delete();
+
+        $otp = $user->otpVerifications()->create([
+            'otp' => rand(100000, 999999),
+            'type' => 'email_verification'
+        ]);
+
+        Mail::to($user)->send(new OtpCode($user, $otp));
+
+        return response()->json([
+            'message' => 'OTP resent successfully'
+        ]);
+    }
+
+    public function verifyEmailOtp(Request $request)
+    {
+        $request->validate([
+            'otp' => ['required', 'string']
+        ]);
+
+        $otp = OtpVerification::where('otp', $request->otp)
+            ->where('type', 'email_verification')
+            ->first();
+
+        if (!$otp) {
+            return response()->json(['message' => 'Invalid OTP'], 400);
+        }
+
+        $user = User::find($otp->user_id);
+        $user->email_verified_at = now();
+        $user->save();
+        $otp->delete();
+
+        return $this->success(['token' => JWTAuth::fromUser($user), 'user' => $user], 'Email verified successfully');
     }
 }
