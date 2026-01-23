@@ -41,7 +41,7 @@ return [
             'provider' => 'users',
         ],
         'api'=> [
-            'driver'=> 'jwt',
+            'driver'=> 'sanctum', // todo: change to jwt
             'provider' => 'users',
         ]
     ],
