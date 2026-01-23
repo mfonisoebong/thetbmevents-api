@@ -258,7 +258,7 @@
                                                                                 margin: 0;
                                                                             "
                                                     >
-                                                        Hello {{$organizer->buisness_name}} 👋,
+                                                        Hello {{$organizer->business_name}} 👋,
                                                     </p>
                                                 </div>
                                             </td>

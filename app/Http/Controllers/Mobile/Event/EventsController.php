@@ -279,7 +279,7 @@ class EventsController extends Controller
                 'longitude' => $event->longitude,
                 'latitude' => $event->latitude,
                 'organizer' => [
-                    'business_name' => $event->user->buisness_name,
+                    'business_name' => $event->user->business_name,
                     'avatar' => $event->user->avatar,
                     'is_verified' => $event->user->account_state === 'active'
                 ]

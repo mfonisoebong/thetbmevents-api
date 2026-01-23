@@ -41,7 +41,7 @@ class RegisterGoogleCallback
         }
         $googleUser = Socialite::driver('google')->user();
         $user = User::create([
-            'buisness_name' => $googleUser->name . ' buisness',
+            'business_name' => $googleUser->name . ' buisness',
             'email' => $googleUser->email,
             'role' => 'organizer',
             'auth_provider' => 'google',

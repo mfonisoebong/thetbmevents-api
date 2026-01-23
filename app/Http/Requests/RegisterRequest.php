@@ -34,7 +34,7 @@ class RegisterRequest extends FormRequest
             'first_name' => ['required_if:role,customer,admin', 'string', 'max:255'],
             'last_name' => ['required_if:role,customer,admin', 'string', 'max:255'],
             'role' => ['required', Rule::in(['admin', 'organizer', 'customer'])],
-            'buisness_name' => ['required_if:role,organizer', 'string', 'max:255'],
+            'business_name' => ['required_if:role,organizer', 'string', 'max:255'],
             'phone_number' => ['required'],
             'phone_dial_code' => ['required'],
             'email' => ['required', 'email', Rule::unique('users', 'email')],

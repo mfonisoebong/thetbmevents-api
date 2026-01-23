@@ -12,7 +12,7 @@ use App\Http\Requests\SendPasswordResetLinkRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\VerifyOtpRequest;
-use App\Http\Resources\UsersResource;
+use App\Http\Resources\UserResource;
 use App\Mail\OtpCode;
 use App\Models\OtpVerification;
 use App\Models\PasswordResetToken;
@@ -130,7 +130,7 @@ class AuthController extends Controller
         $request->validated($request->all());
 
         $user = User::create([
-            'buisness_name' => $request->buisness_name,
+            'business_name' => $request->business_name,
             'role' => $request->role,
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,

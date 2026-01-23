@@ -23,7 +23,7 @@ class UserFactory extends Factory
         $name= $userRole !== 'organizer' ? [
             'full_name' => trim(fake()->firstName() . ' ' . fake()->lastName()),
         ]: [
-            'buisness_name'=> fake()->company()
+            'business_name'=> fake()->company()
         ];
 
         return [

@@ -72,7 +72,7 @@ class OverviewController extends Controller
 
             return [
                 'title' => $organizerEvent?->title,
-                'organizer' => $organizerEvent?->user?->buisness_name,
+                'organizer' => $organizerEvent?->user?->business_name,
                 'tickets_sold' => $event['tickets_sold'],
                 'id' => $organizerEvent?->user?->id
             ];

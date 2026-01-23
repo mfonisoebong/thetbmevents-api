@@ -27,7 +27,7 @@ class AuthController extends Controller
         try {
 
             $user = User::create([
-                'buisness_name' => $request->buisness_name,
+                'business_name' => $request->business_name,
                 'role' => $request->role,
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,

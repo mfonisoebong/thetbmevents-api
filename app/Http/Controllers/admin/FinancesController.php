@@ -86,7 +86,7 @@ class FinancesController extends Controller
                 ->first();
             return [
                 'title' => $organizerEvent->title,
-                'organizer' => $organizerEvent->user->buisness_name,
+                'organizer' => $organizerEvent->user->business_name,
                 'avatar' => $organizerEvent->user->avatar,
                 'email' => $organizerEvent->user->email,
                 'tickets_sold' => $event['tickets_sold'],

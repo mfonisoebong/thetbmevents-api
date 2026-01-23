@@ -28,7 +28,7 @@ class UpdateUserRequest extends FormRequest
             'phone_dial_code'=> ['required'],
             'first_name'=> ['nullable'],
             'last_name'=> ['nullable'],
-            'buisness_name'=>['nullable'],
+            'business_name'=>['nullable'],
         ];
     }
 }

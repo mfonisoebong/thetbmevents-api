@@ -2,10 +2,8 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\AccountState;
 use App\Http\Middleware\LoginGoogleCallback;
 use App\Http\Middleware\RegisterGoogleCallback;
-use App\Http\Middleware\RoleAuthenticate;
 use App\Http\Middleware\ValidateRecaptcha;
 use App\Http\Middleware\ValidateTicketId;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -50,6 +48,7 @@ class Kernel extends HttpKernel
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\ForceJsonResponse::class,
         ],
     ];
 
@@ -75,7 +74,8 @@ class Kernel extends HttpKernel
         'googlelogin' => LoginGoogleCallback::class,
         'validaterecaptcha' => ValidateRecaptcha::class,
         'validateticketid' => ValidateTicketId::class,
-        'account_state' => AccountState::class,
-        'role' => RoleAuthenticate::class
+        'account_state' => \App\Http\Middleware\AccountState::class,
+        'role' => \App\Http\Middleware\RoleAuthenticate::class,
+        'active' => \App\Http\Middleware\EnsureUserIsActive::class,
     ];
 }

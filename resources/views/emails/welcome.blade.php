@@ -261,7 +261,7 @@
                                                                             Hello
                                                                             {{$user->first_name
                                                                             ??
-                                                                            $user->buisness_name}}
+                                                                            $user->business_name}}
                                                                             👋,
                                                                         </p>
                                                                     </div>

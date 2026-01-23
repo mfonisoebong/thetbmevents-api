@@ -19,7 +19,8 @@
         "laravel/tinker": "^2.8",
         "league/csv": "^9.9",
         "simplesoftwareio/simple-qrcode": "^4.2",
-        "stevebauman/location": "^6.6"
+        "stevebauman/location": "^6.6",
+        "tymon/jwt-auth": "^2.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

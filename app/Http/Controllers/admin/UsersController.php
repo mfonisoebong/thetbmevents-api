@@ -8,7 +8,7 @@ use App\Http\Requests\ExportUsersRequest;
 use App\Http\Requests\StoreAdminUserRequest;
 use App\Http\Requests\UpdateOrganizerSettingsRequest;
 use App\Http\Resources\OrganizerResource;
-use App\Http\Resources\UsersResource;
+use App\Http\Resources\UserResource;
 use App\Mail\ActivatedOrganizer;
 use App\Mail\ActivatedOrganizerMail;
 use App\Models\Commision;
@@ -31,13 +31,13 @@ class UsersController extends Controller
         ->where('role', '=', 'individual')
         ->paginate(20);
         $paginateMetaData= $users->toArray();
-        $usersResource= UsersResource::collection($users);
+        $usersResource= UserResource::collection($users);
         $data= [...$paginateMetaData, 'data'=> $usersResource];
         return $this->success($data);
     }
 
     public function getUser(User $user){
-        $userData= new UsersResource($user);
+        $userData= new UserResource($user);
         return $this->success($userData);
     }
 
@@ -48,7 +48,7 @@ class UsersController extends Controller
 
 
         $paginateMetaData= $users->toArray();
-        $usersResource= UsersResource::collection($users);
+        $usersResource= UserResource::collection($users);
         $data= [...$paginateMetaData, 'data'=> $usersResource];
         return $this->success($data);
     }
@@ -60,7 +60,7 @@ class UsersController extends Controller
 
 
         $paginateMetaData= $users->toArray();
-        $usersResource= UsersResource::collection($users);
+        $usersResource= UserResource::collection($users);
         $data= [...$paginateMetaData, 'data'=> $usersResource];
         return $this->success($data);
     }
@@ -117,7 +117,7 @@ class UsersController extends Controller
             'created_at',
             'role',
             'account_status']);
-        $usersCollection= UsersResource::collection($users)
+        $usersCollection= UserResource::collection($users)
             ->toArray($request);
 
         foreach ($usersCollection as $user){

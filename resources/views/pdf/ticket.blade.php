@@ -21,7 +21,7 @@
         <br> <br>
         We are excited to let you know that you have successfully bought a tickets
         for {{$ticket->ticket->event->title}}. by
-        {{$ticket->ticket->event->user->buisness_name}}
+        {{$ticket->ticket->event->user->business_name}}
 
     </p>
 </div>

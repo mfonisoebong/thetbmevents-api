@@ -7,24 +7,22 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class RoleAuthenticate
+class EnsureUserIsActive
 {
     use ApiResponses;
-
     /**
      * Handle an incoming request.
      *
      * @param Closure(Request): (Response) $next
      */
-    public function handle(Request $request, Closure $next, ...$guards): Response
+    public function handle(Request $request, Closure $next): Response
     {
-        $role = $guards[0];
+
         $user = auth()->user();
 
-        if (!$user || $user->role !== $role) {
-            return $this->error(null, 403, 'Unauthorized access');
+        if (!$user || $user->account_state !== 'active') {
+            return $this->error(null, 403, 'Unauthorized access: User is not active');
         }
-
 
         return $next($request);
     }

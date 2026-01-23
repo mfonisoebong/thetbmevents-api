@@ -30,7 +30,7 @@ class ProfileResource extends JsonResource
             'avatar' => $this->avatar,
             'completed_profile' => $this->completed_profile,
             'auth_provider' => $this->auth_provider,
-            'buisness_name' => $this->buisness_name,
+            'business_name' => $this->business_name,
             'email_verified_at' => $this->email_verified_at,
         ];
     }

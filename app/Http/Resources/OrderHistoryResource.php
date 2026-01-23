@@ -24,7 +24,7 @@ class OrderHistoryResource extends JsonResource
             'event_name' => $event?->title ?? '',
             'ticket_name' => $this->ticket->name,
             'ticket_price' => $this->ticket->price,
-            'organizer' => $event?->user->buisness_name ?? '',
+            'organizer' => $event?->user->business_name ?? '',
             'created_at' => $this->created_at
         ];
     }
