@@ -4,6 +4,7 @@ namespace App\Http\Controllers\V2;
 
 use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V2\LoginRequest;
 use App\Http\Requests\V2\SignUpRequest;
 use App\Http\Resources\UserResource;
 use App\Mail\OtpCode;
@@ -32,7 +33,7 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(LoginRequest $loginRequest, $role = null)
+    public function login(LoginRequest $loginRequest)
     {
         $credentials = $loginRequest->validated();
 
@@ -44,7 +45,14 @@ class AuthController extends Controller
         // 43200 minutes == 30 days
         $TTL = request()->remember ? 43200 : auth()->factory()->getTTL();
 
-        return $this->respondWithToken(request()->has('remember') ? $this->longToken($TTL) : $token, $TTL);
+        $tokenToReturn = request()->has('remember') ? $this->longToken($TTL) : $token;
+
+        return response()->json([
+            'access_token' => $tokenToReturn,
+            'token_type' => 'bearer',
+            'expires_in' => $TTL * 60,
+            'user' => auth()->user()
+        ]);
     }
 
 
@@ -82,22 +90,12 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        return $this->respondWithToken(auth()->refresh());
-    }
+        $token = auth()->refresh();
 
-    /**
-     * Get the token array structure.
-     *
-     * @param string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function respondWithToken($token, $customTTL = null)
-    {
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => !$customTTL ? auth()->factory()->getTTL() * 60 : $customTTL * 60
+            'expires_in' => auth()->factory()->getTTL() * 60,
         ]);
     }
 
