@@ -19,7 +19,7 @@ class EventController extends Controller
     public function listRecentEventsByCategory(string $category)
     {
         // list most recent 24 events by category
-        $events = Event::where('category', $category)->orderBy('created_at', 'desc')->take(24)->get();
+        $events = Event::where('category', 'like', "%$category%")->orderBy('created_at', 'desc')->take(24)->get();
 
         return $this->success(EventResource::collection($events), 'Recent events in category fetched successfully');
     }
