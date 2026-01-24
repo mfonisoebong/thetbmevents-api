@@ -13,14 +13,14 @@ return new class extends Migration {
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
             $table->string('code')->unique();
-            $table->dateTime('start_date_time');
-            $table->dateTime('end_date_time');
             $table->enum('type', ['fixed', 'percentage']);
             $table->unsignedFloat('value');
             $table->string('event_id');
 
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
 
+            $table->dateTime('start_date_time');
+            $table->dateTime('end_date_time');
             $table->timestamps();
         });
     }
