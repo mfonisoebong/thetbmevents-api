@@ -11,12 +11,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->unsignedBigInteger('coupon_id')
-                ->nullable()
-                ->default(null);
-            $table->unsignedDecimal('coupon_amount', 20, 2)
-                ->nullable()
-                ->default(0);
+            $table->unsignedBigInteger('coupon_id')->nullable();
+            $table->unsignedDecimal('coupon_amount', 20, 2)->nullable()->default(0);
         });
     }
 

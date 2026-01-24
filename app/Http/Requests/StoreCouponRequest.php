@@ -25,7 +25,6 @@ class StoreCouponRequest extends FormRequest
     {
         return [
             'event_id' => ['required', 'exists:events,id'],
-            'name' => ['required', 'string'],
             'code' => ['required', 'string'],
             'start_date_time' => ['required', 'date'],
             'end_date_time' => ['required', 'date', 'after:start_date_time'],

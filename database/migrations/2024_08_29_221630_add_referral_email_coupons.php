@@ -12,10 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('coupons', function (Blueprint $table) {
-            $table->string('referral_email')
-                ->after('referral_name')
-                ->nullable()
-                ->default(null);
+            $table->string('referral_email')->after('referral_name')->nullable();
         });
     }
 

@@ -12,12 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('coupons', function (Blueprint $table) {
-            $table->string('referral_name')
-                ->nullable()
-                ->default(null);
-            $table->unsignedBigInteger('limit')
-                ->nullable()
-                ->default(null);
+            $table->string('referral_name')->nullable();
+            $table->unsignedBigInteger('limit')->nullable();
         });
     }
 

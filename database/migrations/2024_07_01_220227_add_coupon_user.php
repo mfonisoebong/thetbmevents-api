@@ -11,15 +11,9 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('coupons', function (Blueprint $table) {
-            $table->string('user_id')
-                ->after('event_id')
-                ->nullable()
-                ->default(null);
+            $table->string('user_id')->after('event_id')->nullable();
 
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

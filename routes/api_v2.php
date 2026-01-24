@@ -27,6 +27,9 @@ Route::group(
         });
     });
 
-    Route::get('/events', 'EventController@listRecentEvents');
-    Route::get('/events/{category}', 'EventController@listRecentEventsByCategory');
+    Route::prefix('events')->group(function(){
+        Route::get('/', 'EventController@listRecentEvents');
+        Route::get('/category/{category}', 'EventController@listRecentEventsByCategory');
+        Route::get('/{event}', 'EventController@getEventDetails');
+    });
 });

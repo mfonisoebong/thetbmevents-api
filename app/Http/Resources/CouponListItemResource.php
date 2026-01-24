@@ -20,7 +20,6 @@ class CouponListItemResource extends JsonResource
 
         return [
             'id' => (string)$this->id,
-            'name' => $this->name,
             'code' => $this->code,
             'status' => $this->status,
             'start_date_time' => Carbon::parse($this->start_date_time)->format('Y-m-d H:i:s'),
