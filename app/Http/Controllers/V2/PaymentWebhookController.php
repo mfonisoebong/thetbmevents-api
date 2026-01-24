@@ -8,9 +8,9 @@ use App\Models\Attendee;
 use App\Models\Transaction;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Log;
 
 class PaymentWebhookController extends Controller
 {
@@ -26,7 +26,7 @@ class PaymentWebhookController extends Controller
     {
         $event = $request->event;
         if (!in_array($event, $this->paystackSupportedEvents, true)) {
-            Logger::warning('Paystack webhook received unsupported event', ['event' => $event]);
+            Log::warning('Paystack webhook received unsupported event', ['event' => $event]);
             return response(null, 400);
         }
 
@@ -35,24 +35,24 @@ class PaymentWebhookController extends Controller
         $amount = (float) $data['amount'];
 
         if (!$reference) {
-            Logger::warning('Paystack webhook received without reference', ['data' => $data]);
+            Log::warning('Paystack webhook received without reference', ['data' => $data]);
             return response(null, 400);
         }
 
         $transaction = Transaction::where('reference', $reference)->first();
 
         if (!$transaction) {
-            Logger::warning('Paystack webhook received for non-existent transaction', ['reference' => $reference]);
+            Log::warning('Paystack webhook received for non-existent transaction', ['reference' => $reference]);
             return response(null, 400);
         }
 
         if ($transaction->status === 'success') {
-            Logger::notice('Paystack webhook received for already successful transaction', ['reference' => $reference]);
+            Log::notice('Paystack webhook received for already successful transaction', ['reference' => $reference]);
             return response(null, 200);
         }
 
         if (round($transaction->charged_amount * 100, 2) !== $amount) {
-            Logger::warning('Paystack webhook amount mismatch', [
+            Log::warning('Paystack webhook amount mismatch', [
                 'reference' => $reference,
                 'expected_amount' => round($transaction->charged_amount * 100, 2),
                 'received_amount' => $amount,
@@ -68,7 +68,7 @@ class PaymentWebhookController extends Controller
         $event = $request->event;
 
         if (!in_array($event, $this->flutterwaveSupportedEvents, true)) {
-            Logger::warning('Flutterwave webhook received unsupported event', ['event' => $event]);
+            Log::warning('Flutterwave webhook received unsupported event', ['event' => $event]);
             return response(null, 200);
         }
 
@@ -77,24 +77,24 @@ class PaymentWebhookController extends Controller
         $amount = (float) $data['amount'];
 
         if (!$reference) {
-            Logger::warning('Flutterwave webhook received without reference', ['data' => $data]);
+            Log::warning('Flutterwave webhook received without reference', ['data' => $data]);
             return response(null, 200);
         }
 
         $transaction = Transaction::where('reference', $reference)->first();
 
         if (!$transaction) {
-            Logger::warning('Flutterwave webhook received for non-existent transaction', ['reference' => $reference]);
+            Log::warning('Flutterwave webhook received for non-existent transaction', ['reference' => $reference]);
             return response(null, 200);
         }
 
         if ($transaction->status === 'success') {
-            Logger::notice('Flutterwave webhook received for already successful transaction', ['reference' => $reference]);
+            Log::notice('Flutterwave webhook received for already successful transaction', ['reference' => $reference]);
             return response(null, 200);
         }
 
         if ($transaction->amount !== $amount || $data['status'] !== 'successful') {
-            Logger::warning('Flutterwave webhook amount/status mismatch', [
+            Log::warning('Flutterwave webhook amount/status mismatch', [
                 'reference' => $reference,
                 'expected_amount' => $transaction->amount,
                 'received_amount' => $amount,
@@ -201,9 +201,9 @@ class PaymentWebhookController extends Controller
             $ticketsBoughtCount = $payload['meta']['tickets_count'];
 
             $customer = $transaction->customer()->create([
-                'full_name' => $customerData['full_name'],
+                'full_name' => $customerData['fullname'],
                 'email' => $customerData['email'],
-                'phone_number' => $customerData['phone_number'],
+                'phone_number' => $customerData['phone'],
                 'tickets_bought_count' => $ticketsBoughtCount
             ]);
 
@@ -235,9 +235,10 @@ class PaymentWebhookController extends Controller
 
             event(new TicketPurchaseCompleted($transaction, $customer));
         } catch (Exception $e) {
-            Logger::error('Error processing transaction after payment verification', [
+            Log::error('Error processing transaction after payment verification', [
                 'transaction_id' => $transaction->id,
                 'error' => $e->getMessage(),
+                'stack_trace' => $e->getTraceAsString(),
             ]);
             DB::rollBack();
             return response(null, 500);

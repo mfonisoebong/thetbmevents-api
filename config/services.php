@@ -38,11 +38,13 @@ return [
     ],
 
     'paystack' => [
-        'url' => env('PAYSTACK_API_URL')
+        'url' => env('PAYSTACK_API_URL'),
+        'secret' => env('PAYSTACK_SECRET'),
     ],
 
     'flutterwave' => [
-        'url' => env('FLUTTERWAVE_API_URL')
+        'url' => env('FLUTTERWAVE_API_URL'),
+        'secret' => env('FLUTTERWAVE_SECRET'),
     ],
 
 ];
