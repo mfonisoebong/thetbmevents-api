@@ -207,6 +207,10 @@ class PaymentWebhookController extends Controller
                 'tickets_bought_count' => $ticketsBoughtCount
             ]);
 
+            $transaction->update([
+                'customer_id' => $customer->id,
+            ]);
+
             if ($payload['send_to_different_email']) {
                 for ($i = 0; $i < count($attendeesData); $i++) {
                     $attendee = $attendeesData[$i];

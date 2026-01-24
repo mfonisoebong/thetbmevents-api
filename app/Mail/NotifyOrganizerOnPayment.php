@@ -2,6 +2,10 @@
 
 namespace App\Mail;
 
+use App\Models\Customer;
+use App\Models\Event;
+use App\Models\Ticket;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,10 +24,8 @@ class NotifyOrganizerOnPayment extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public User $organizer, $ticket, $isAdmin)
+    public function __construct(public Transaction $transaction, public Customer $customer, public Event $event, public Ticket $ticket)
     {
-        $this->tickets= $ticket;
-        $this->isAdmin= $isAdmin;
     }
 
     /**
@@ -42,7 +44,7 @@ class NotifyOrganizerOnPayment extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.notify-on-payment',
+            view: 'emails.payment-notification-organizer',
         );
     }
 

@@ -29,47 +29,42 @@ class SendPurchasedTickets
         $attendees = $customer->attendees;
 
         foreach ($attendees as $attendee) {
-            $ticket = $attendee->purchasedTicket;
-            $datePurchased = Carbon::parse($ticket->invoice->created_at)
-                ->format('d/m/y');
-            $timePurchased = Carbon::parse($ticket->invoice->created_at)
-                ->format('H:i:s');
-            $qrCodeData = json_encode([
-                'id' => $ticket->id,
-                'event_id' => $ticket->ticket->event_id,
-                'quantity' => $ticket->quantity,
-                'price' => $ticket->price
-            ]);
-            $eventLink = $ticket->ticket->event?->event_link;
-            $eventLocation = $ticket->ticket->event?->location;
-            $eventLocationTips = $ticket->ticket->event?->location_tips;
-            $qrCode = QrCode::format('png')
-                ->size(150)
-                ->generate($qrCodeData);
-            $ticketPath = 'tickets/' . Str::uuid()->toString() . '.png';
+            $tickets = $attendee->newPurchasedTickets;
 
-            Storage::disk('public')
-                ->put($ticketPath, $qrCode);
-            $qrCodeUrl = config('app.url') . '/storage/' . $ticketPath;
+            foreach ($tickets as $ticket) {
+                $dateTimePurchased = Carbon::parse($ticket->transaction->updated_at)->format('d/m/y H:i:s');
 
-            $data = [
-                'id' => $ticket->id,
-                'event_title' => $ticket->ticket->event->title,
-                'organizer' => $ticket->ticket->organizer->full_name,
-                'event_logo' => $ticket->ticket->event->logo,
-                'name' => $ticket->ticket->name . ' - ' . $ticket->ticket->event->title,
-                'price' => $ticket->quantity * $ticket->ticket->price,
-                'event_link' => $eventLink,
-                'event_location' => $eventLocation,
-                'event_location_tips' => $eventLocationTips,
-                'quantity' => $ticket->quantity,
-                'gateway' => Str::upper($ticket->invoice->gateway),
-                'date_purchased' => $datePurchased,
-                'time_purchased' => $timePurchased,
-                'qr_code' => $qrCodeUrl
-            ];
+                $qrCodeData = base64_encode($ticket->id);
 
-            Mail::to($attendee->email)->send(new PurchasedTicketMail($data, $ticket->attendee));
+                $eventLink = $ticket->ticket->event?->event_link;
+                $eventLocation = $ticket->ticket->event?->location;
+                $eventLocationTips = $ticket->ticket->event?->location_tips;
+
+                $qrCode = QrCode::format('png')->size(200)->generate($qrCodeData);
+                $ticketPath = 'tickets/' . Str::uuid()->toString() . '.png';
+
+                Storage::disk('public')->put($ticketPath, $qrCode);
+                $qrCodeUrl = config('app.url') . '/storage/' . $ticketPath;
+
+                $data = [
+                    'id' => $ticket->id,
+                    'event_title' => $ticket->ticket->event->title,
+                    'event_id' => $ticket->ticket->event->id,
+                    'organizer' => $ticket->ticket->organizer->full_name,
+                    'event_logo' => $ticket->ticket->event->logo,
+                    'ticket_name' => $ticket->ticket->name,
+                    'event_name' => $ticket->ticket->event->title,
+                    'price' => $ticket->ticket->price,
+                    'event_link' => $eventLink,
+                    'event_location' => $eventLocation,
+                    'event_location_tips' => $eventLocationTips,
+                    'gateway' => Str::upper($ticket->transaction->gateway),
+                    'date_time_purchased' => $dateTimePurchased,
+                    'qr_code' => $qrCodeUrl
+                ];
+
+                Mail::to($attendee->email)->send(new PurchasedTicketMail($data, $attendee));
+            }
         }
     }
 }

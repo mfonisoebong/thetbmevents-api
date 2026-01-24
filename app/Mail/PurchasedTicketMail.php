@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Attendee;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -18,7 +19,7 @@ class PurchasedTicketMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public $ticketDetails, public $attendee)
+    public function __construct(public $ticketDetails, public Attendee $attendee)
     {
         //
     }
@@ -39,7 +40,7 @@ class PurchasedTicketMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.ticket',
+            view: 'emails.payment-confirmed-attendee',
         );
     }
 

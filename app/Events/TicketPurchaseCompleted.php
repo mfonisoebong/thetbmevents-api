@@ -20,7 +20,7 @@ class TicketPurchaseCompleted
     /**
      * Create a new event instance.
      */
-    public function __construct(public Transaction $invoice, public Customer $customer)
+    public function __construct(public Transaction $transaction, public Customer $customer)
     {
     }
 

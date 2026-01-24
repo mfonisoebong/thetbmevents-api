@@ -3,9 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\TicketPurchaseCompleted;
+use App\Mail\NotifyAdminOnPayment;
 use App\Mail\NotifyOrganizerOnPayment;
-use App\Models\Notification;
-use App\Models\Ticket;
 use Illuminate\Support\Facades\Mail;
 
 class NotifyAdminAndOrganizersOnPayment
@@ -23,28 +22,13 @@ class NotifyAdminAndOrganizersOnPayment
      */
     public function handle(TicketPurchaseCompleted $event): void
     {
-        $invoice = $event->invoice;
-        $userCart = $invoice->cart_items;
+        $transaction = $event->transaction;
+        $customer = $transaction->customer;
+        $ticket = $customer->attendees()->first()->ticket;
+        $organizerMail = $ticket->organizer->email;
 
-        foreach ($userCart as $ticketData) {
-            $ticket = Ticket::where('id', '=', $ticketData->id)->first();
-            $organizerId = $ticket->organizer->id;
-            $organizerMail = $ticket->organizer->email;
-            $name = $ticket->name . ' - ' . $ticket->event->title;
+        Mail::to($organizerMail)->send(new NotifyOrganizerOnPayment($transaction, $customer, $ticket->event, $ticket));
 
-            $data = [
-                'name' => $name,
-                'quantity' => $ticketData->quantity
-            ];
-
-            Mail::to($organizerMail)->send(new NotifyOrganizerOnPayment($ticket->organizer, [$data], false));
-
-            Mail::to(config('mail.admin_email'))->send(new NotifyOrganizerOnPayment($ticket->organizer, [$data], true));
-
-            Notification::create([
-                'body' => 'A ticket purchase has been made for ' . $name . ' (' . $ticketData->quantity . ')',
-                'user_id' => $organizerId
-            ]);
-        }
+        Mail::to(config('mail.admin_email'))->send(new NotifyAdminOnPayment($transaction, $customer, $ticket->event, $ticket));
     }
 }

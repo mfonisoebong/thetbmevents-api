@@ -23,10 +23,10 @@ class NotifyCouponReferral
      */
     public function handle(TicketPurchaseCompleted $event): void
     {
-        $referralEmail = $event->invoice->coupon?->referral_email;
+        $referralEmail = $event->transaction->coupon?->referral_email;
 
         if (!$referralEmail) return;
 
-        Mail::to($referralEmail)->send(new CouponReferralMail($event->invoice));
+        Mail::to($referralEmail)->send(new CouponReferralMail($event->transaction));
     }
 }

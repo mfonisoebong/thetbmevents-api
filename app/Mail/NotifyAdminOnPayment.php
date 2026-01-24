@@ -2,7 +2,11 @@
 
 namespace App\Mail;
 
+use App\Models\Customer;
+use App\Models\Event;
+use App\Models\Ticket;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -10,16 +14,15 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class CouponReferralMail extends Mailable
+class NotifyAdminOnPayment extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(public Transaction $transaction)
+    public function __construct(public Transaction $transaction, public Customer $customer, public Event $event, public Ticket $ticket)
     {
-        //
     }
 
     /**
@@ -28,7 +31,7 @@ class CouponReferralMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Hurray! Your coupon code has been used',
+            subject: 'Tickets have been bought',
         );
     }
 
@@ -38,7 +41,7 @@ class CouponReferralMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.notification-referral',
+            view: 'emails.payment-notification-admin',
         );
     }
 
