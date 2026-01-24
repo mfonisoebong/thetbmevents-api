@@ -15,6 +15,7 @@ use App\Listeners\SendPurchasedTickets;
 use App\Listeners\SendWelcomeMail;
 use App\Listeners\UpdateOrganizerStats;
 use App\Listeners\UpdateRevenueCommisionSnapshot;
+use App\Listeners\UpdateTicketSoldListener;
 use App\Listeners\UpdateTicketStats;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -32,11 +33,11 @@ class EventServiceProvider extends ServiceProvider
             NotifyAdminOnNewSignup::class,
         ],
         TicketPurchaseCompleted::class => [
-            // UpdateTicketStats::class,
             // UpdateOrganizerStats::class,
             SendPurchasedTickets::class,
             NotifyAdminAndOrganizersOnPayment::class,
-            NotifyCouponReferral::class
+            NotifyCouponReferral::class,
+            UpdateTicketSoldListener::class
         ],
         PasswordTokenCreated::class => [
             SendPasswordResetEmail::class
