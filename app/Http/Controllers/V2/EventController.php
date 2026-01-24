@@ -23,4 +23,11 @@ class EventController extends Controller
 
         return $this->success(EventResource::collection($events), 'Recent events in category fetched successfully');
     }
+
+    public function getEventDetails(string $event)
+    {
+        $event = Event::where('id', $event)->orWhere('alias', $event)->first();
+
+        return $this->success(new EventResource($event), 'Event details fetched successfully');
+    }
 }
