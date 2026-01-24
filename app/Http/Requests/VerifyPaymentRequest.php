@@ -23,7 +23,7 @@ class VerifyPaymentRequest extends FormRequest
     {
         return [
             'reference'=> ['required'],
-            'payment_method'=> ['required', 'in:vella,paystack']
+            'gateway'=> ['required', 'in:vella,paystack']
         ];
     }
 }

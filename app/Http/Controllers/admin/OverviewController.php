@@ -34,7 +34,7 @@ class OverviewController extends Controller
         $allThroughTheYearStats = array_map(function ($month) {
             $sales = Transaction::whereYear('created_at', $this->getCurrentYear())
                 ->whereMonth('created_at', $month)
-                ->where('payment_status', 'success');
+                ->where('status', 'success');
             return $this->calculateNetRevenueAndCommision($sales);
         }, $this->months);
         $topCustomers = Sale::filter()
@@ -93,7 +93,7 @@ class OverviewController extends Controller
     {
         $netSales = Transaction::whereYear('created_at', $this->getCurrentYear())
             ->whereMonth('created_at', request('month'))
-            ->where('payment_status', 'success');
+            ->where('status', 'success');
 
         $netRevenueCommisions = $this->calculateNetRevenueAndCommision($netSales);
 

@@ -30,7 +30,7 @@ class PaymentWebhook extends Controller
 
         $data = $request->data;
         $reference = $data['reference'];
-        $invoice = Transaction::where('transaction_reference', '=', $reference)->first();
+        $invoice = Transaction::where('reference', '=', $reference)->first();
         $amount = (float)$data['amount'];
 
 
@@ -38,7 +38,7 @@ class PaymentWebhook extends Controller
             return response(null, 400);
         }
 
-        if ($invoice->payment_status === 'success') {
+        if ($invoice->status === 'success') {
             return response(null, 200);
         }
 
@@ -60,7 +60,7 @@ class PaymentWebhook extends Controller
 
         $data = $request->data;
         $reference = $data['tx_ref'];
-        $invoice = Transaction::where('transaction_reference', '=', $reference)->first();
+        $invoice = Transaction::where('reference', '=', $reference)->first();
         $amount = (float) $data['amount'];
 
 
@@ -68,7 +68,7 @@ class PaymentWebhook extends Controller
             return response(null, 200);
         }
 
-        if ($invoice->payment_status === 'success') {
+        if ($invoice->status === 'success') {
             return response(null, 200);
         }
 
@@ -83,7 +83,7 @@ class PaymentWebhook extends Controller
     public function finishUp(Transaction $invoice)
     {
         $invoice->update([
-            'payment_status' => 'success'
+            'status' => 'success'
         ]);
 
         if ($invoice?->coupon && $invoice?->coupon->limit) {
@@ -103,18 +103,18 @@ class PaymentWebhook extends Controller
 
     public function manualVerifyPayment($reference)
     {
-        $invoice = Transaction::where('transaction_reference', $reference)->first();
+        $invoice = Transaction::where('reference', $reference)->first();
 
         if (!$invoice) {
             return response()->json(['message' => 'Transaction not found'], 404);
         }
 
-        if ($invoice->payment_status === 'success') {
+        if ($invoice->status === 'success') {
             return response()->json(['message' => 'Payment already verified']);
         }
 
-        if ($invoice->payment_status === 'pending') {
-            $gateway = $invoice->payment_method;
+        if ($invoice->status === 'pending') {
+            $gateway = $invoice->gateway;
 
             if ($gateway === 'paystack') {
                 $secret = config('services.paystack.secret', env('PAYSTACK_SECRET'));

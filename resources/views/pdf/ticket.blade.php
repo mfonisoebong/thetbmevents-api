@@ -49,7 +49,7 @@
     </div>
     <br>
     <div>
-        <p style="margin: 2px; text-transform: uppercase">{{$ticket->invoice->payment_method}}</p>
+        <p style="margin: 2px; text-transform: uppercase">{{$ticket->invoice->gateway}}</p>
         <h3 style="margin: 2px">Payment method</h3>
     </div>
     <br>

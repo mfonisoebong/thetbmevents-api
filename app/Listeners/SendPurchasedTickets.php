@@ -63,7 +63,7 @@ class SendPurchasedTickets
                 'event_location' => $eventLocation,
                 'event_location_tips' => $eventLocationTips,
                 'quantity' => $ticket->quantity,
-                'payment_method' => Str::upper($ticket->invoice->payment_method),
+                'gateway' => Str::upper($ticket->invoice->gateway),
                 'date_purchased' => $datePurchased,
                 'time_purchased' => $timePurchased,
                 'qr_code' => $qrCodeUrl

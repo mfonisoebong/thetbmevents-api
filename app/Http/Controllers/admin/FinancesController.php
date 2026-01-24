@@ -25,7 +25,7 @@ class FinancesController extends Controller
     public function getRevenueOverview()
     {
         $revenueSnapshot = RevenueCommisionSnapshot::first();
-        $netSales = Transaction::where('payment_status', 'success');
+        $netSales = Transaction::where('status', 'success');
 
         $netRevenueCommisions = $this->calculateNetRevenueAndCommision($netSales);
 

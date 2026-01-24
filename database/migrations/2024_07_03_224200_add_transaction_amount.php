@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::table('transactions', function (Blueprint $table) {
             $table->unsignedDecimal('amount')
-                ->after('payment_status')
+                ->after('status')
                 ->default(0);
         });
     }

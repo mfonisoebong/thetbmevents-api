@@ -22,7 +22,7 @@ class DashboardController extends Controller
         $data = [
             'total_events' => $user->events()->count(),
             'total_sales' => $user->invoices()
-                ->where('payment_status', 'success')
+                ->where('status', 'success')
                 ->sum('amount'),
             'tickets_sold' => $user->sales->sum('tickets_bought'),
             'total_attendees' => $attendees,

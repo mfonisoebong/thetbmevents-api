@@ -107,13 +107,13 @@ class TicketsController extends Controller
 //        $hasExpired= Carbon::now()->gt($expiryDate);
 
         $ticketInvoice = $ticket->invoice;
-        $unsettledPayment = $ticketInvoice->payment_status !== 'success';
+        $unsettledPayment = $ticketInvoice->status !== 'success';
 
         if ($unsettledPayment) {
             return $this
                 ->failed(403,
                     null,
-                    'Your payment status for this ticket is/has ' . $ticketInvoice->payment_status);
+                    'Your payment status for this ticket is/has ' . $ticketInvoice->status);
         }
 
 //        if($hasExpired){

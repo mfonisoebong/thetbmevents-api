@@ -14,13 +14,12 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('id')
                 ->primary();
-            $table->unsignedBigInteger('customer_id');
-            $table->enum('payment_method', ['vella', 'paystack']);
-            $table
-                ->enum('payment_status', ['pending', 'success', 'failed', 'reversed'])
-                ->default('pending');
+            $table->unsignedBigInteger('customer_id')->nullable();
+            $table->enum('gateway', ['vella', 'paystack']);
+            $table->enum('status', ['pending', 'success', 'failed', 'reversed'])->default('pending');
             $table->json('cart_items');
-            $table->string('transaction_reference');
+            $table->string('reference');
+            $table->json('data')->nullable();
             $table->timestamps();
 
             $table->foreign('customer_id')

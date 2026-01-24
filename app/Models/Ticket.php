@@ -23,6 +23,13 @@ class Ticket extends Model
         'sold'
     ];
 
+    protected $casts = [
+        'selling_start_date_time' => 'datetime',
+        'selling_end_date_time' => 'datetime',
+        'price' => 'float',
+        'quantity' => 'integer',
+    ];
+
     public function event()
     {
         return $this->belongsTo(Event::class);

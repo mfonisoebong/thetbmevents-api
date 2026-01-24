@@ -68,8 +68,8 @@ class SalesController extends Controller
                 'customer_email' => $customer->email,
                 'invoice' => [
                     'date' => $invoice->created_at->toDateTimeString(),
-                    'status' => $invoice->payment_status,
-                    'gateway' => $invoice->payment_method,
+                    'status' => $invoice->status,
+                    'gateway' => $invoice->gateway,
                     'amount_paid' => $invoice->amount,
                     'ticket_bought' => $purchasedTicket->name,
                     'quantity' => $quantity,

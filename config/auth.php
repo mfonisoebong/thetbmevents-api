@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web', // todo: change to 'api'
+        'guard' => 'api',
         'passwords' => 'users',
     ],
 

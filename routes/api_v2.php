@@ -34,6 +34,7 @@ Route::group(
     });
 
     Route::prefix('checkout')->group(function() {
+        Route::post('/', 'CheckoutController@processCheckout');
        Route::post('/apply-coupon', 'CheckoutController@applyCoupon');
     });
 });

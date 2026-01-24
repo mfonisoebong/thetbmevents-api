@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
-            DB::statement("ALTER TABLE `transactions` MODIFY `payment_method` ENUM('flutterwave','paystack', 'vella') NOT NULL");
+            DB::statement("ALTER TABLE `transactions` MODIFY `gateway` ENUM('flutterwave','paystack', 'vella') NOT NULL");
         });
     }
 

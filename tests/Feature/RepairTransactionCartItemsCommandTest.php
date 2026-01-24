@@ -47,10 +47,10 @@ class RepairTransactionCartItemsCommandTest extends TestCase
 
         $before = Transaction::create([
             'customer_id' => $customerId,
-            'payment_method' => 'paystack',
+            'gateway' => 'paystack',
             'cart_items' => [['id' => 't1', 'quantity' => 1]],
-            'transaction_reference' => 'ref_before',
-            'payment_status' => 'pending',
+            'reference' => 'ref_before',
+            'status' => 'pending',
             'created_at' => '2025-12-24 14:51:08',
         ]);
 
@@ -69,10 +69,10 @@ class RepairTransactionCartItemsCommandTest extends TestCase
         // Corrupted: JSON string stored in JSON column.
         $corrupted = Transaction::create([
             'customer_id' => $customerId,
-            'payment_method' => 'paystack',
+            'gateway' => 'paystack',
             'cart_items' => json_encode([['id' => 'a', 'quantity' => 1]]),
-            'transaction_reference' => 'ref_corrupted',
-            'payment_status' => 'pending',
+            'reference' => 'ref_corrupted',
+            'status' => 'pending',
             'created_at' => '2025-12-24 14:51:09',
         ]);
 

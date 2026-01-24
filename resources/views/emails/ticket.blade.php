@@ -486,7 +486,7 @@
                                             font-size: 13px;
                                           "
                                                             >
-                                                                {{$ticketDetails['payment_method']}}
+                                                                {{$ticketDetails['gateway']}}
                                                             </p>
 
                                                             <h3

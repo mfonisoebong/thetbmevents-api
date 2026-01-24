@@ -27,7 +27,7 @@ class ResendTicketEmailFromIdCommand extends Command
         for ($i = 0; $i < count($invoices); $i++) {
             $invoice = $invoices[$i];
             try {
-                $_invoice = Transaction::where('transaction_reference', $invoice)->firstOrFail();
+                $_invoice = Transaction::where('reference', $invoice)->firstOrFail();
                 $invoiceGeneratedEvent = new TicketPurchaseCompleted($_invoice, $_invoice->customer);
                 $sendPurchasedTicketsListener = new SendPurchasedTickets();
                 $sendPurchasedTicketsListener->handle($invoiceGeneratedEvent);

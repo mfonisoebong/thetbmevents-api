@@ -29,9 +29,9 @@ class ProfileController extends Controller
 
 
         $allTimeSales = $user->invoices()
-            ->where('payment_status', 'success');
+            ->where('status', 'success');
         $salesThisMonth = $user->invoices()
-            ->where('payment_status', 'success')
+            ->where('status', 'success')
             ->whereYear('created_at', $this->getCurrentYear())
             ->whereMonth('created_at', $this->getCurrentMonth());
 
@@ -86,7 +86,7 @@ class ProfileController extends Controller
         $revenueAndProfit = $this->calculateSalesRevenueAndProfit(
             $commissionRate ?? $this->default_commition,
             $user->invoices()
-                ->where('payment_status', 'success')
+                ->where('status', 'success')
         );
 
         $userEvents = $user->events->toArray();

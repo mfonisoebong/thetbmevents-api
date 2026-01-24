@@ -28,7 +28,7 @@ class TicketResource extends JsonResource
             ],
             'quantity' => $this->quantity,
             'total_paid' => $this->price,
-            'status' => $this->invoice->payment_status,
+            'status' => $this->invoice->status,
             'customer' => [
                 'name' => $this->attendee->customer->full_name
             ]

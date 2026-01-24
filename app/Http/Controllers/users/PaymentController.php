@@ -141,10 +141,10 @@ class PaymentController extends Controller
                 'organizer_id' => $ticket->event->user_id,
                 'amount' => $total,
                 'charged_amount' => $chargedAmount,
-                'payment_method' => $gateway,
+                'gateway' => $gateway,
                 'cart_items' => $request->tickets,
-                'transaction_reference' => $reference,
-                'payment_status' => 'pending',
+                'reference' => $reference,
+                'status' => 'pending',
                 'coupon_id' => $coupon?->id,
                 'coupon_amount' => $couponAmount,
                 'user_id' => $request->user()?->id
@@ -193,10 +193,10 @@ class PaymentController extends Controller
         $invoice = Transaction::create([
             'customer_id' => $customer->id,
             'organizer_id' => $ticket->event->user_id,
-            'payment_method' => 'paystack',
+            'gateway' => 'paystack',
             'cart_items' => $request->tickets,
-            'transaction_reference' => $reference,
-            'payment_status' => 'success',
+            'reference' => $reference,
+            'status' => 'success',
             'user_id' => $request->user()?->id
         ]);
 
@@ -227,13 +227,12 @@ class PaymentController extends Controller
 
     public function callback($reference)
     {
-        $invoice = Transaction::where('transaction_reference', $reference)
-            ->first();
+        $invoice = Transaction::where('reference', $reference)->first();
 
         if (!$invoice) {
             return $this->failed(404);
         }
-        return redirect()->away(env('CLIENT_URL') . '/events/payment-complete');
+        return redirect()->away(config('app.client_url') . '/events/payment-complete');
     }
 
     private function validateCoupon($code)

@@ -20,22 +20,24 @@ class Transaction extends Model
 
     protected $fillable = [
         'customer_id',
-        'payment_method',
+        'gateway',
         'cart_items',
-        'transaction_reference',
-        'payment_status',
+        'reference',
+        'status',
         'coupon_id',
         'coupon_amount',
         'amount',
         'charged_amount',
         'organizer_id',
-        'user_id'
+        'user_id',
+        'data',
     ];
 
     protected $casts = [
         'amount' => 'float',
         'charged_amount' => 'float',
         'cart_items' => 'array',
+        'data' => 'array',
     ];
 
     public function scopeFilter(Builder $builder)
@@ -139,7 +141,7 @@ class Transaction extends Model
                 'event_location' => $eventLocation,
                 'event_location_tips' => $eventLocationTips,
                 'quantity' => $ticket->quantity,
-                'payment_method' => Str::upper($ticket->invoice->payment_method),
+                'gateway' => Str::upper($ticket->invoice->gateway),
                 'date_purchased' => $datePurchased,
                 'time_purchased' => $timePurchased,
                 'qr_code' => $qrCodeUrl
