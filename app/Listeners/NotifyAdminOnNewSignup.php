@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\UserRegistered;
-use App\Mail\NotifyAdminOnNewSignup;
+use App\Mail\NotifyAdminOnNewSignup as NotifyAdminOnNewSignupMail;
 use Illuminate\Support\Facades\Mail;
 
 class NotifyAdminOnNewSignup
@@ -21,6 +21,6 @@ class NotifyAdminOnNewSignup
      */
     public function handle(UserRegistered $event): void
     {
-        Mail::to(config('mail.admin_email'))->send(new NotifyAdminOnNewSignup($event->user));
+        Mail::to(config('mail.admin_email'))->send(new NotifyAdminOnNewSignupMail($event->user));
     }
 }
