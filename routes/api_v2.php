@@ -37,4 +37,11 @@ Route::group(
         Route::post('/', 'CheckoutController@processCheckout');
        Route::post('/apply-coupon', 'CheckoutController@applyCoupon');
     });
+
+    // Webhooks (V2)
+    Route::get('manual-verify-payment/{reference}', 'PaymentWebhookController@manualVerifyPayment');
+    Route::prefix('webhooks')->group(function () {
+        Route::post('/paystack', 'PaymentWebhookController@paystackWebhook');
+        Route::post('/flutterwave', 'PaymentWebhookController@flutterwaveWebhook');
+    });
 });

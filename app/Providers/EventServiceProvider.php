@@ -32,10 +32,10 @@ class EventServiceProvider extends ServiceProvider
             NotifyAdminOnNewSignup::class,
         ],
         TicketPurchaseCompleted::class => [
-            UpdateTicketStats::class,
-            NotifyAdminAndOrganizersOnPayment::class,
-            UpdateOrganizerStats::class,
+            // UpdateTicketStats::class,
+            // UpdateOrganizerStats::class,
             SendPurchasedTickets::class,
+            NotifyAdminAndOrganizersOnPayment::class,
             NotifyCouponReferral::class
         ],
         PasswordTokenCreated::class => [

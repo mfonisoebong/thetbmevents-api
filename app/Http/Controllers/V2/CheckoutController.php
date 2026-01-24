@@ -160,6 +160,8 @@ class CheckoutController extends Controller
                 'tickets_amount' => $ticketsAmount,
                 'gateway_fees' => $gatewayFees,
                 'platform_fee' => $platformFee,
+                'tickets_count' => count($payload['tickets']),
+                'tickets' => $payload['tickets']
             ],
         ];
 
