@@ -32,4 +32,8 @@ Route::group(
         Route::get('/category/{category}', 'EventController@listRecentEventsByCategory');
         Route::get('/{event}', 'EventController@getEventDetails');
     });
+
+    Route::prefix('checkout')->group(function() {
+       Route::post('/apply-coupon', 'CheckoutController@applyCoupon');
+    });
 });

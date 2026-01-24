@@ -24,6 +24,11 @@ class Coupon extends Model
         'limit',
     ];
 
+    protected $casts = [
+        'value' => 'float',
+        'limit' => 'integer',
+    ];
+
     public function event()
     {
         return $this->belongsTo(Event::class);
@@ -42,7 +47,7 @@ class Coupon extends Model
 
     public function getHasReachedLimitAttribute(): bool
     {
-        return !is_null($this->limit) && $this->limit === 0;
+        return $this->limit === 0;
     }
 
     public function getIsActiveAttribute(): bool
@@ -52,14 +57,13 @@ class Coupon extends Model
         return Carbon::now()->between($startDate, $endDate);
     }
 
-    public function calculateValue($amount)
+    public function calculateValue($amount): float
     {
-        $value = (float)$this->value;
-
         if ($this->type === 'percentage') {
-            return $amount * ($value / 100);
+            return $amount * ($this->value / 100);
         }
-        return $value;
+
+        return $this->value;
     }
 
     public function invoices()

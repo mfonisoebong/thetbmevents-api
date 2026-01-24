@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('coupons', function (Blueprint $table) {
             $table->string('referral_name')->nullable();
-            $table->unsignedBigInteger('limit')->default(0)->after('value');
+            $table->bigInteger('limit')->default(0)->after('value');
         });
     }
 
