@@ -23,6 +23,7 @@ class EventResource extends JsonResource
             'image' => $this->logo,
             'isOnline' => $this->type === 'virtual',
             'tickets' => TicketResource::collection(Ticket::where('event_id', $this->id)->get()),
+            'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

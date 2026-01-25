@@ -5,6 +5,8 @@ namespace App\Http\Resources\V2;
 use App\Http\Resources\Mobile\Auth\ProfileResource;
 use App\Http\Resources\Mobile\Invoice\TicketResource as InvoiceTicketResource;
 use App\Http\Resources\Mobile\Sale\EventSaleResource;
+use App\Models\NewPurchasedTicket;
+use App\Models\PurchasedTicket;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -23,11 +25,29 @@ class TicketResource extends JsonResource
             'start_selling_date' => $this->selling_start_date_time,
             'end_selling_date' => $this->selling_end_date_time,
             'quantity' => $this->quantity,
-            'sold' => $this->sold,
+            'sold' => $this->getSold(),
             'organizer_id' => $this->organizer_id,
             'event_id' => $this->event_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
     }
+
+    private function getSold(): int
+    {
+        $sold = $this->sold;
+
+        if ($sold > 0) {
+            return $sold;
+        }
+
+        $purchasedCount = NewPurchasedTicket::where('ticket_id', $this->id)->count();
+
+        if ($purchasedCount > 0) {
+            return $purchasedCount;
+        }
+
+        return PurchasedTicket::where('ticket_id', $this->id)->count();
+    }
+
 }

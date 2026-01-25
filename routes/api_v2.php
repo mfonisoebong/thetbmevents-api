@@ -38,10 +38,15 @@ Route::group(
        Route::post('/apply-coupon', 'CheckoutController@applyCoupon');
     });
 
-    // Webhooks (V2)
     Route::get('manual-verify-payment/{reference}', 'PaymentWebhookController@manualVerifyPayment');
     Route::prefix('webhooks')->group(function () {
         Route::post('/paystack', 'PaymentWebhookController@paystackWebhook');
         Route::post('/flutterwave', 'PaymentWebhookController@flutterwaveWebhook');
+    });
+
+    Route::middleware(['auth', 'verified', 'active'])->prefix('dashboard')->group(function () {
+        Route::prefix('organizer')->group(function() {
+            Route::get('overview', 'OrganizerDashboardController@overview');
+        });
     });
 });
