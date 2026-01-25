@@ -39,7 +39,9 @@ class PaymentWebhookController extends Controller
             return response(null, 400);
         }
 
-        $transaction = Transaction::where('reference', $reference)->first();
+        DB::beginTransaction();
+
+        $transaction = Transaction::where('reference', $reference)->lockForUpdate()->first();
 
         if (!$transaction) {
             Log::warning('Paystack webhook received for non-existent transaction', ['reference' => $reference]);
@@ -81,7 +83,9 @@ class PaymentWebhookController extends Controller
             return response(null, 200);
         }
 
-        $transaction = Transaction::where('reference', $reference)->first();
+        DB::beginTransaction();
+
+        $transaction = Transaction::where('reference', $reference)->lockForUpdate()->first();
 
         if (!$transaction) {
             Log::warning('Flutterwave webhook received for non-existent transaction', ['reference' => $reference]);
@@ -108,7 +112,9 @@ class PaymentWebhookController extends Controller
 
     public function manualVerifyPayment(string $reference)
     {
-        $transaction = Transaction::query()->where('reference', $reference)->first();
+        DB::beginTransaction();
+
+        $transaction = Transaction::where('reference', $reference)->lockForUpdate()->first();
 
         if (!$transaction) {
             return response()->json(['message' => 'Transaction not found'], 404);
@@ -179,8 +185,6 @@ class PaymentWebhookController extends Controller
 
     private function finishUp(Transaction $transaction)
     {
-        DB::beginTransaction();
-
         $transaction->update([
             'status' => 'success',
         ]);
