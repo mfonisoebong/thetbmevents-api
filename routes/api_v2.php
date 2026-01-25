@@ -47,6 +47,7 @@ Route::group(
     Route::middleware(['auth', 'verified', 'active'])->prefix('dashboard')->group(function () {
         Route::prefix('organizer')->group(function() {
             Route::get('overview', 'OrganizerDashboardController@overview');
+            Route::get('/event-orders-and-attendees/{event}', 'OrganizerDashboardController@eventOrdersAndAttendees');
         });
     });
 });
