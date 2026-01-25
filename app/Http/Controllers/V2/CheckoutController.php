@@ -177,9 +177,8 @@ class CheckoutController extends Controller
             return $this->error($gatewayResponse['message'], 502);
         }
 
-        // 7) if successfully initialized, create transaction + return gateway response
         Transaction::create([
-            'amount' => $total,
+            'amount' => $total - $platformFee,
             'charged_amount' => $chargedAmount,
             'gateway' => $gateway,
             'cart_items' => $cartItems,
