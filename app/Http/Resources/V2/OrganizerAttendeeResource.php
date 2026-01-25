@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\V2;
 
-use App\Models\NewPurchasedTicket;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,13 +13,19 @@ class OrganizerAttendeeResource extends JsonResource
             'id' => $this->id,
             'full_name' => $this->full_name,
             'email' => $this->email,
-            'ticket_name' => $this->ticket->name,
+            'ticket_name' => $this->ticket?->name,
             'checked_in' => $this->hasCheckedIn(),
         ];
     }
 
     private function hasCheckedIn(): bool
     {
-        return $this->newPurchasedTickets()->where('used', true)->first() !== null;
+        // If the controller used withExists(), Laravel will hydrate a boolean-ish attribute.
+        if (array_key_exists('new_purchased_tickets_used_exists', $this->getAttributes())) {
+            return (bool) $this->getAttribute('new_purchased_tickets_used_exists');
+        }
+
+        // Fallback: still avoid loading a full model.
+        return $this->newPurchasedTickets()->where('used', true)->exists();
     }
 }

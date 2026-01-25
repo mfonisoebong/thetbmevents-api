@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\V2\EventWithStatsResource;
 use App\Http\Resources\V2\OrganizerAttendeeResource;
 use App\Http\Resources\V2\OrganizerTransactionResource;
+use App\Models\Attendee;
 use App\Models\Event;
 use App\Models\Ticket;
 use App\Models\Transaction;
@@ -20,23 +21,32 @@ class OrganizerDashboardController extends Controller
 
     public function eventOrdersAndAttendees(Event $event)
     {
-        $tickets = Ticket::where('event_id', $event->id)->get();
+        $tickets = Ticket::where('event_id', $event->id)->get(['id', 'name']);
 
-        $transactions = Transaction::where(function ($query) use ($tickets) {
-            foreach ($tickets as $ticket) {
-                $query->orWhereJsonContains('cart_items', [['id' => $ticket->id]]);
-            }
-        })->get();
+        $ticketIds = $tickets->pluck('id')->values();
+        $ticketNames = $tickets->pluck('name', 'id')->mapWithKeys(fn ($name, $id) => [(string) $id => $name])->all();
 
-        $attendees = collect();
+        // Only fetch successful transactions if you only use them for attendee listing.
+        // If you need failed/pending orders too, remove the status clause.
+        $transactions = Transaction::where('status', 'success')
+            ->where(function ($query) use ($ticketIds) {
+                foreach ($ticketIds as $ticketId) {
+                    $query->orWhereJsonContains('cart_items', [['id' => $ticketId]]);
+                }
+            })
+            ->with(['customer:id,full_name,email,phone_number'])
+            ->get();
 
-        foreach ($transactions as $transaction) {
-            if ($transaction->status !== 'success') {
-                continue;
-            }
+        // Fetch attendees in one query (instead of merging per-transaction) and eager-load what's needed by the resource.
+        $attendees = Attendee::whereIn('ticket_id', $ticketIds)
+            ->with(['ticket:id,name'])
+            ->withExists(['newPurchasedTickets as new_purchased_tickets_used_exists' => function ($q) {
+                $q->where('used', true);
+            }])
+            ->get();
 
-            $attendees = $attendees->merge($transaction->customer->attendees);
-        }
+        // Pass preloaded ticket names to the resource to avoid Ticket::find() inside resource serialization.
+        request()->attributes->set('ticket_names', $ticketNames);
 
         return $this->success([
             'orders' => OrganizerTransactionResource::collection($transactions),
