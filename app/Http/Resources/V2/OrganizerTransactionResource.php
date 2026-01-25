@@ -3,6 +3,7 @@
 namespace App\Http\Resources\V2;
 
 use App\Models\Ticket;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -28,6 +29,7 @@ class OrganizerTransactionResource extends JsonResource
                 'phone_number' => $this->customer?->phone_number,
             ],
             'quantity' => $this->getTotalQuantityFromCartItems($this->cart_items),
+            'date' => Carbon::parse($this->created_at)->format('M d, Y h:ia'),
         ];
     }
 
