@@ -120,8 +120,9 @@ class Event extends Model
 
     public function getImageUrlAttribute($value)
     {
-        $logo = config('app.url') . '/' . $value;
-        return $logo;
+        if(Str::isUrl($value)) return $value;
+
+        return config('app.url') . '/' . trim($value, '/');
     }
 
     public function user()

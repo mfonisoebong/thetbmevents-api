@@ -20,7 +20,8 @@ class Ticket extends Model
         'description',
         'selling_start_date_time',
         'selling_end_date_time',
-        'sold'
+        'sold',
+        'currency'
     ];
 
     protected $casts = [

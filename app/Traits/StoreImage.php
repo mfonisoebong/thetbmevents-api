@@ -14,7 +14,7 @@ trait StoreImage
     {
         if ($oldPath) {
             $formatted = Str::isUrl($oldPath) ? str_replace(
-                env('APP_URL') . '/',
+                config('app.url') . '/',
                 '',
                 $oldPath
             ) : $oldPath;
@@ -33,7 +33,7 @@ trait StoreImage
     public function removeFile($path)
     {
         $formatted = Str::isUrl($path) ? str_replace(
-            env('APP_URL') . '/',
+            config('app.url') . '/',
             '',
             $path
         ) : $path;
