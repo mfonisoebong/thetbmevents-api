@@ -27,15 +27,15 @@ Route::group(
         });
     });
 
-    Route::prefix('events')->group(function(){
+    Route::prefix('events')->group(function () {
         Route::get('/', 'EventController@listRecentEvents');
         Route::get('/category/{category}', 'EventController@listRecentEventsByCategory');
         Route::get('/{event}', 'EventController@getEventDetails');
     });
 
-    Route::prefix('checkout')->group(function() {
+    Route::prefix('checkout')->group(function () {
         Route::post('/', 'CheckoutController@processCheckout');
-       Route::post('/apply-coupon', 'CheckoutController@applyCoupon');
+        Route::post('/apply-coupon', 'CheckoutController@applyCoupon');
     });
 
     Route::get('manual-verify-payment/{reference}', 'PaymentWebhookController@manualVerifyPayment');
@@ -45,17 +45,16 @@ Route::group(
     });
 
     Route::middleware(['auth', 'verified', 'active'])->prefix('dashboard')->group(function () {
-        Route::prefix('organizer')->group(function() {
+        Route::prefix('organizer')->group(function () {
             Route::get('overview', 'OrganizerDashboardController@overview');
             Route::get('/event-orders-and-attendees/{event}', 'OrganizerDashboardController@eventOrdersAndAttendees');
 
-            Route::prefix('event')->group(function() {
+            Route::prefix('event')->group(function () {
                 Route::post('/', 'OrganizerEventController@createEvent');
                 Route::put('/{event}', 'OrganizerEventController@updateEvent');
-                // Route::delete('/{event}', 'OrganizerEventController@deleteEvent');
             });
 
-            Route::prefix('ticket')->group(function() {
+            Route::prefix('ticket')->group(function () {
                 Route::delete('/delete/{ticket}', 'OrganizerTicketController@deleteTicket');
                 Route::put('/edit-end-date/{ticket}/{newEndDate}', 'OrganizerTicketController@editTicketEndDate');
             });

@@ -11,6 +11,7 @@ class EventWithStatsResource extends EventResource
     public function toArray(Request $request): array
     {
         return array_merge(parent::toArray($request), [
+            'location' => $this->location,
             'total_tickets_sold' => $this->getTicketsSold(),
             'total_revenue' => $this->getTotalRevenue(),
         ]);

@@ -7,6 +7,7 @@ use App\Http\Requests\V2\CreateEventRequest;
 use App\Models\Event;
 use App\Models\Ticket;
 use App\Traits\StoreImage;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -66,5 +67,30 @@ class OrganizerEventController extends Controller
             DB::rollBack();
             return $this->error($e->getMessage(), 500);
         }
+    }
+
+    public function updateEvent(Request $request, Event $event)
+    {
+        $this->authorize('update', $event);
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+//            'category' => 'required|string|max:100',
+            'date' => 'required|date|after:now',
+            'time' => 'required',
+//            'location' => 'required|string|max:255',
+//            'virtual_link' => 'required|url|max:255',
+//            'undisclosed' => 'required|boolean',
+        ]);
+
+        $event->update([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'event_date' => $request->input('date'),
+            'event_time' => $request->input('time'),
+        ]);
+
+        return $this->success(null, 'Event updated successfully');
     }
 }

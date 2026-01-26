@@ -16,7 +16,7 @@ class CreateEventRequest extends FormRequest
             'tags' => 'nullable|array',
             'tags.*' => 'string|max:50',
             'date' => 'required|date|after:now',
-            'time' => 'required|date_format:H:i',
+            'time' => 'required',
             'timezone' => 'required|string|timezone',
             'location' => 'required_if:type,physical|string|max:255',
             'virtual_link' => 'required_if:type,virtual|url|max:255',
