@@ -52,7 +52,11 @@ Route::group(
             Route::prefix('event')->group(function() {
                 Route::post('/', 'OrganizerEventController@createEvent');
                 Route::put('/{event}', 'OrganizerEventController@updateEvent');
-//                Route::delete('/{event}', 'OrganizerEventController@deleteEvent');
+                // Route::delete('/{event}', 'OrganizerEventController@deleteEvent');
+            });
+
+            Route::prefix('ticket')->group(function() {
+                Route::delete('/delete/{ticket}', 'OrganizerTicketController@deleteTicket');
             });
         });
     });

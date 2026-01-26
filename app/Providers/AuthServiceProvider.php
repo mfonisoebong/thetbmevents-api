@@ -4,7 +4,9 @@ namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
 use App\Models\Event;
+use App\Models\Ticket;
 use App\Policies\EventPolicy;
+use App\Policies\TicketPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -16,7 +18,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         //
-        Event::class => EventPolicy::class,
+        Ticket::class => TicketPolicy::class,
     ];
 
     /**
