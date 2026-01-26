@@ -15,7 +15,6 @@ class Ticket extends Model
         'event_id',
         'price',
         'name',
-        'unlimited',
         'quantity',
         'organizer_id',
         'description',

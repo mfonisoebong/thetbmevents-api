@@ -32,7 +32,7 @@ class CartItemResource extends JsonResource
                 'price'=> $ticket->price,
                 'name'=> $ticket->name,
                 'quantity'=> $ticket->quantity,
-                'unlimited'=> $ticket->unlimited ? true: false
+                'unlimited'=> $ticket->quantity === 0
             ]
         ];
     }

@@ -31,7 +31,7 @@ class UpdateTicketStats
                 ->first();
             $itemQuantity = (int)$item->quantity;
 
-            $isUnlimited = $ticket->unlimited;
+            $isUnlimited = $ticket->quantity === 0;
 
             if (!$isUnlimited) {
                 $ticket->quantity = $ticket->quantity - $itemQuantity;

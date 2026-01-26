@@ -22,8 +22,8 @@ class TicketResource extends JsonResource
         $now = Carbon::now();
         $isEarly = $now->lt($ticketSellingStartDate);
         $isLate = $now->gt($ticketSellingEndDate);
-        $unlimited = (bool)$this->unlimited;
-        $isSoldOut = $unlimited ? false : !(int)$this->quantity;
+        $unlimited = $this->quantity === 0;
+        $isSoldOut = !$unlimited && !(int)$this->quantity;
 
 
         return [
@@ -31,7 +31,7 @@ class TicketResource extends JsonResource
             'name' => $this->name,
             'price' => (float)$this->price,
             'quantity' => (int)$this->quantity,
-            'unlimited' => $unlimited,
+            'unlimited' => $this->quantity === 0,
             'organizer_id' => $this->organizer_id,
             'description' => Str::limit($this->description, 150),
             'selling_start_date_time' => $this->selling_start_date_time,

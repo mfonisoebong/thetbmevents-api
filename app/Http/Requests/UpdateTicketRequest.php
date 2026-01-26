@@ -28,7 +28,6 @@ class UpdateTicketRequest extends FormRequest
             'tickets.*.selling_end_date_time'=> ['required'],
             'tickets.*.price'=> ['required', 'numeric'],
             'tickets.*.quantity'=> ['required', 'integer'],
-            'tickets.*.unlimited'=> ['required', 'boolean'],
             'tickets.*.description'=> ['required']
     ];
     }

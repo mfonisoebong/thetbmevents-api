@@ -21,8 +21,6 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->enum('currency', ['NGN', 'USD'])->default('NGN');
             $table->unsignedDouble('price');
-            // todo: remove everywhere
-            $table->boolean('unlimited')->default(true);
             $table->bigInteger('quantity')->default(0);
             $table->bigInteger('sold')->default(0);
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
