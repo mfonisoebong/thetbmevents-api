@@ -19,7 +19,7 @@ class EventsController extends Controller
 
     public function getAllEvents()
     {
-        $events = Event::all(['id', 'title', 'logo']);
+        $events = Event::all(['id', 'title', 'image_url']);
         return $this->success($events);
     }
 

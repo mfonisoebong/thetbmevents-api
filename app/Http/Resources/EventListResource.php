@@ -19,7 +19,7 @@ class EventListResource extends JsonResource
             'id' => $this->id,
             'alias' => $this->alias,
             'title' => Str::of($this->title)->limit(25) ?? $this->title,
-            'logo' => $this->logo,
+            'logo' => $this->image_url,
             'created_at' => $this->created_at,
             'ticket_price' => count($this->tickets) < 1 ? null : $this->tickets[0]->price,
             'status' => $this->status

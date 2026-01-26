@@ -22,7 +22,7 @@ class Event extends Model
         'category',
         'tags',
         'location',
-        'logo',
+        'image_url',
         'type',
         'event_link',
         'links_instagram',
@@ -118,7 +118,7 @@ class Event extends Model
         return $this->end_date . ' ' . $this->end_time;
     }
 
-    public function getLogoAttribute($value)
+    public function getImageUrlAttribute($value)
     {
         $logo = config('app.url') . '/' . $value;
         return $logo;

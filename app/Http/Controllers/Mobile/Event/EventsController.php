@@ -49,7 +49,7 @@ class EventsController extends Controller
             foreach ($events as $event) {
                 $csv->insertOne([
                     $event->title,
-                    $event->logo,
+                    $event->image_url,
                     $event->tickets[0]->price,
                     $event->type,
                     $event->commence_date,
@@ -263,7 +263,7 @@ class EventsController extends Controller
                 'description' => $event->description,
                 'categories' => $event->category,
                 'location' => $event->location,
-                'logo' => $event->logo,
+                'logo' => $event->image_url,
                 'type' => $event->type,
                 'event_link' => $event->event_link,
                 'links_instagram' => $event->links_instagram,

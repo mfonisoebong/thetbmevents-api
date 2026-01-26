@@ -21,7 +21,7 @@ class EventListResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'logo' => $this->logo,
+            'logo' => $this->image_url,
             'categories' => $this->category,
             'location' => $this->location,
             'status' => $this->status,

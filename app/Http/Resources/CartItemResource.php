@@ -23,7 +23,7 @@ class CartItemResource extends JsonResource
             'quantity'=> $this->quantity,
             'event'=>[
                 'id'=> $event->id,
-                'logo'=> $event->logo,
+                'logo'=> $event->image_url,
                 'category'=> $event->category,
                 'title'=> $event->title
             ],

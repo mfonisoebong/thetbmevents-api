@@ -24,7 +24,7 @@ class EventsResource extends JsonResource
             'title' => Str::of($this->title)->limit(25) ?? $this->title,
             'event_date' => $this->event_date,
             'location' => $this->undisclose_location ? 'Undisclosed' : $location,
-            'logo' => $this->logo,
+            'logo' => $this->image_url,
             'undisclose_location' => $this->undisclose_location === 1 ? true : false
         ];
     }

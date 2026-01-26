@@ -32,7 +32,7 @@ class EventsWithTicketResource extends JsonResource
             'status' => $this->status,
             'title' => Str::of($this->title)->limit(17) ?? $this->title,
             'type' => $this->type,
-            'logo' => $this->logo,
+            'logo' => $this->image_url,
             'tickets_sold' => $ticketsSold
         ];
     }

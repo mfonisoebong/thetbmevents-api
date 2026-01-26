@@ -23,7 +23,7 @@ class EventFactory extends Factory
             'description' => fake()->text(200),
             'timezone' => fake()->randomElement(['WAT', 'UTC']),
             'type' => 'physical',
-            'logo' => fake()->randomElement(['storage/event_img_1.png', 'storage/event_img_2.png', 'storage/event_img_3.png', null]),
+            'image_url' => fake()->randomElement(['storage/event_img_1.png', 'storage/event_img_2.png', 'storage/event_img_3.png', null]),
             'location' => fake()->randomElement(['Abuja, Nigeria', 'Lagos, Nigeria', 'Akure, Ondo']),
             'attendees' => fake()->numberBetween(0, 2000),
             'event_date' => fake()->date(),

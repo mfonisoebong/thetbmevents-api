@@ -183,7 +183,7 @@ class EventsController extends Controller
                 'location' => $request->location,
                 'longitude' => $request->longitude ?? 0,
                 'latitude' => $request->latitude ?? 0,
-                'logo' => $logoFilepath,
+                'image_url' => $logoFilepath,
                 'type' => $request->type,
                 'undisclose_location' => $request->undisclose_location === 'true' ? true : false,
                 'links_instagram' => $request->links_instagram ?? null,
@@ -235,7 +235,7 @@ class EventsController extends Controller
                         'event_link' => $request->event_link,
                         'location_tips' => null,
                     ]),
-                    'logo' => $logoFilepath,
+                    'image_url' => $logoFilepath,
                     'undisclose_location' => $request->undisclose_location === 'true' ? true : false,
                 ]);
             } else {
@@ -295,7 +295,7 @@ class EventsController extends Controller
         try {
             $this->checkEventAuth($event, $request);
             $event->delete();
-            File::delete(public_path($event->logo));
+            File::delete(public_path($event->image_url));
         } catch (Exception $e) {
             return $this
                 ->failed(401, null, $e->getMessage());
@@ -332,7 +332,7 @@ class EventsController extends Controller
             foreach ($events as $event) {
                 $csv->insertOne([
                     $event->title,
-                    $event->logo,
+                    $event->image_url,
                     $event->tickets[0]->price,
                     $event->type,
                     $event->commence_date,

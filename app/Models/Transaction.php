@@ -140,7 +140,7 @@ class Transaction extends Model
                 'id' => $ticket->id,
                 'event_title' => $ticket->ticket->event?->title ?? '',
                 'organizer' => $ticket->ticket->organizer->full_name,
-                'event_logo' => $ticket->ticket->event?->logo ?? '',
+                'event_logo' => $ticket->ticket->event?->image_url ?? '',
                 'name' => $ticket->ticket->name . ' - ' . $ticket->ticket->event?->title ?? '',
                 'price' => $ticket->quantity * $ticket->ticket->price,
                 'event_link' => $eventLink,

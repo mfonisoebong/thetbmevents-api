@@ -20,7 +20,7 @@ class EventResource extends JsonResource
             'location' => !$this->undisclose_location ? $this->location : 'Undisclosed',
             'category' => $this->category,
             'tags' => $this->tags,
-            'image' => $this->logo,
+            'image' => $this->image_url,
             'isOnline' => $this->type === 'virtual',
             'tickets' => TicketResource::collection(Ticket::where('event_id', $this->id)->get()),
             'status' => $this->status,

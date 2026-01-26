@@ -23,7 +23,7 @@ class EventSaleResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'logo' => $this->logo,
+            'logo' => $this->image_url,
             'event_date' => Carbon::parse($this->event_date)->format('D, d M Y'),
             'categories' => $this->category,
             'tickets_sold' => (int) $this->sales()->sum('tickets_bought'),

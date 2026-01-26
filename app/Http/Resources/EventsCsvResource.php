@@ -18,7 +18,7 @@ class EventsCsvResource extends JsonResource
 
             [
              Str::of($this->title)->limit(25) ?? $this->title,
-             $this->logo,
+             $this->image_url,
            $this->created_at,
             $this->tickets[0]->price,
            $this->type,

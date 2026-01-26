@@ -117,7 +117,7 @@ class ProfileController extends Controller
             return [
                 'id' => $event['id'],
                 'title' => Str::of($event['title'])->limit(25) ?? $event['title'],
-                'logo' => $event['logo'],
+                'logo' => $event['image_url'],
                 'tickets' => $eventSales,
                 'created_at' => $event['created_at'],
             ];

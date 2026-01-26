@@ -51,7 +51,7 @@ class SendPurchasedTickets
                     'event_title' => $ticket->ticket->event->title,
                     'event_id' => $ticket->ticket->event->id,
                     'organizer' => $ticket->ticket->organizer->full_name,
-                    'event_logo' => $ticket->ticket->event->logo,
+                    'event_logo' => $ticket->ticket->event->image_url,
                     'ticket_name' => $ticket->ticket->name,
                     'event_name' => $ticket->ticket->event->title,
                     'price' => $ticket->ticket->price,
