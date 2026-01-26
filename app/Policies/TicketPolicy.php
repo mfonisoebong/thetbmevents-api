@@ -17,7 +17,7 @@ class TicketPolicy
 
     public function update(User $user, Ticket $ticket): bool
     {
-        return true;
+        return $user->id === $ticket->organizer_id;
     }
 
     public function delete(User $user, Ticket $ticket): bool

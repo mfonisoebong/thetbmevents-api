@@ -57,6 +57,7 @@ Route::group(
 
             Route::prefix('ticket')->group(function() {
                 Route::delete('/delete/{ticket}', 'OrganizerTicketController@deleteTicket');
+                Route::put('/edit-end-date/{ticket}/{newEndDate}', 'OrganizerTicketController@editTicketEndDate');
             });
         });
     });
