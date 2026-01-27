@@ -27,17 +27,14 @@ class Handler extends ExceptionHandler
         return true;
     }
 
-
-    protected function unauthenticated($request, AuthenticationException $ex)
+    protected function unauthenticated($request, AuthenticationException $exception)
     {
-
-        if ($request->is('api/*')) { // for routes starting with `/api`
-            return $this->failed(401, null, 'Unauntenticated');
+        if ($request->expectsJson()) {
+            return $this->failed(401, null, 'Unauthenticated. Please log in to continue.');
         }
 
-        return redirect('/login'); // for normal routes
+        return redirect('/login');
     }
-
 
     /**
      * Register the exception handling callbacks for the application.
