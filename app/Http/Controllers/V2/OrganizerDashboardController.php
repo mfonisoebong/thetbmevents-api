@@ -10,6 +10,7 @@ use App\Models\Attendee;
 use App\Models\Event;
 use App\Models\Ticket;
 use App\Models\Transaction;
+use Illuminate\Support\Facades\DB;
 
 class OrganizerDashboardController extends Controller
 {
@@ -52,5 +53,36 @@ class OrganizerDashboardController extends Controller
             'orders' => OrganizerTransactionResource::collection($transactions),
             'attendees' => OrganizerAttendeeResource::collection($attendees),
         ]);
+    }
+
+    public function revenueByYear(string $year)
+    {
+        if (!preg_match('/^\d{4}$/', $year)) {
+            return $this->failed(422, null, 'Invalid year format. Expected YYYY');
+        }
+
+        $ticketIds = auth()->user()->createdTickets->pluck('id')->all();
+
+        // Note: months returned by MySQL are 1..12.
+        $monthly = Transaction::where('status', 'success')
+            ->where(function ($query) use ($ticketIds) {
+                foreach ($ticketIds as $ticketId) {
+                    $query->orWhereJsonContains('cart_items', [['id' => $ticketId]]);
+                }
+            })
+            ->whereYear('created_at', (int) $year)
+            ->selectRaw('MONTH(created_at) as month, SUM(amount) as total')
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->pluck('total', 'month');
+
+        $result = array_fill(0, 12, 0.0);
+        foreach ($monthly as $month => $total) {
+            $idx = ((int) $month) - 1;
+            if ($idx >= 0 && $idx < 12) {
+                $result[$idx] = (float) $total;
+            }
+        }
+
+        return $this->success($result);
     }
 }

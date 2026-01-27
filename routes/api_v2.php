@@ -67,6 +67,8 @@ Route::group(
                 Route::put('/update-status/{coupon}', 'OrganizerCouponController@updateCouponStatus');
                 Route::delete('/{coupon}', 'OrganizerCouponController@deleteCoupon');
             });
+
+            Route::get('/revenue-by year/{year}', 'OrganizerDashboardController@revenueByYear');
         });
     });
 });
