@@ -131,7 +131,7 @@ class PaymentController extends Controller
         $res = Http::withHeaders($headers)->post($url, $data);
 
         if ($res->successful()) {
-            Attendee::createMany(array_map(function ($a) use ($customer) {
+            Attendee::insert(array_map(function ($a) use ($customer) {
                 return [
 
                     'full_name' => $a['first_name'] . ' ' . $a['last_name'],
@@ -187,7 +187,7 @@ class PaymentController extends Controller
             "phone_number" => $request->customer_phone_number
         ]);
 
-        Attendee::create(array_map(function ($a) use ($customer) {
+        Attendee::insert(array_map(function ($a) use ($customer) {
             return [
 
                 'full_name' => $a['first_name'] . ' ' . $a['last_name'],
