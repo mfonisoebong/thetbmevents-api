@@ -182,7 +182,7 @@ class PaymentController extends Controller
             "phone_number" => $request->customer_phone_number
         ]);
         $attendees = array_map(function ($a) use ($customer) {
-            return [...$a, 'customer_id' => $customer->id];
+            return [...$a, 'full_name' => $a['first_name'] . ' ' . $a['last_name'], 'customer_id' => $customer->id];
         }, $request->attendees);
         Attendee::insert($attendees);
 
@@ -276,6 +276,6 @@ class PaymentController extends Controller
             return round($finalPrice - $amount, 2);
         }
 
-        return  0;
+        return 0;
     }
 }

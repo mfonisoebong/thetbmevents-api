@@ -20,7 +20,8 @@ class PayoutsController extends Controller
         try {
             $authorized = Gate::allows('create', Payout::class);
 
-            if (!$authorized) return $this->failed(403, null, 'Unauthorized');
+            if (!$authorized)
+                return $this->failed(403, null, 'Unauthorized');
 
             $data = $request->validate([
                 'amount' => ['required', 'numeric', 'min:100'],
