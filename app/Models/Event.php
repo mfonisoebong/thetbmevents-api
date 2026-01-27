@@ -104,7 +104,7 @@ class Event extends Model
         parent::boot();
 
         static::saving(function ($event) {
-            $event->alias = Str::slug($event->title);
+            $event->alias = Str::slug($event->title) . '-' . substr(bin2hex(random_bytes(3)), 0, 6);
         });
     }
 
