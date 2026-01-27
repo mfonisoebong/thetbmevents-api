@@ -131,10 +131,15 @@ class PaymentController extends Controller
         $res = Http::withHeaders($headers)->post($url, $data);
 
         if ($res->successful()) {
-            $attendees = array_map(function ($a) use ($customer) {
-                return [...$a, 'customer_id' => $customer->id];
-            }, $request->attendees);
-            Attendee::insert($attendees);
+            Attendee::create(array_map(function ($a) use ($customer) {
+                return [
+
+                    'full_name' => $a['first_name'] . ' ' . $a['last_name'],
+                    'email' => $a['email'],
+                    'ticket_id' => $a['ticket_id'],
+                    'customer_id' => $customer->id
+                ];
+            }, $request->attendees));
 
             Transaction::create([
                 'customer_id' => $customer->id,
@@ -181,15 +186,16 @@ class PaymentController extends Controller
             "phone_dial_code" => $request->customer_phone_dial_code,
             "phone_number" => $request->customer_phone_number
         ]);
-        $attendees = array_map(function ($a) use ($customer) {
+
+        Attendee::create(array_map(function ($a) use ($customer) {
             return [
+
                 'full_name' => $a['first_name'] . ' ' . $a['last_name'],
                 'email' => $a['email'],
                 'ticket_id' => $a['ticket_id'],
                 'customer_id' => $customer->id
             ];
-        }, $request->attendees);
-        Attendee::insert($attendees);
+        }, $request->attendees));
 
         $reference = $customer->id;
         $ticket = Ticket::where('id', $request->tickets[0]['id'])
