@@ -6,10 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\V2\EventWithStatsResource;
 use App\Http\Resources\V2\OrganizerAttendeeResource;
 use App\Http\Resources\V2\OrganizerTransactionResource;
+use App\Jobs\SendBlastEmailJob;
+use App\Mail\BlastMailV2;
 use App\Models\Attendee;
 use App\Models\Event;
+use App\Models\NewPurchasedTicket;
 use App\Models\Ticket;
 use App\Models\Transaction;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class OrganizerDashboardController extends Controller
@@ -84,5 +88,46 @@ class OrganizerDashboardController extends Controller
         }
 
         return $this->success($result);
+    }
+
+    public function checkInAttendee(NewPurchasedTicket $newPurchasedTicket)
+    {
+        if ($newPurchasedTicket->used) {
+            return $this->error('Attendee has already been checked in.');
+        }
+
+        if ($newPurchasedTicket->ticket->organizer_id !== auth()->id()) {
+            return $this->error('You do not have permission to check in this attendee.', 403);
+        }
+
+        $newPurchasedTicket->used = true;
+        $newPurchasedTicket->save();
+
+        return $this->success([
+            'attendee_name' => $newPurchasedTicket->attendee->full_name,
+            'ticket_name' => $newPurchasedTicket->ticket->name,
+            'event_name' => $newPurchasedTicket->ticket->event->title,
+        ]);
+    }
+
+    public function sendBlastEmail(Request $request)
+    {
+        $request->validate([
+            'subject' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string'],
+            'event_id' => ['required'],
+        ]);
+
+        $event = Event::findOrFail($request->event_id);
+
+        $this->authorize('blast-mail', $event);
+
+        SendBlastEmailJob::dispatch(
+            $request->subject,
+            $request->input('content'),
+            $event->id
+        );
+
+        return $this->success(null, 'Blast email has been queued and will be sent shortly.');
     }
 }

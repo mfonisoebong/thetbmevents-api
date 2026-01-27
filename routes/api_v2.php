@@ -69,6 +69,8 @@ Route::group(
             });
 
             Route::get('/revenue-by year/{year}', 'OrganizerDashboardController@revenueByYear');
+            Route::get('/check-in-attendee/{newPurchasedTicket}', 'OrganizerDashboardController@checkInAttendee');
+            Route::post('/send-blast-email', 'OrganizerDashboardController@sendBlastEmail');
         });
     });
 });

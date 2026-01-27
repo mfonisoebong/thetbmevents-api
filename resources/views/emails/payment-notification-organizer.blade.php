@@ -74,7 +74,7 @@
                                     <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:20px;color:#4B5563;">
                                         Event: <span style="color:#111827;font-weight:700;">{{ $event->title }}</span><br />
                                         Customer: <span style="color:#111827;">{{ $customer->full_name }}</span><br />
-                                        Purchased: <span style="color:#111827;">{{ \Carbon\Carbon::parse($transaction->updated_at)->format('d/m/y H:i:s') }}</span>
+                                        Purchased On: <span style="color:#111827;">{{ \Carbon\Carbon::parse($transaction->updated_at)->format('d/m/y H:i:s') }}</span>
                                     </div>
 
                                     {{--<div style="margin-top:14px;">

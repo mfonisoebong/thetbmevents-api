@@ -14,4 +14,9 @@ class EventPolicy
     {
         return $user->id === $event->user_id;
     }
+
+    public function blastMail(User $user, Event $event): bool
+    {
+        return $user->id === $event->user_id;
+    }
 }
