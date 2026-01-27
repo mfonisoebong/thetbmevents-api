@@ -180,10 +180,15 @@ class PaymentWebhookController extends Controller
             return response()->json(['message' => 'Payment not successful'], 400);
         }
 
+        if ($gateway === 'free') {
+            return $this->finishUp($transaction);
+        }
+
         return response()->json(['message' => 'Unsupported gateway'], 400);
     }
 
-    private function finishUp(Transaction $transaction)
+    /** Always start a transaction using DB::beginTransaction() before calling this method */
+    public static function finishUp(Transaction $transaction)
     {
         $transaction->update([
             'status' => 'success',
@@ -226,18 +231,18 @@ class PaymentWebhookController extends Controller
                         'ticket_id' => $ticket_id,
                     ]);
 
-                    $this->createPurchasedTickets($attendee, $transaction, $ticket_id);
+                    static::createPurchasedTickets($attendee, $transaction, $ticket_id);
                 }
             } else {
                 $attendee = $customer->attendees()->create([
-                    'full_name' => $customerData['full_name'],
+                    'full_name' => $customerData['fullname'],
                     'email' => $customerData['email'],
                     'ticket_id' => $tickets[0],
                     'tickets_bought_count' => $ticketsBoughtCount
                 ]);
 
                 for ($i = 0; $i < $ticketsBoughtCount; $i++) {
-                    $this->createPurchasedTickets($attendee, $transaction, $tickets[$i]);
+                    static::createPurchasedTickets($attendee, $transaction, $tickets[$i]);
                 }
             }
 
@@ -256,7 +261,7 @@ class PaymentWebhookController extends Controller
         return response(null, 200);
     }
 
-    private function createPurchasedTickets(Attendee $attendee, Transaction $transaction, string $ticket_id)
+    private static function createPurchasedTickets(Attendee $attendee, Transaction $transaction, string $ticket_id)
     {
         $attendee->newPurchasedTickets()->create([
             'transaction_id' => $transaction->id,

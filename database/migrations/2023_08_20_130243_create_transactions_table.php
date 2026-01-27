@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('gateway', ['vella', 'paystack']);
             $table->enum('status', ['pending', 'success', 'failed', 'reversed'])->default('pending');
             $table->json('cart_items');
-            $table->string('reference');
+            $table->string('reference')->nullable();
             $table->json('data')->nullable();
             $table->timestamps();
 

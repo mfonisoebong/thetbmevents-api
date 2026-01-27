@@ -15,8 +15,8 @@ class UpdateTicketSoldListener
     {
         $transaction = $event->transaction;
         foreach ($transaction->cart_items as $item) {
-            $ticket = Ticket::find($item->id);
-            $ticket->increment('sold', $item->quantity);
+            $ticket = Ticket::find($item['id']);
+            $ticket->increment('sold', $item['quantity']);
         }
     }
 }

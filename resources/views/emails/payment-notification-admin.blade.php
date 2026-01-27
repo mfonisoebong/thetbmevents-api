@@ -62,7 +62,7 @@
                                         New payment received
                                     </div>
                                     <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:18px;color:rgba(15,23,42,0.9);margin-top:4px;">
-                                        {{ $transaction->amount }} via {{ $transaction->gateway }}
+                                        {{ '₦' . $transaction->amount }} via {{ $transaction->gateway }}
                                     </div>
                                 </td>
                             </tr>

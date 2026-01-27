@@ -85,11 +85,43 @@ class CheckoutController extends Controller
     {
         $payload = $request->validated();
 
-        $gateway = $payload['gateway'];
-
         $cartItems = $this->transformTicketIdsToCartItems($payload['tickets']);
 
         $this->checkSellingDateFromCartItems($cartItems);
+
+        $ticketsAmount = $this->getTotalAmount($cartItems);
+
+        if ($payload['is_free_checkout'] && $ticketsAmount == 0) {
+            $data = [
+                'customer' => $payload['customer'],
+                'send_to_different_email' => $payload['send_to_different_email'],
+                'attendees' => $payload['attendees'] ?? [],
+                'meta' => [
+                    'tickets_amount' => $ticketsAmount,
+                    'gateway_fees' => 0,
+                    'platform_fee' => 0,
+                    'tickets_count' => count($payload['tickets']),
+                    'tickets' => $payload['tickets']
+                ],
+            ];
+
+            $transaction = Transaction::create([
+                'amount' => 0,
+                'charged_amount' => 0,
+                'gateway' => 'free',
+                'cart_items' => $cartItems,
+                'reference' => $reference = Str::uuid()->toString(),
+                'user_id' => $request->user()?->id,
+                'data' => $data,
+            ]);
+
+            \DB::beginTransaction();
+            PaymentWebhookController::finishUp($transaction);
+
+            return $this->success(['reference' => $reference], 'Free checkout successful');
+        }
+
+        $gateway = $payload['gateway'];
 
         $paymentMethod = PaymentMethod::where('gateway', $gateway)->firstOrFail();
 
@@ -107,12 +139,6 @@ class CheckoutController extends Controller
         $firstTicket = Ticket::query()->where('id', $cartItems[0]['id'])->first();
         if (!$firstTicket) {
             return $this->error('Invalid ticket selected', 422);
-        }
-
-        $ticketsAmount = $this->getTotalAmount($cartItems);
-
-        if (!$payload['is_free_checkout'] && $ticketsAmount == 0) {
-            return $this->error('This checkout is not free', 403);
         }
 
         $platformFee = $this->getPlatformFee($ticketsAmount);
