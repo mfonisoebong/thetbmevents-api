@@ -200,7 +200,7 @@ class CheckoutController extends Controller
         );
 
         if (!$gatewayResponse['ok']) {
-            return $this->error($gatewayResponse['message'], 502);
+            return $this->error($gatewayResponse['message'], 502, $gatewayResponse['data'] ?? null);
         }
 
         Transaction::create([
@@ -304,7 +304,7 @@ class CheckoutController extends Controller
                 'Authorization' => 'Bearer ' . $secretKey,
             ])->post($url, [
                 'email' => $email,
-                'amount' => $amount * 100,
+                'amount' => (int) ($amount * 100),
                 'reference' => $reference,
                 'callback_url' => $callbackUrl
             ]);

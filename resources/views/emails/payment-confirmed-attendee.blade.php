@@ -99,7 +99,7 @@
                                                 <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:20px;color:#4B5563;">
                                                     Ticket ID: <span style="color:#111827;font-weight:700;">{{ $ticketDetails['id'] }}</span><br />
                                                     Ticket name: <span style="color:#111827;">{{ $ticketDetails['ticket_name'] }}</span><br />
-                                                    Purchased: <span style="color:#111827;">{{ $ticketDetails['date_time_purchased'] }}</span><br />
+                                                    Purchased On: <span style="color:#111827;">{{ $ticketDetails['date_time_purchased'] }}</span><br />
                                                     Payment gateway: <span style="color:#111827;">{{ $ticketDetails['gateway'] }}</span>
                                                 </div>
                                             </td>

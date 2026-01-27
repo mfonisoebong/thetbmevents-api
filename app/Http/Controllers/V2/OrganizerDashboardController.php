@@ -6,10 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\V2\EventWithStatsResource;
 use App\Http\Resources\V2\OrganizerAttendeeResource;
 use App\Http\Resources\V2\OrganizerTransactionResource;
+use App\Jobs\SendBlastEmailJob;
+use App\Mail\BlastMailV2;
 use App\Models\Attendee;
 use App\Models\Event;
+use App\Models\NewPurchasedTicket;
 use App\Models\Ticket;
 use App\Models\Transaction;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrganizerDashboardController extends Controller
 {
@@ -52,5 +57,77 @@ class OrganizerDashboardController extends Controller
             'orders' => OrganizerTransactionResource::collection($transactions),
             'attendees' => OrganizerAttendeeResource::collection($attendees),
         ]);
+    }
+
+    public function revenueByYear(string $year)
+    {
+        if (!preg_match('/^\d{4}$/', $year)) {
+            return $this->failed(422, null, 'Invalid year format. Expected YYYY');
+        }
+
+        $ticketIds = auth()->user()->createdTickets->pluck('id')->all();
+
+        // Note: months returned by MySQL are 1..12.
+        $monthly = Transaction::where('status', 'success')
+            ->where(function ($query) use ($ticketIds) {
+                foreach ($ticketIds as $ticketId) {
+                    $query->orWhereJsonContains('cart_items', [['id' => $ticketId]]);
+                }
+            })
+            ->whereYear('created_at', (int) $year)
+            ->selectRaw('MONTH(created_at) as month, SUM(amount) as total')
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->pluck('total', 'month');
+
+        $result = array_fill(0, 12, 0.0);
+        foreach ($monthly as $month => $total) {
+            $idx = ((int) $month) - 1;
+            if ($idx >= 0 && $idx < 12) {
+                $result[$idx] = (float) $total;
+            }
+        }
+
+        return $this->success($result);
+    }
+
+    public function checkInAttendee(NewPurchasedTicket $newPurchasedTicket)
+    {
+        if ($newPurchasedTicket->used) {
+            return $this->error('Attendee has already been checked in.');
+        }
+
+        if ($newPurchasedTicket->ticket->organizer_id !== auth()->id()) {
+            return $this->error('You do not have permission to check in this attendee.', 403);
+        }
+
+        $newPurchasedTicket->used = true;
+        $newPurchasedTicket->save();
+
+        return $this->success([
+            'attendee_name' => $newPurchasedTicket->attendee->full_name,
+            'ticket_name' => $newPurchasedTicket->ticket->name,
+            'event_name' => $newPurchasedTicket->ticket->event->title,
+        ]);
+    }
+
+    public function sendBlastEmail(Request $request)
+    {
+        $request->validate([
+            'subject' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string'],
+            'event_id' => ['required'],
+        ]);
+
+        $event = Event::findOrFail($request->event_id);
+
+        $this->authorize('blast-mail', $event);
+
+        SendBlastEmailJob::dispatch(
+            $request->subject,
+            $request->input('content'),
+            $event->id
+        );
+
+        return $this->success(null, 'Blast email has been queued and will be sent shortly.');
     }
 }

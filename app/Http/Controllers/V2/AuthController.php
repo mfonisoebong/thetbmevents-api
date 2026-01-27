@@ -11,6 +11,7 @@ use App\Mail\OtpCode;
 use App\Models\OtpVerification;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -141,5 +142,37 @@ class AuthController extends Controller
         $otp->delete();
 
         return $this->success(['token' => JWTAuth::fromUser($user), 'user' => $user], 'Email verified successfully');
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'business_name' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:20',
+            'email' => 'required|email|max:255'
+        ]);
+
+        auth()->user()->update($request->only(['business_name', 'phone_number', 'email']));
+
+        return $this->success();
+    }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = auth()->user();
+
+        if (!password_verify($request->current_password, $user->password)) {
+            return response()->json(['message' => 'Current password is incorrect'], 400);
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return $this->success(null, 'Password changed successfully');
     }
 }

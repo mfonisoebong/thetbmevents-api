@@ -5,17 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light" />
     <meta name="supported-color-schemes" content="light" />
-    <title>New payment received</title>
+    <title>{{ $emailSubject }}</title>
 </head>
 <body style="margin:0;padding:0;background-color:#F8FAFC;">
+<!-- Preheader (hidden preview text). Keep it short; truncated by many email clients. -->
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">
-    New payment received for {{ $event->title }}.
+    {{ $emailSubject }}
 </div>
 
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#F8FAFC;">
     <tr>
         <td align="center" style="padding:32px 12px;">
+            <!-- Container -->
             <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="width:600px;max-width:600px;">
+                <!-- Header -->
                 <tr>
                     <td style="padding:0 0 16px 0;">
                         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -37,7 +40,7 @@
                                                     TBM <span style="color:#E8B025;">EVENTS</span>
                                                 </div>
                                                 <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:12px;line-height:16px;color:#4B5563;">
-                                                    Admin Payment Alert
+                                                    Message from <strong>{{ $organizerName }}</strong> &mdash; <strong>{{ $eventName }}</strong>
                                                 </div>
                                             </td>
                                         </tr>
@@ -45,7 +48,7 @@
                                 </td>
                                 <td align="right" style="padding:0 4px;">
                                     <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:12px;line-height:16px;color:#9CA3AF;">
-                                        {{ \Carbon\Carbon::parse($transaction->updated_at)->format('d/m/y H:i:s') }}
+                                        {{ now()->format('F j, Y') }}
                                     </div>
                                 </td>
                             </tr>
@@ -53,31 +56,43 @@
                     </td>
                 </tr>
 
+                <!-- Card -->
                 <tr>
                     <td style="background-color:#FFFFFF;border:1px solid rgba(15,23,42,0.08);border-radius:4px;overflow:hidden;box-shadow:0 10px 30px rgba(15,23,42,0.06);">
+                        <!-- Accent header -->
                         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                             <tr>
                                 <td style="padding:18px 22px;background:#E8B025;">
                                     <div style="font-family:Manrope,Inter,Segoe UI,Arial,sans-serif;font-size:18px;line-height:24px;font-weight:800;color:#0F172A;">
-                                        New payment received
+                                        {{ $emailSubject }}
                                     </div>
                                     <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:18px;color:rgba(15,23,42,0.9);margin-top:4px;">
-                                        {{ '₦' . $transaction->amount }} via {{ $transaction->gateway }}
+                                        From {{ $organizerName }} &mdash; {{ $eventName}}
                                     </div>
                                 </td>
                             </tr>
                         </table>
 
                         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <!-- Rich HTML body -->
                             <tr>
-                                <td style="padding:16px 22px 18px 22px;">
-                                    <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:20px;color:#4B5563;">
-                                        Event: <span style="color:#111827;font-weight:700;">{{ $event->title }}</span><br />
-                                        Ticket: <span style="color:#111827;">{{ $ticket->name }}</span><br />
-                                        Customer: <span style="color:#111827;">{{ $customer->full_name }} ({{ $customer->email }})</span><br />
-                                        Ticket ID: <span style="color:#111827;">{{ $ticket->id }}</span><br />
-                                        Transaction reference: <span style="color:#111827;">{{ $transaction->reference }}</span><br />
-                                        Purchased On: <span style="color:#111827;">{{ \Carbon\Carbon::parse($transaction->updated_at)->format('d/m/y H:i:s') }}</span>
+                                <td style="padding:18px 22px 10px 22px;">
+                                    <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:14px;line-height:22px;color:#111827;">
+                                        {!! $emailContent !!}
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Minimal footer note -->
+                            <tr>
+                                <td style="padding:0 22px 22px 22px;">
+                                    <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:12px;line-height:18px;color:#6B7280;">
+                                        You're receiving this message because you registered for <strong>{{ $eventName }}</strong> on TBM Events.
+                                        If you need help, contact <a href="mailto:{{ config('mail.support_email') }}" style="color:#4F8A92;text-decoration:none;font-weight:700;">{{ config('mail.support_email') }}</a>.
+                                    </div>
+                                    <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:12px;line-height:18px;color:#9CA3AF;margin-top:10px;">
+                                        <!-- Optional: add a one-click unsubscribe link if your ESP supports it -->
+                                        <!-- <a href="{{'unsubscribeUrl'}}" style="color:#9CA3AF;text-decoration:underline;">Unsubscribe</a> -->
                                     </div>
                                 </td>
                             </tr>
@@ -85,14 +100,18 @@
                     </td>
                 </tr>
 
+                <!-- Footer -->
                 <tr>
                     <td style="padding:16px 6px 0 6px;">
                         <div style="text-align:center;font-family:Inter,Segoe UI,Arial,sans-serif;font-size:12px;line-height:18px;color:#9CA3AF;">
-                            Automated notification from TBM Events.
+                            &copy; {{ date('Y') }} TBM Events.
+                            <br />
+                            <span style="color:#9CA3AF;">5, FUNSO FABURE CLOSE, ADO-ODO OTA, OGUN STATE, NIGERIA</span>
                         </div>
                     </td>
                 </tr>
             </table>
+            <!-- /Container -->
         </td>
     </tr>
 </table>

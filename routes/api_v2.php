@@ -13,8 +13,8 @@ Route::group(
         Route::post('/login', 'AuthController@login');
 
         // todo:implement
-        Route::post('/forgot-password', 'PasswordResetController@sendResetOTPEmail');
-        Route::post('/forgot-password/reset', 'PasswordResetController@resetByOTP');
+//        Route::post('/forgot-password', 'PasswordResetController@sendResetOTPEmail');
+//        Route::post('/forgot-password/reset', 'PasswordResetController@resetByOTP');
 
         Route::post('/resend-email-otp', 'AuthController@resendEmailOtp');
         Route::post('/verify-email-otp', 'AuthController@verifyEmailOtp');
@@ -23,7 +23,8 @@ Route::group(
             Route::post('/logout', 'AuthController@logout');
             Route::post('/refresh', 'AuthController@refresh');
             Route::get('/me', 'AuthController@me');
-            Route::post('/change-password', 'PasswordResetController@changePassword');
+            Route::put('/update-profile', 'AuthController@updateProfile');
+            Route::post('/change-password', 'AuthController@changePassword');
         });
     });
 
@@ -66,6 +67,10 @@ Route::group(
                 Route::put('/update-status/{coupon}', 'OrganizerCouponController@updateCouponStatus');
                 Route::delete('/{coupon}', 'OrganizerCouponController@deleteCoupon');
             });
+
+            Route::get('/revenue-by year/{year}', 'OrganizerDashboardController@revenueByYear');
+            Route::get('/check-in-attendee/{newPurchasedTicket}', 'OrganizerDashboardController@checkInAttendee');
+            Route::post('/send-blast-email', 'OrganizerDashboardController@sendBlastEmail');
         });
     });
 });

@@ -12,13 +12,13 @@ return new class extends Migration {
     {
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('email')->unique();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('business_name')->nullable();
             $table->boolean('completed_profile')->default(true);
             $table->string('avatar')->nullable();
             $table->enum('auth_provider', ['local', 'google'])->default('local');
-            $table->string('email')->unique();
             $table->enum('role', ['organizer', 'admin']);
             $table->enum('admin_role', ['super_admin', 'support', 'manager', null])->default(null)->nullable();
             $table->string('country')->nullable();
