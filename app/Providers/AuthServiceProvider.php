@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+use App\Models\Coupon;
 use App\Models\Event;
 use App\Models\Ticket;
+use App\Policies\CouponPolicy;
 use App\Policies\EventPolicy;
 use App\Policies\TicketPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -17,7 +19,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        //
+        Coupon::class => CouponPolicy::class,
         Ticket::class => TicketPolicy::class,
         Event::class => EventPolicy::class,
     ];

@@ -50,6 +50,7 @@ Route::group(
             Route::get('/event-orders-and-attendees/{event}', 'OrganizerDashboardController@eventOrdersAndAttendees');
 
             Route::prefix('event')->group(function () {
+                Route::get('/', 'OrganizerEventController@index');
                 Route::post('/', 'OrganizerEventController@createEvent');
                 Route::put('/{event}', 'OrganizerEventController@updateEvent');
             });
@@ -57,6 +58,13 @@ Route::group(
             Route::prefix('ticket')->group(function () {
                 Route::delete('/delete/{ticket}', 'OrganizerTicketController@deleteTicket');
                 Route::put('/edit-end-date/{ticket}/{newEndDate}', 'OrganizerTicketController@editTicketEndDate');
+            });
+
+            Route::prefix('coupon')->group(function () {
+                Route::get('/', 'OrganizerCouponController@index');
+                Route::post('/', 'OrganizerCouponController@createCoupon');
+                Route::put('/update-status/{coupon}', 'OrganizerCouponController@updateCouponStatus');
+                Route::delete('/{coupon}', 'OrganizerCouponController@deleteCoupon');
             });
         });
     });

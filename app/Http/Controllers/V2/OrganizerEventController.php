@@ -4,6 +4,7 @@ namespace App\Http\Controllers\V2;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V2\CreateEventRequest;
+use App\Http\Resources\V2\EventResource;
 use App\Models\Event;
 use App\Models\Ticket;
 use App\Traits\StoreImage;
@@ -14,6 +15,12 @@ use Illuminate\Support\Str;
 class OrganizerEventController extends Controller
 {
     use StoreImage;
+
+    public function index()
+    {
+        $myEvents = Event::where('user_id', auth()->id())->get();
+        return $this->success(EventResource::collection($myEvents));
+    }
 
     public function createEvent(CreateEventRequest $request)
     {

@@ -13,8 +13,8 @@ class CouponPolicy
      */
 
 
-    public function before(User $user){
-        if($user->role === 'admin'){
+    public function before(User $user) {
+        if($user->role === 'admin') {
             return true;
         }
     }
