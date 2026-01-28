@@ -94,6 +94,12 @@ Route::group(['namespace' => 'App\Http\Controllers\V2'], function () {
                 Route::get('/overview', 'AdminFinanceController@overview');
                 Route::get('/verify-transaction/{reference}', 'AdminFinanceController@verifyTransaction');
             });
+
+            Route::prefix('categories')->group(function () {
+                Route::get('/', 'AdminCategoryController@index');
+                Route::post('/', 'AdminCategoryController@createCategory');
+                Route::delete('/{category}', 'AdminCategoryController@deleteCategory');
+            });
         });
     });
 });

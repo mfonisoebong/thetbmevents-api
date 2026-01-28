@@ -14,7 +14,7 @@ class CategoryResource extends JsonResource
             'slug' => $this['slug'],
             'category' => $this['category'],
             'icon' => $this['icon'] ? asset($this['icon']) : null,
-
+            'events_count' => $this->events_count ?? 0,
         ];
     }
 }
