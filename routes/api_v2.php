@@ -82,6 +82,8 @@ Route::group(['namespace' => 'App\Http\Controllers\V2'], function () {
         });
 
         Route::group(['prefix' => 'admin', 'middleware' => 'role:admin'], function () {
+            Route::get('/overview', 'AdminController@overview');
+
             Route::get('/organizers', 'AdminController@listOrganizers');
             Route::put('/organizer/{user}/change-status', 'AdminController@changeOrganizerStatus');
             Route::post('/impersonate/{user}', 'AdminController@impersonateUser');
