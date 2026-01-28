@@ -6,8 +6,6 @@ use App\Events\TicketPurchaseCompleted;
 use App\Models\Event;
 use App\Models\Sale;
 use App\Models\Ticket;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class UpdateOrganizerStats
 {
@@ -24,22 +22,17 @@ class UpdateOrganizerStats
      */
     public function handle(TicketPurchaseCompleted $event): void
     {
-        $invoice = $event->invoice;
-        $userCart = $invoice->cart_items;
+        $transaction = $event->transaction;
+        $userCart = $transaction->cart_items;
 
         foreach ($userCart as $item) {
-            $ticket = Ticket::where('id', $item->id)
-                ->first();
-            $itemQuantity = (int)$item->quantity;
+            $ticket = Ticket::where('id', $item->id)->first();
+            $itemQuantity = $item->quantity;
 
-            $organizerEvent = Event::where('id', '=', $ticket->event_id)
-                ->first();
-            $organizerEvent->update([
-                'attendees' => $itemQuantity
-            ]);
+            $organizerEvent = Event::where('id', $ticket->event_id)->first();
 
             Sale::create([
-                'invoice_id' => $invoice->id,
+                'invoice_id' => $transaction->id,
                 'organizer_id' => $organizerEvent->user_id,
                 'customer_id' => $event->customer->id,
                 'ticket_id' => $ticket->id,
@@ -49,7 +42,5 @@ class UpdateOrganizerStats
             ]);
 
         }
-
-
     }
 }

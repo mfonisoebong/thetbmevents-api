@@ -11,6 +11,7 @@ use App\Models\RevenueCommisionSnapshot;
 use App\Models\Sale;
 use App\Traits\ApiResponses;
 use App\Traits\CurrentDateTime;
+use App\Traits\GetTopOrganizers;
 use App\Traits\HttpResponses;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,7 @@ use Illuminate\Support\Str;
 
 class FinancesController extends Controller
 {
-    use CurrentDateTime, HttpResponses, ApiResponses;
+    use CurrentDateTime, HttpResponses, ApiResponses, GetTopOrganizers;
 
     public $default_rate = 0;
 
@@ -72,44 +73,7 @@ class FinancesController extends Controller
 
     public function getTopOrganizers()
     {
-        $topEvents = Sale::filter()
-            ->select('event_id', DB::raw('SUM(tickets_bought) as tickets_sold'))
-            ->groupBy('event_id')
-            ->orderByDesc('tickets_sold')
-            ->limit(10)
-            ->get()
-            ->toArray();
-
-
-        $topOrganizersList = array_map(function ($event) {
-            $organizerEvent = Event::where('id', $event['event_id'])
-                ->first();
-            return [
-                'title' => $organizerEvent->title,
-                'organizer' => $organizerEvent->user->business_name,
-                'avatar' => $organizerEvent->user->avatar,
-                'email' => $organizerEvent->user->email,
-                'tickets_sold' => $event['tickets_sold'],
-                'id' => $organizerEvent->user->id
-            ];
-
-        }, $topEvents);
-        function isSameOrganizer($organizer1, $organizer2)
-        {
-            return $organizer1['id'] === $organizer2['id'];
-        }
-
-        $topOrganizersList = array_values(array_filter($topOrganizersList, function ($organizer, $index) use ($topOrganizersList, $topEvents) {
-            for ($i = 0; $i < $index; $i++) {
-                if (isSameOrganizer($organizer, $topOrganizersList[$i])) {
-                    return false;
-                }
-            }
-            return true;
-        }, ARRAY_FILTER_USE_BOTH));
-
-
-        return $this->success($topOrganizersList);
+        return $this->success($this->computeTopOrganizers());
     }
 
     public function getTopCustomers()
