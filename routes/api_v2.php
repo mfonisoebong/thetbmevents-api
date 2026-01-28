@@ -86,6 +86,8 @@ Route::group(['namespace' => 'App\Http\Controllers\V2'], function () {
             Route::put('/organizer/{user}/change-status', 'AdminController@changeOrganizerStatus');
             Route::post('/impersonate/{user}', 'AdminController@impersonateUser');
 
+            Route::get('/attendees', 'AdminController@listAttendees');
+
             Route::prefix('finance')->group(function () {
                 Route::get('/overview', 'AdminFinanceController@overview');
                 Route::get('/verify-transaction/{reference}', 'AdminFinanceController@verifyTransaction');

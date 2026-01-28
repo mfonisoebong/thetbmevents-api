@@ -4,6 +4,8 @@ namespace App\Http\Controllers\V2;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V2\AdminOrganizersResource;
+use App\Http\Resources\V2\OrganizerAttendeeResource;
+use App\Models\Attendee;
 use App\Models\User;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -31,5 +33,10 @@ class AdminController extends Controller
             'token' => JWTAuth::fromUser($user),
             'user' => $user
         ]);
+    }
+
+    public function listAttendees()
+    {
+        return $this->success(OrganizerAttendeeResource::collection(Attendee::distinct()->take(10)->orderByDesc('created_at')->get()));
     }
 }
