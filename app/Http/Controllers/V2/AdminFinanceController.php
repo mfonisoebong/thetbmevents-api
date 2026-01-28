@@ -26,7 +26,7 @@ class AdminFinanceController extends Controller
         return $this->success([
             'all_time_revenue' => $allTimeRevenue,
             'recent_transactions' => AdminTransactionResource::collection($recentTransactions),
-            'top_organizers' => $this->computeTopOrganizers(),
+            'top_organizers' => $this->computeTopOrganizers('total_sales', 'organizer_id'),
         ]);
     }
 
