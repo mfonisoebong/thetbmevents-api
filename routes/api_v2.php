@@ -80,5 +80,11 @@ Route::group(['namespace' => 'App\Http\Controllers\V2'], function () {
             Route::get('/check-in-attendee/{newPurchasedTicket}', 'OrganizerDashboardController@checkInAttendee');
             Route::post('/send-blast-email', 'OrganizerDashboardController@sendBlastEmail');
         });
+
+        Route::group(['prefix' => 'admin', 'middleware' => 'role:admin'], function () {
+            Route::get('/organizers', 'AdminController@listOrganizers');
+            Route::put('/organizer/{user}/change-status', 'AdminController@changeOrganizerStatus');
+            Route::post('/impersonate/{user}', 'AdminController@impersonateUser');
+        });
     });
 });
