@@ -1,13 +1,9 @@
 <?php
 
+use App\Http\Controllers\V2\HlsController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(
-    [
-        'namespace' => 'App\Http\Controllers\V2',
-        'where' => ['role' => '[a-zA-Z]+', 'id' => '[0-9]+', 'delivery' => '[0-9]+', 'errand' => '[0-9]+', 'hub' => '[0-9]+', 'walk_in' => '[0-9]+', 'tracking_number' => '[a-zA-Z0-9]+', 'reference' => '[a-zA-Z0-9-]+']
-    ]
-    , function () {
+Route::group(['namespace' => 'App\Http\Controllers\V2'], function () {
     Route::prefix('auth')->group(function () {
         Route::post('/signup', 'AuthController@signup');
         Route::post('/login', 'AuthController@login');
@@ -43,6 +39,18 @@ Route::group(
     Route::prefix('webhooks')->group(function () {
         Route::post('/paystack', 'PaymentWebhookController@paystackWebhook');
         Route::post('/flutterwave', 'PaymentWebhookController@flutterwaveWebhook');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | HLS streaming (served by Laravel to avoid nginx/CORS issues)
+    |--------------------------------------------------------------------------
+    |
+    | These routes stream .m3u8 playlists and .ts segments from public/videos.
+    |
+    */
+    Route::prefix('hls')->group(function () {
+        Route::match(['GET', 'OPTIONS'], '/{path}', [HlsController::class, 'index'])->where('path', '.*');
     });
 
     Route::middleware(['auth', 'verified', 'active'])->prefix('dashboard')->group(function () {
