@@ -12,12 +12,26 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 
 class Transaction extends Model
 {
     use HasFactory, HasUuids;
+
+    protected static function booted(): void
+    {
+        static::creating(function (Transaction $transaction) {
+            $data = $transaction->getAttribute('data');
+
+            // Treat null, empty string, empty array/object as invalid.
+            // Note: because `data` is cast to array, it may be `[]` even when set from `{}`.
+            if ($data === null || $data === '' || (is_array($data) && count($data) === 0)) {
+                throw new InvalidArgumentException("Transaction 'data' is required and cannot be empty.");
+            }
+        });
+    }
 
     protected $fillable = [
         'customer_id',

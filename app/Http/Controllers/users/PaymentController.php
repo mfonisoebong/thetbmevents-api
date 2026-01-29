@@ -141,6 +141,7 @@ class PaymentController extends Controller
                 ];
             }, $request->attendees));
 
+            // todo (IMPORTANT): backend developer should include the data field
             Transaction::create([
                 'customer_id' => $customer->id,
                 'organizer_id' => $ticket->event->user_id,
