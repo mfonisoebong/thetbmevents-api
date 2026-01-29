@@ -10,7 +10,7 @@ trait StoreImage
     protected $quality = 60;
     protected $encoding = 'webp';
 
-    public function storeImage($path, $oldPath, $image)
+    public function storeImage($path, $oldPath, $image): void
     {
         if ($oldPath) {
             $formatted = Str::isUrl($oldPath) ? str_replace(
@@ -30,7 +30,7 @@ trait StoreImage
             ->save($newPath);
     }
 
-    public function removeFile($path)
+    public function removeFile($path): void
     {
         $formatted = Str::isUrl($path) ? str_replace(
             config('app.url') . '/',

@@ -62,6 +62,7 @@ Route::group(['namespace' => 'App\Http\Controllers\V2'], function () {
                 Route::get('/', 'OrganizerEventController@index');
                 Route::post('/', 'OrganizerEventController@createEvent');
                 Route::put('/{event}', 'OrganizerEventController@updateEvent');
+                Route::delete('/{event}/delete', 'OrganizerEventController@deleteEvent');
             });
 
             Route::prefix('ticket')->group(function () {

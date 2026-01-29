@@ -104,4 +104,15 @@ class OrganizerEventController extends Controller
 
         return $this->success(null, 'Event updated successfully');
     }
+
+    public function deleteEvent(Event $event)
+    {
+        $this->authorize('delete', $event);
+
+        $this->removeFile($event->image_url);
+
+        $event->delete();
+
+        return $this->success(null, 'Event deleted successfully');
+    }
 }
