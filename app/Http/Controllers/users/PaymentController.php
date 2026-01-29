@@ -80,15 +80,7 @@ class PaymentController extends Controller
 
         $chargedAmount = $total + $this->getFees($total, $gateway);
 
-        $customer = Customer::create([
-            "first_name" => $request->customer_first_name,
-            "last_name" => $request->customer_last_name,
-            "email" => $request->customer_email,
-            "phone_dial_code" => $request->customer_phone_dial_code,
-            "phone_number" => $request->customer_phone_number
-        ]);
-
-        $email = $customer->email;
+        $email = $request->customer_email;
         $reference = Str::uuid()->toString();
 
         $data = [
@@ -131,19 +123,8 @@ class PaymentController extends Controller
         $res = Http::withHeaders($headers)->post($url, $data);
 
         if ($res->successful()) {
-            Attendee::insert(array_map(function ($a) use ($customer) {
-                return [
-
-                    'full_name' => $a['first_name'] . ' ' . $a['last_name'],
-                    'email' => $a['email'],
-                    'ticket_id' => $a['ticket_id'],
-                    'customer_id' => $customer->id
-                ];
-            }, $request->attendees));
-
             // todo (IMPORTANT): backend developer should include the data field
             Transaction::create([
-                'customer_id' => $customer->id,
                 'organizer_id' => $ticket->event->user_id,
                 'amount' => $total,
                 'charged_amount' => $chargedAmount,
@@ -181,10 +162,8 @@ class PaymentController extends Controller
             return $this->failed(403);
         }
         $customer = Customer::create([
-            "first_name" => $request->customer_first_name,
-            "last_name" => $request->customer_last_name,
+            "full_name" => $request->customer_first_name . ' ' . $request->customer_last_name,
             "email" => $request->customer_email,
-            "phone_dial_code" => $request->customer_phone_dial_code,
             "phone_number" => $request->customer_phone_number
         ]);
 
@@ -199,8 +178,7 @@ class PaymentController extends Controller
         }, $request->attendees));
 
         $reference = $customer->id;
-        $ticket = Ticket::where('id', $request->tickets[0]['id'])
-            ->first();
+        $ticket = Ticket::where('id', $request->tickets[0]['id'])->first();
 
         $invoice = Transaction::create([
             'customer_id' => $customer->id,
@@ -214,7 +192,7 @@ class PaymentController extends Controller
 
         event(new TicketPurchaseCompleted($invoice, $customer));
 
-        return $this->success(null, 'TotalAmount successfull');
+        return $this->success(null, 'Payment completed successfully');
     }
 
     private function checkSellingDate($tickets)
