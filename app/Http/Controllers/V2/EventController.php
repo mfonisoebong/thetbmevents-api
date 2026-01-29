@@ -26,7 +26,7 @@ class EventController extends Controller
 
     public function getEventDetails(string $event)
     {
-        $event = Event::where('id', $event)->orWhere('alias', $event)->first();
+        $event = Event::where('id', $event)->orWhere('alias', $event)->firstOrFail();
 
         return $this->success(new EventResource($event), 'Event details fetched successfully');
     }
