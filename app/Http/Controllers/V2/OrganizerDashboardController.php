@@ -31,8 +31,13 @@ class OrganizerDashboardController extends Controller
         $ticketIds = $tickets->pluck('id')->values();
         $ticketNames = $tickets->pluck('name', 'id')->mapWithKeys(fn ($name, $id) => [(string) $id => $name])->all();
 
-        // Only fetch successful transactions if you only use them for attendee listing.
-        // If you need failed/pending orders too, remove the status clause.
+        if ($ticketIds->isEmpty()) {
+            return $this->success([
+                'orders' => [],
+                'attendees' => [],
+            ]);
+        }
+
         $transactions = Transaction::where('status', 'success')
             ->where(function ($query) use ($ticketIds) {
                 foreach ($ticketIds as $ticketId) {
