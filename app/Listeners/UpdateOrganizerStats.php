@@ -26,8 +26,8 @@ class UpdateOrganizerStats
         $userCart = $transaction->cart_items;
 
         foreach ($userCart as $item) {
-            $ticket = Ticket::where('id', $item->id)->first();
-            $itemQuantity = $item->quantity;
+            $ticket = Ticket::where('id', $item['id'])->firstOrFail();
+            $itemQuantity = $item['quantity'];
 
             $organizerEvent = Event::where('id', $ticket->event_id)->first();
 
