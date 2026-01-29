@@ -52,6 +52,10 @@ class OrganizerEventController extends Controller
                 'undisclose_location' => $request->input('undisclosed'),
             ]);
 
+            if (empty($request->tickets) || !is_array($request->tickets)) {
+                throw new \Exception('At least one ticket type is required');
+            }
+
             foreach ($request->tickets as $ticket) {
                 $ticket['start_selling_date'] = date('Y-m-d H:i:s', strtotime($ticket['start_selling_date']));
                 $ticket['end_selling_date'] = date('Y-m-d H:i:s', strtotime($ticket['end_selling_date']));

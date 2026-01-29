@@ -97,7 +97,9 @@ class PaymentWebhookController extends Controller
             return response(null, 200);
         }
 
-        if ($transaction->amount !== $amount || $data['status'] !== 'successful') {
+        $platformFee = $transaction->data['meta']['platform_fee'] ?? 0;
+
+        if ($transaction->amount + $platformFee !== $amount || $data['status'] !== 'successful') {
             Log::warning('Flutterwave webhook amount/status mismatch', [
                 'reference' => $reference,
                 'expected_amount' => $transaction->amount,
