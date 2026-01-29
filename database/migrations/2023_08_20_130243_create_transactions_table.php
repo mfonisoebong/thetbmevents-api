@@ -12,14 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->uuid('id')
-                ->primary();
+            $table->uuid('id')->primary();
             $table->unsignedBigInteger('customer_id')->nullable();
             $table->enum('gateway', ['vella', 'paystack']);
             $table->enum('status', ['pending', 'success', 'failed', 'reversed'])->default('pending');
             $table->json('cart_items');
             $table->string('reference')->nullable();
-            $table->json('data')->nullable();
+            $table->json('data');
             $table->timestamps();
 
             $table->foreign('customer_id')
