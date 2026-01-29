@@ -99,10 +99,12 @@ class PaymentWebhookController extends Controller
 
         $platformFee = $transaction->data['meta']['platform_fee'] ?? 0;
 
-        if ($transaction->amount + $platformFee !== $amount || $data['status'] !== 'successful') {
+        $expectedAmount = $transaction->amount + $platformFee;
+
+        if ($expectedAmount!== $amount || $data['status'] !== 'successful') {
             Log::warning('Flutterwave webhook amount/status mismatch', [
                 'reference' => $reference,
-                'expected_amount' => $transaction->amount,
+                'expected_amount' => $expectedAmount,
                 'received_amount' => $amount,
                 'received_status' => $data['status'],
             ]);
@@ -110,6 +112,28 @@ class PaymentWebhookController extends Controller
         }
 
         return $this->finishUp($transaction);
+    }
+
+
+    public function flutterwaveWebhookFailed(Request $request)
+    {
+        $event = $request->event;
+
+        if (!in_array($event, $this->flutterwaveSupportedEvents, true)) {
+            Log::warning('Flutterwave webhook received unsupported event', ['event' => $event]);
+            return response(null, 200);
+        }
+
+        $data = $request->data;
+        $reference = $data['tx_ref'];
+        $status = $data['status'];
+
+        if ($transaction = Transaction::where('reference', $reference)->firstOrFail()) {
+            $transaction->status = $status;
+            $transaction->save();
+        }
+
+        return response(null, 200);
     }
 
     public function manualVerifyPayment(string $reference)

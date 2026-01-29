@@ -39,6 +39,7 @@ Route::group(['namespace' => 'App\Http\Controllers\V2'], function () {
     Route::prefix('webhooks')->group(function () {
         Route::post('/paystack', 'PaymentWebhookController@paystackWebhook');
         Route::post('/flutterwave', 'PaymentWebhookController@flutterwaveWebhook');
+        Route::post('/flutterwave/failed', 'PaymentWebhookController@flutterwaveWebhookFailed');
     });
 
     /*
