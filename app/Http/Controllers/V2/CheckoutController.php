@@ -88,6 +88,7 @@ class CheckoutController extends Controller
         $cartItems = $this->transformTicketIdsToCartItems($payload['tickets']);
 
         $this->checkSellingDateFromCartItems($cartItems);
+        $this->validateTicketAvailabilityFromCartItems($cartItems);
 
         $ticketsAmount = $this->getTotalAmount($cartItems);
 
@@ -253,6 +254,30 @@ class CheckoutController extends Controller
 
             if ($now->gt($end)) {
                 abort(403, 'Ticket selling date has ended');
+            }
+        }
+    }
+
+    private function validateTicketAvailabilityFromCartItems(array $cartItems): void
+    {
+        foreach ($cartItems as $item) {
+            $ticket = Ticket::where('id', $item['id'])->first();
+
+            if (!$ticket) {
+                abort(422, 'Invalid ticket selected');
+            }
+
+            $requestedQty = (int) ($item['quantity'] ?? 0);
+            if ($requestedQty < 1) {
+                abort(422, 'Invalid ticket quantity selected');
+            }
+
+            $availableQty = max(0, (int) $ticket->quantity);
+            $soldQty = max(0, (int) $ticket->sold);
+            $remainingQty =  $availableQty - $soldQty;
+
+            if ($requestedQty > $remainingQty) {
+                abort(403, 'tickets have been sold out or try reducing the quantity');
             }
         }
     }
