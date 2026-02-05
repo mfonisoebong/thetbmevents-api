@@ -128,7 +128,7 @@ class PaymentWebhookController extends Controller
         $reference = $data['tx_ref'];
         $status = $data['status'];
 
-        if ($transaction = Transaction::where('reference', $reference)->firstOrFail()) {
+        if ($transaction = Transaction::where('reference', $reference)->first()) {
             $transaction->status = $status;
             $transaction->save();
         }
