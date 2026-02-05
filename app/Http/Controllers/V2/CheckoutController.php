@@ -272,8 +272,12 @@ class CheckoutController extends Controller
                 abort(422, 'Invalid ticket quantity selected');
             }
 
-            $availableQty = max(0, (int) $ticket->quantity);
-            $soldQty = max(0, (int) $ticket->sold);
+            $availableQty = $ticket->quantity;
+
+            if ($availableQty === 0) continue; // unlimited tickets
+
+            $soldQty = $ticket->sold;
+
             $remainingQty =  $availableQty - $soldQty;
 
             if ($requestedQty > $remainingQty) {

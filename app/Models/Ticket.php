@@ -29,6 +29,7 @@ class Ticket extends Model
         'selling_end_date_time' => 'datetime',
         'price' => 'float',
         'quantity' => 'integer',
+        'sold' => 'int'
     ];
 
     public function event()
