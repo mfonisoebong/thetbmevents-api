@@ -8,7 +8,6 @@ Route::group(['namespace' => 'App\Http\Controllers\V2'], function () {
         Route::post('/signup', 'AuthController@signup');
         Route::post('/login', 'AuthController@login');
 
-        // todo:implement
         Route::post('/forgot-password', 'PasswordResetController@sendResetPasswordOTPEmail');
         Route::post('/forgot-password/reset', 'PasswordResetController@resetPasswordByOTP');
 
