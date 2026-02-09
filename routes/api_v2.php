@@ -9,8 +9,8 @@ Route::group(['namespace' => 'App\Http\Controllers\V2'], function () {
         Route::post('/login', 'AuthController@login');
 
         // todo:implement
-//        Route::post('/forgot-password', 'PasswordResetController@sendResetOTPEmail');
-//        Route::post('/forgot-password/reset', 'PasswordResetController@resetByOTP');
+        Route::post('/forgot-password', 'PasswordResetController@sendResetPasswordOTPEmail');
+        Route::post('/forgot-password/reset', 'PasswordResetController@resetPasswordByOTP');
 
         Route::post('/resend-email-otp', 'AuthController@resendEmailOtp');
         Route::post('/verify-email-otp', 'AuthController@verifyEmailOtp');
