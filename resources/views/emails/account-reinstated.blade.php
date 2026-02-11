@@ -85,7 +85,7 @@
                                 <td style="padding:22px 22px 12px 22px;">
                                     <div
                                         style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:14px;line-height:22px;color:#111827;">
-                                        Hi {{ $user->business_name || $user->full_name }},
+                                        Hi {{ $user->business_name ?: $user->full_name }},
                                         <br/><br/>
                                         Good news — your account has been reinstated and full access has been restored.
                                     </div>
