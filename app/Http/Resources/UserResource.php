@@ -28,6 +28,7 @@ class UserResource extends JsonResource
             'phone_number'=> $this->phone_number,
             'account_state'=> $this->account_state,
             'created_at'=> $this->created_at,
+            'email_verified_at'=> $this->email_verified_at,
         ];
     }
 }

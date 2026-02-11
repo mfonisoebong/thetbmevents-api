@@ -11,7 +11,7 @@ class EventController extends Controller
     public function listRecentEvents()
     {
         // list most recent 24 events
-        $events = Event::orderBy('created_at', 'desc')->take(24)->get();
+        $events = Event::where('status', 'published')->orderBy('created_at', 'desc')->take(24)->get();
 
         return $this->success(EventResource::collection($events), 'Recent events fetched successfully');
     }
