@@ -5,11 +5,14 @@ namespace App\Http\Controllers\V2;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V2\AdminOrganizersResource;
 use App\Http\Resources\V2\OrganizerAttendeeResource;
+use App\Mail\AccountReinstatedMail;
+use App\Mail\AccountSuspendedMail;
 use App\Models\Attendee;
 use App\Models\Event;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Traits\GetTopOrganizers;
+use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AdminController extends Controller
@@ -25,8 +28,16 @@ class AdminController extends Controller
     {
         $organizer = User::findOrFail($organizer);
 
-        $organizer->account_state = request()->input('status');
+        $status = request()->input('status');
+
+        $organizer->account_state = $status;
         $organizer->save();
+
+        if ($status === 'suspended') {
+            Mail::to($organizer->email)->send(new AccountSuspendedMail($organizer));
+        } else {
+            Mail::to($organizer->email)->send(new AccountReinstatedMail($organizer));
+        }
 
         return $this->success('Organizer account status changed successfully.');
     }
