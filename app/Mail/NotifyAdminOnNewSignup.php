@@ -28,7 +28,7 @@ class NotifyAdminOnNewSignup extends Mailable
     {
         return new Envelope(
             to: config('mail.admin_email'),
-            subject: 'A new user just signed up on TBM',
+            subject: "A new {$this->user->role} just signed up on TBM",
         );
     }
 
