@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light" />
     <meta name="supported-color-schemes" content="light" />
-    <title>New Organizer Signup</title>
+    <title>New {{ ucfirst($user->role) }} Signup</title>
 </head>
 <body style="margin:0;padding:0;background-color:#F8FAFC;">
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">
-    A new organizer has signed up on TBM Events.
+    A new {{ $user->role }} has signed up on TBM Events.
 </div>
 
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#F8FAFC;">
@@ -61,7 +61,7 @@
                             <tr>
                                 <td style="padding:18px 22px;background:#E8B025;">
                                     <div style="font-family:Manrope,Inter,Segoe UI,Arial,sans-serif;font-size:18px;line-height:24px;font-weight:800;color:#0F172A;">
-                                        New organizer signup
+                                        New {{ $user->role }} signup
                                     </div>
                                     <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:18px;color:rgba(15,23,42,0.9);margin-top:4px;">
                                         Review the details and approve if required.
@@ -74,7 +74,7 @@
                             <tr>
                                 <td style="padding:18px 22px 10px 22px;">
                                     <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:14px;line-height:22px;color:#111827;">
-                                        A new organizer has just created an account on <strong>TBM Events</strong>.
+                                        A new {{ $user->role }} has just created an account on <strong>TBM Events</strong>.
                                     </div>
                                 </td>
                             </tr>
@@ -85,7 +85,7 @@
                                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#F9FAFB;border:1px solid rgba(15,23,42,0.06);border-radius:14px;">
                                         <tr>
                                             <td style="padding:14px;">
-                                                <div style="font-family:Manrope,Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:18px;font-weight:800;color:#0F172A;margin-bottom:8px;">Organizer details</div>
+                                                <div style="font-family:Manrope,Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:18px;font-weight:800;color:#0F172A;margin-bottom:8px;">{{ ucfirst($user->role) }} details</div>
 
                                                 <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:20px;color:#4B5563;">
                                                     Name: <span style="color:#111827;">{{ $user->full_name }}</span><br />
@@ -113,7 +113,7 @@
                                                 <a
                                                     href="{{adminReviewUrl}}"
                                                     style="display:inline-block;padding:12px 18px;font-family:Inter,Segoe UI,Arial,sans-serif;font-size:14px;line-height:18px;font-weight:800;color:#0F172A;text-decoration:none;border-radius:999px;"
-                                                >Review organizer</a
+                                                >Review {{ $user->role }}</a
                                                 >
                                             </td>--}}
                                             <td width="10" style="font-size:0;line-height:0;">&nbsp;</td>
