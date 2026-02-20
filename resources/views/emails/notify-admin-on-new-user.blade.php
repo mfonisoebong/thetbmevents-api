@@ -88,9 +88,8 @@
                                                 <div style="font-family:Manrope,Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:18px;font-weight:800;color:#0F172A;margin-bottom:8px;">{{ ucfirst($user->role) }} details</div>
 
                                                 <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:20px;color:#4B5563;">
-                                                    Name: <span style="color:#111827;">{{ $user->full_name }}</span><br />
+                                                    Name: <span style="color:#111827;">{{ $user->business_name ?: $user->full_name }}</span><br />
                                                     Email: <span style="color:#111827;">{{ $user->email }}</span><br />
-                                                    Organization: <span style="color:#111827;">{{ $user->business_name }}</span><br />
                                                     Phone: <span style="color:#111827;">{{ $user->phone_number }}</span><br />
                                                     Country: <span style="color:#111827;">{{ $user->country }}</span><br />
                                                 </div>
