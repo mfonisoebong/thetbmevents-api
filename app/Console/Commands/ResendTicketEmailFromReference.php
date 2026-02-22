@@ -10,7 +10,7 @@ use Illuminate\Console\Command;
 
 class ResendTicketEmailFromReference extends Command
 {
-    protected $signature = 'resend:ticket-email-from-reference';
+    protected $signature = 'resend:purchased-ticket-from-ref';
 
     protected $description = 'Resend ticket emails to customers';
 
@@ -22,8 +22,8 @@ class ResendTicketEmailFromReference extends Command
             $reference = $references[$i];
             try {
                 $transaction = Transaction::where('reference', $reference)->firstOrFail();
-                $sendPurchasedTicketsListener = new SendPurchasedTickets();
                 $invoiceGeneratedEvent = new TicketPurchaseCompleted($transaction, $transaction->customer);
+                $sendPurchasedTicketsListener = new SendPurchasedTickets();
                 $sendPurchasedTicketsListener->handle($invoiceGeneratedEvent);
             } catch (Exception $e) {
                 $this->error("Failed to resend ticket email. Reference id $reference: " . $e->getMessage());
