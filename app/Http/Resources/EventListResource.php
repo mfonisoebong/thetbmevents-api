@@ -17,7 +17,7 @@ class EventListResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'alias' => $this->alias,
+            'alias' => $this->slug,
             'title' => Str::of($this->title)->limit(25) ?? $this->title,
             'logo' => $this->image_url,
             'created_at' => $this->created_at,

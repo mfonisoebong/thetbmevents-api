@@ -29,7 +29,7 @@ class SliderResource extends JsonResource
             'id'=> $this->id,
             'event_id'=> $this->event_id,
             'event_logo'=> $this->event->image_url,
-            'event_alias'=> $this->event->alias,
+            'event_alias'=> $this->event->slug,
             'expire_in'=> $expireIn,
             'ticket'=> [
                 'name'=> $ticket?->name,

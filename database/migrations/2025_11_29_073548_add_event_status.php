@@ -8,9 +8,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('events', function (Blueprint $table) {
-            $table->enum('status', [
-                'draft', 'published', 'ended'
-            ])->default('published');
+            $table->enum('status', ['draft', 'published', 'ended'])->default('published')->after('description');
         });
     }
 

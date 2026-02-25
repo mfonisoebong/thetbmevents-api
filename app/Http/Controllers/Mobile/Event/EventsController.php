@@ -274,7 +274,7 @@ class EventsController extends Controller
                 'links_facebook_formatted' => $event->links_facebook ? 'https://www.facebook.com/' . ltrim($event->links_facebook, '@') : null,
                 'timezone' => $event->timezone,
                 'undisclose_location' => $event->undisclose_location,
-                'alias' => $event->alias,
+                'alias' => $event->slug,
                 'location_tips' => $event->location_tips,
                 'is_featured' => $event->is_featured,
                 'longitude' => $event->longitude,

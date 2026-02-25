@@ -19,7 +19,7 @@ class EventsResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'alias' => $this->alias,
+            'alias' => $this->slug,
             'status' => $this->status,
             'title' => Str::of($this->title)->limit(25) ?? $this->title,
             'event_date' => $this->event_date,

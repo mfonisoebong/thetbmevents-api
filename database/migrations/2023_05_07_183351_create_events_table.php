@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->string('user_id');
             $table->string('title');
-            $table->string('alias');
+            $table->string('slug')->unique();
             $table->longText('description');
             $table->string('event_link')->nullable();
             $table->enum('currency', ['USD', 'NGN'])->default('NGN');

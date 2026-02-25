@@ -133,13 +133,13 @@ class EventsController extends Controller
 
     public function getEventsSlugs()
     {
-        $events = Event::all(['alias', 'id']);
+        $events = Event::all(['slug', 'id']);
         return $this->success($events);
     }
 
     public function getEvent(string $alias)
     {
-        $event = Event::where('alias', $alias)
+        $event = Event::where('slug', $alias)
             ->orWhere('id', $alias)
             ->first();
 
