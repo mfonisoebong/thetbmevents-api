@@ -10,7 +10,7 @@ use Illuminate\Console\Command;
 
 class ResendTicketEmailFromReference extends Command
 {
-    protected $signature = 'resend:purchased-ticket-from-ref';
+    protected $signature = 'resend:purchased-tickets-from-ref';
 
     protected $description = 'Resend ticket emails to customers';
 
