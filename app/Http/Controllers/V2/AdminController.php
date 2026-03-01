@@ -4,6 +4,7 @@ namespace App\Http\Controllers\V2;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V2\AdminOrganizersResource;
+use App\Http\Resources\V2\EventWithStatsResource;
 use App\Http\Resources\V2\OrganizerAttendeeResource;
 use App\Mail\AccountReinstatedMail;
 use App\Mail\AccountSuspendedMail;
@@ -55,6 +56,11 @@ class AdminController extends Controller
         return $this->success(OrganizerAttendeeResource::collection(Attendee::distinct()->take(10)->orderByDesc('created_at')->get()));
     }
 
+    public function events()
+    {
+        return $this->success(EventWithStatsResource::collection(Event::orderByDesc('created_at')/*->take(50)*/->get()));
+    }
+
     public function overview()
     {
         $revenueThisMonth = Transaction::where('status', 'success')
@@ -97,4 +103,13 @@ class AdminController extends Controller
             'top_organizers' => $this->computeTopOrganizers(),
         ]);
     }
+
+    public function changeEventStatus(Event $event, string $status)
+    {
+        $event->status = $status;
+        $event->save();
+
+        return $this->success('Event status updated successfully.');
+    }
+
 }

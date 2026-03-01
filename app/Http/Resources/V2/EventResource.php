@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\V2;
 
+use App\Http\Resources\UserResource;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -12,6 +13,7 @@ class EventResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'organizer' => new UserResource($this->user),
             'title' => $this->title,
             'slug' => $this->slug,
             'description' => $this->description,

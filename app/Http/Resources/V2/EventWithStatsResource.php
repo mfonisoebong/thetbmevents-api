@@ -19,7 +19,7 @@ class EventWithStatsResource extends EventResource
 
     private function getTicketsSold(): int
     {
-        $sumSoldQuantity = (int)$this->tickets()->sum('sold');
+        $sumSoldQuantity = (int) $this->tickets()->sum('sold');
 
         if ($sumSoldQuantity > 0) {
             return $sumSoldQuantity;
