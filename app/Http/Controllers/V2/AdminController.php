@@ -13,6 +13,7 @@ use App\Models\Event;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Traits\GetTopOrganizers;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -58,7 +59,7 @@ class AdminController extends Controller
 
     public function events()
     {
-        return $this->success(EventWithStatsResource::collection(Event::orderByDesc('created_at')/*->take(50)*/->get()));
+        return $this->success(EventWithStatsResource::collection(Event::orderByDesc('created_at')->take(24)->get()));
     }
 
     public function overview()
