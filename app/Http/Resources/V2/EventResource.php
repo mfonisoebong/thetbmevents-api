@@ -13,7 +13,7 @@ class EventResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'organizer' => $this->whenLoaded('user', fn () => new UserResource($this->user)),
+            'organizer' => new UserResource($this->user),
             'title' => $this->title,
             'slug' => $this->slug,
             'description' => $this->description,
@@ -24,7 +24,7 @@ class EventResource extends JsonResource
             'tags' => $this->tags,
             'image' => $this->image_url,
             'isOnline' => $this->type === 'virtual',
-            'tickets' => TicketResource::collection($this->whenLoaded('tickets')),
+            'tickets' => TicketResource::collection($this->tickets),
             'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
