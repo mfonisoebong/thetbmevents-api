@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\V2;
 
+use App\Arrays\EventEagerLoads;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V2\EventWithStatsResource;
 use App\Http\Resources\V2\OrganizerAttendeeResource;
 use App\Http\Resources\V2\OrganizerTransactionResource;
 use App\Jobs\SendBlastEmailJob;
-use App\Mail\BlastMailV2;
 use App\Models\Attendee;
 use App\Models\Event;
 use App\Models\NewPurchasedTicket;
-use App\Models\Ticket;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,12 +20,14 @@ class OrganizerDashboardController extends Controller
 
     public function overview()
     {
-        return $this->success(EventWithStatsResource::collection(Event::where('user_id', auth()->id())->get()));
+        $events = auth()->user()->events()->with(EventEagerLoads::get())->get();
+
+        return $this->success(EventWithStatsResource::collection($events));
     }
 
     public function eventOrdersAndAttendees(Event $event)
     {
-        $tickets = Ticket::where('event_id', $event->id)->get(['id', 'name']);
+        $tickets = $event->tickets()->select(['id', 'name'])->get();
 
         $ticketIds = $tickets->pluck('id')->values();
         $ticketNames = $tickets->pluck('name', 'id')->mapWithKeys(fn ($name, $id) => [(string) $id => $name])->all();

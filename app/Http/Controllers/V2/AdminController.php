@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V2;
 
+use App\Arrays\EventEagerLoads;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V2\AdminOrganizersResource;
 use App\Http\Resources\V2\EventWithStatsResource;
@@ -59,7 +60,11 @@ class AdminController extends Controller
 
     public function events()
     {
-        return $this->success(EventWithStatsResource::collection(Event::orderByDesc('created_at')->take(24)->get()));
+        $events = Event::orderByDesc('created_at')
+            ->with(EventEagerLoads::get())
+            ->get();
+
+        return $this->success(EventWithStatsResource::collection($events));
     }
 
     public function overview()

@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources\V2;
 
-use App\Models\NewPurchasedTicket;
-use App\Models\PurchasedTicket;
 use Illuminate\Http\Request;
 
 class EventWithStatsResource extends EventResource
@@ -19,24 +17,29 @@ class EventWithStatsResource extends EventResource
 
     private function getTicketsSold(): int
     {
-        $sumSoldQuantity = (int) $this->tickets()->sum('sold');
+        $sumSoldQuantity = (int) $this->whenLoaded('tickets')->sum('sold');
 
         if ($sumSoldQuantity > 0) {
             return $sumSoldQuantity;
         }
 
-        $purchasedCount = NewPurchasedTicket::whereIn('ticket_id', $this->tickets->pluck('id'))->count();
+        $purchasedCount = $this->whenLoaded('tickets')->sum(function ($ticket) {
+            return $ticket->newPurchasedTickets->count();
+        });
 
         if ($purchasedCount > 0) {
             return $purchasedCount;
         }
 
-        return PurchasedTicket::whereIn('ticket_id', $this->tickets->pluck('id'))->count();
+        return $this->whenLoaded('tickets')->sum(function ($ticket) {
+            return $ticket->purchasedTickets->count();
+        });
     }
 
+    // TODO: Optimize this by caching the total revenue in the database and updating it whenever a purchase is made, instead of calculating it on the fly.
     private function getTotalRevenue(): float
     {
-        $ticketIds = $this->tickets->pluck('id')->all();
+        $ticketIds = $this->whenLoaded('tickets')->pluck('id')->all();
 
         if (empty($ticketIds)) {
             return 0.0;

@@ -41,13 +41,7 @@ class TicketResource extends JsonResource
             return $sold;
         }
 
-        $purchasedCount = NewPurchasedTicket::where('ticket_id', $this->id)->count();
-
-        if ($purchasedCount > 0) {
-            return $purchasedCount;
-        }
-
-        return PurchasedTicket::where('ticket_id', $this->id)->count();
+        return $this->purchasedTickets->count();
     }
 
 }
