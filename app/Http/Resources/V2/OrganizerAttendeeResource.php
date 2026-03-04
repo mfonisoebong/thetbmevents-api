@@ -13,7 +13,8 @@ class OrganizerAttendeeResource extends JsonResource
             'id' => $this->id,
             'full_name' => $this->full_name,
             'email' => $this->email,
-            'ticket_name' => $this->ticket?->name,
+            'ticket_name' => $this->ticket->name,
+            'tickets_bought_count' => $this->tickets_bought_count,
             'checked_in' => $this->hasCheckedIn(),
         ];
     }
