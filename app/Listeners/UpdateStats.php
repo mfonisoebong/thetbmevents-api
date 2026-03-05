@@ -7,7 +7,7 @@ use App\Models\Event;
 use App\Models\Sale;
 use App\Models\Ticket;
 
-class UpdateOrganizerStats
+class UpdateStats
 {
     /**
      * Create the event listener.
@@ -25,11 +25,15 @@ class UpdateOrganizerStats
         $transaction = $event->transaction;
         $userCart = $transaction->cart_items;
 
+        $organizerEvent = null;
+
         foreach ($userCart as $item) {
             $ticket = Ticket::where('id', $item['id'])->firstOrFail();
             $itemQuantity = $item['quantity'];
 
-            $organizerEvent = Event::where('id', $ticket->event_id)->first();
+            if (!$organizerEvent) {
+                $organizerEvent = Event::where('id', $ticket->event_id)->first();
+            }
 
             Sale::create([
                 'invoice_id' => $transaction->id,
@@ -41,6 +45,8 @@ class UpdateOrganizerStats
                 'event_id' => $organizerEvent->id
             ]);
 
+            $organizerEvent->total_revenue += $transaction->amount;
+            $organizerEvent->save();
         }
     }
 }

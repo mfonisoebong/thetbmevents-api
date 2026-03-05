@@ -13,7 +13,7 @@ use App\Listeners\SendOTPCode;
 use App\Listeners\SendPasswordResetEmail;
 use App\Listeners\SendPurchasedTickets;
 use App\Listeners\SendWelcomeMail;
-use App\Listeners\UpdateOrganizerStats;
+use App\Listeners\UpdateStats;
 use App\Listeners\UpdateRevenueCommisionSnapshot;
 use App\Listeners\UpdateTicketSoldListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -36,7 +36,7 @@ class EventServiceProvider extends ServiceProvider
             NotifyAdminAndOrganizersOnPayment::class,
             NotifyCouponReferral::class,
             UpdateTicketSoldListener::class,
-            UpdateOrganizerStats::class,
+            UpdateStats::class,
         ],
         PasswordTokenCreated::class => [
             SendPasswordResetEmail::class

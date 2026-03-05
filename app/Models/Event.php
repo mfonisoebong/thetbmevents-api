@@ -25,6 +25,8 @@ class Event extends Model
         'image_url',
         'type',
         'event_link',
+        'currency',
+        'total_revenue',
         'links_instagram',
         'links_twitter',
         'links_facebook',
@@ -41,6 +43,7 @@ class Event extends Model
     protected $casts = [
         'tags' => 'array',
         'undisclose_location' => 'boolean',
+        'total_revenue' => 'float',
     ];
 
     public function scopeFilter(Builder $builder)

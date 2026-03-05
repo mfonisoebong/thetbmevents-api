@@ -36,24 +36,29 @@ class EventWithStatsResource extends EventResource
         });
     }
 
-    // TODO: Optimize this by caching the total revenue in the database and updating it whenever a purchase is made, instead of calculating it on the fly.
     private function getTotalRevenue(): float
     {
-        $ticketIds = $this->whenLoaded('tickets')->pluck('id')->all();
+        if ($this->total_revenue != -1) {
+            return $this->total_revenue;
+        } else {
+            $ticketIds = $this->whenLoaded('tickets')->pluck('id')->all();
 
-        if (empty($ticketIds)) {
-            return 0.0;
+            if (empty($ticketIds)) {
+                return 0.0;
+            }
+
+            $total = \DB::table('transactions')
+                ->where('status', 'success')
+                ->where(function ($query) use ($ticketIds) {
+                    foreach ($ticketIds as $ticketId) {
+                        $query->orWhereJsonContains('cart_items', [['id' => $ticketId]]);
+                    }
+                })
+                ->sum('amount');
+
+            $this->resource->forceFill(['total_revenue' => $total])->save();
+
+            return (float) $total;
         }
-
-        $total = \DB::table('transactions')
-            ->where('status', 'success')
-            ->where(function ($query) use ($ticketIds) {
-                foreach ($ticketIds as $ticketId) {
-                    $query->orWhereJsonContains('cart_items', [['id' => $ticketId]]);
-                }
-            })
-            ->sum('amount');
-
-        return (float) $total;
     }
 }
