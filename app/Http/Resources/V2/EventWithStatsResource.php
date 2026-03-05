@@ -23,16 +23,8 @@ class EventWithStatsResource extends EventResource
             return $sumSoldQuantity;
         }
 
-        $purchasedCount = $this->whenLoaded('tickets')->sum(function ($ticket) {
-            return $ticket->newPurchasedTickets->count();
-        });
-
-        if ($purchasedCount > 0) {
-            return $purchasedCount;
-        }
-
         return $this->whenLoaded('tickets')->sum(function ($ticket) {
-            return $ticket->purchasedTickets->count();
+            return $ticket->newPurchasedTickets->count() + $ticket->purchasedTickets->count();
         });
     }
 

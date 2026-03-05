@@ -4,48 +4,38 @@ namespace App\Traits;
 
 use App\Models\Event;
 use App\Models\Sale;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 trait GetTopOrganizers
 {
-    public function computeTopOrganizers($orderBy = 'tickets_sold', $groupBy = 'event_id'): array
+    public function computeTopOrganizers($orderBy = 'tickets_sold'): array
     {
-        // TODO: Sales table is not returning accurate data. Fix this later.
-        $topEvents = Sale::filter()
-            ->select('event_id', DB::raw('SUM(tickets_bought) as tickets_sold'), DB::raw('SUM(total) as total_sales'))
-            ->groupBy($groupBy)
-            ->orderByDesc($orderBy)
-            ->limit(10)
-            ->get()
-            ->toArray();
+        $organizers = User::where('role', 'organizer')->get();
 
+        return $organizers->map((function ($organizer) {
+            $events = $organizer->events()->with('tickets')->get();
 
-        $topOrganizersList = array_map(function ($event) {
-            $organizerEvent = Event::where('id', $event['event_id'])->first();
+            $ticketsSold = $events->sum(function ($event) {
+                return $event->tickets->sum('sold');
+            });
+
+            if ($ticketsSold == 0) {
+                $ticketsSold = $events->sum(function ($event) {
+                    return $event->tickets->sum(function ($ticket) {
+                        return $ticket->newPurchasedTickets->count() + $ticket->purchasedTickets->count();
+                    });
+                });
+            }
 
             return [
-                'title' => $organizerEvent->title,
-                'organizer' => $organizerEvent->user->business_name,
-                'avatar' => $organizerEvent->user->avatar,
-                'email' => $organizerEvent->user->email,
-                'tickets_sold' => $event['tickets_sold'],
-                'total_sales' => $event['total_sales'],
-                'id' => $organizerEvent->user->id
+                'id' => $organizer->id,
+                'organizer' => $organizer->business_name,
+                'avatar' => $organizer->avatar,
+                'email' => $organizer->email,
+                'tickets_sold' => $ticketsSold,
+                'total_sales' => $events->sum('total_revenue'),
             ];
-        }, $topEvents);
-
-        return array_values(array_filter($topOrganizersList, function ($organizer, $index) use ($topOrganizersList, $topEvents) {
-            for ($i = 0; $i < $index; $i++) {
-                if ($this->isSameOrganizer($organizer, $topOrganizersList[$i])) {
-                    return false;
-                }
-            }
-            return true;
-        }, ARRAY_FILTER_USE_BOTH));
-    }
-
-    private function isSameOrganizer($organizer1, $organizer2): bool
-    {
-        return $organizer1['id'] === $organizer2['id'];
+        }))->sortByDesc($orderBy)->take(50)->values()->all();
     }
 }
