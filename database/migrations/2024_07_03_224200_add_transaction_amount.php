@@ -11,9 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->unsignedDecimal('amount')
-                ->after('status')
-                ->default(0);
+            $table->unsignedDecimal('amount', 15)->after('status')->default(0);
         });
     }
 
