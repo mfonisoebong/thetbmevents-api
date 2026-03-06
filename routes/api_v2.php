@@ -35,6 +35,10 @@ Route::group(['namespace' => 'App\Http\Controllers\V2'], function () {
     });
 
     Route::get('manual-verify-payment/{reference}', 'PaymentWebhookController@manualVerifyPayment');
+
+    // Public: resend ticket email(s) from transaction reference
+    Route::get('resend-ticket-email/{reference}', 'TicketEmailController@resendPurchasedTicketsFromReference');
+
     Route::prefix('webhooks')->group(function () {
         Route::post('/paystack', 'PaymentWebhookController@paystackWebhook');
         Route::post('/flutterwave', 'PaymentWebhookController@flutterwaveWebhook');
