@@ -40,7 +40,7 @@ class SendPurchasedTickets
                 $eventLocation = $ticket->ticket->event?->location;
                 $eventLocationTips = $ticket->ticket->event?->location_tips;
 
-                $qrCode = QrCode::format('png')->size(200)->generate($qrCodeData);
+                $qrCode = QrCode::format('png')->size(200)->margin(2)->generate($qrCodeData);
                 $ticketPath = 'tickets/' . Str::uuid()->toString() . '.png';
 
                 Storage::disk('public')->put($ticketPath, $qrCode);
