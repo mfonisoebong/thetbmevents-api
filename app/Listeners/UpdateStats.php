@@ -28,11 +28,11 @@ class UpdateStats
         $organizerEvent = null;
 
         foreach ($userCart as $item) {
-            $ticket = Ticket::where('id', $item['id'])->firstOrFail();
+            $ticket = Ticket::findOrFail($item['id']);
             $itemQuantity = $item['quantity'];
 
             if (!$organizerEvent) {
-                $organizerEvent = Event::where('id', $ticket->event_id)->first();
+                $organizerEvent = Event::findOrFail($ticket->event_id);
             }
 
             Sale::create([
@@ -44,9 +44,9 @@ class UpdateStats
                 'total' => $itemQuantity * $ticket->price,
                 'event_id' => $organizerEvent->id
             ]);
-
-            $organizerEvent->total_revenue += $transaction->amount;
-            $organizerEvent->save();
         }
+
+        $organizerEvent->total_revenue += $transaction->amount;
+        $organizerEvent->save();
     }
 }
