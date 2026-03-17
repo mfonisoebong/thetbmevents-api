@@ -14,7 +14,7 @@ class AdminOrganizersResource extends JsonResource
             'business_name' => $this->business_name,
             'email' => $this->email,
             'phone' => $this->phone_number,
-            'created_at' => $this->created_at->format('j M Y'),
+            'created_at' => $this->created_at->format('j M Y, g:i A'),
             'status' => $this->account_state,
         ];
     }
