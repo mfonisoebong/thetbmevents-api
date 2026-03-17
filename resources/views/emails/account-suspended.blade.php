@@ -51,8 +51,7 @@
                                     </table>
                                 </td>
                                 <td align="right" style="padding:0 4px;">
-                                    <div
-                                        style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:12px;line-height:16px;color:#9CA3AF;">
+                                    <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:12px;line-height:16px;color:#9CA3AF;">
                                         {{ Carbon::now()->format('d/m/y H:i:s') }}
                                     </div>
                                 </td>
@@ -68,12 +67,10 @@
                         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                             <tr>
                                 <td style="padding:18px 22px;background:#E8B025;">
-                                    <div
-                                        style="font-family:Manrope,Inter,Segoe UI,Arial,sans-serif;font-size:18px;line-height:24px;font-weight:800;color:#0F172A;">
+                                    <div style="font-family:Manrope,Inter,Segoe UI,Arial,sans-serif;font-size:18px;line-height:24px;font-weight:800;color:#0F172A;">
                                         Your account has been suspended
                                     </div>
-                                    <div
-                                        style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:18px;color:rgba(15,23,42,0.9);margin-top:4px;">
+                                    <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:18px;color:rgba(15,23,42,0.9);margin-top:4px;">
                                         This is a temporary restriction and may be resolved after review.
                                     </div>
                                 </td>
@@ -83,8 +80,7 @@
                         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                             <tr>
                                 <td style="padding:22px 22px 12px 22px;">
-                                    <div
-                                        style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:14px;line-height:22px;color:#111827;">
+                                    <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:14px;line-height:22px;color:#111827;">
                                         Hi {{ $user->business_name ?: $user->full_name }},
                                         <br/><br/>
                                         We noticed activity on your <strong>TBM Events</strong> account that requires
@@ -96,12 +92,10 @@
                             <!-- Details -->
                             <tr>
                                 <td style="padding:0 22px 16px 22px;">
-                                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"
-                                           style="background-color:#F9FAFB;border:1px solid rgba(15,23,42,0.06);border-radius:14px;">
+                                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#F9FAFB;border:1px solid rgba(15,23,42,0.06);border-radius:14px;">
                                         <tr>
                                             <td style="padding:14px 14px 2px 14px;">
-                                                <div
-                                                    style="font-family:Manrope,Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:18px;font-weight:800;color:#0F172A;">
+                                                <div style="font-family:Manrope,Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:18px;font-weight:800;color:#0F172A;">
                                                     Suspension details
                                                 </div>
                                             </td>
@@ -110,13 +104,11 @@
                                             <td style="padding:0 14px 14px 14px;">
                                                 <div
                                                     style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:20px;color:#4B5563;">
-                                                    Status: <span
-                                                        style="color:#111827;font-weight:700;">Suspended</span><br/>
-                                                    Effective: <span
-                                                        style="color:#111827;">{{ Carbon::now()->format('d/m/y H:i:s') }}</span><br/>
+                                                    Status: <span style="color:#111827;font-weight:700;">Suspended</span><br/>
+                                                    Effective: <span style="color:#111827;">{{ Carbon::now()->format('d/m/y H:i:s') }}</span><br/>
                                                     {{--Reference: <span style="color:#111827;"></span>--}}
                                                     <br/>
-                                                    Reason: <span style="color:#111827;">Suspicious Activity</span>
+                                                    Reason: <span style="color:#111827;">One (or more) of: Multiple similar accounts, multiple similar events, compliance with authorities, violating our term of use or any similar suspicious activity</span>
                                                 </div>
                                             </td>
                                         </tr>
