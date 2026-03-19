@@ -171,6 +171,11 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->hasMany(OtpVerification::class);
     }
 
+    public function emailLinkVerifications(): HasMany
+    {
+        return $this->hasMany(EmailLinkVerification::class);
+    }
+
     public function sales(): HasMany
     {
         return $this->hasMany(Sale::class, 'organizer_id');

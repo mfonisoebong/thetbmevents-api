@@ -14,6 +14,9 @@ Route::group(['namespace' => 'App\Http\Controllers\V2'], function () {
         Route::post('/resend-email-otp', 'AuthController@resendEmailOtp');
         Route::post('/verify-email-otp', 'AuthController@verifyEmailOtp');
 
+        Route::post('resend-email-verification-link', 'AuthController@resendEmailVerificationLink');
+        Route::post('verify-email-link/{hash}', 'AuthController@verifyEmailVerificationHash');
+
         Route::middleware('auth')->group(function () {
             Route::post('/logout', 'AuthController@logout');
             Route::post('/refresh', 'AuthController@refresh');

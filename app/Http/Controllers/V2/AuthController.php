@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\V2;
 
+use App\Events\ResendEmailVerificationLinkEvent;
 use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V2\LoginRequest;
 use App\Http\Requests\V2\SignUpRequest;
 use App\Http\Resources\UserResource;
 use App\Mail\OtpCode;
+use App\Models\EmailLinkVerification;
 use App\Models\OtpVerification;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -142,6 +144,46 @@ class AuthController extends Controller
         $otp->delete();
 
         return $this->success(['token' => JWTAuth::fromUser($user), 'user' => $user], 'Email verified successfully');
+    }
+
+    public function resendEmailVerificationLink(Request $request)
+    {
+        $request->validate([
+            'email' => ['required', 'email', 'exists:users,email']
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+        if ($user->email_verified_at) {
+            return response()->json(['message' => 'Email is already verified'], 400);
+        }
+
+        $user->emailLinkVerifications()->delete();
+
+        event(new ResendEmailVerificationLinkEvent($user));
+
+        return response()->json([
+            'message' => 'Verification link resent successfully'
+        ]);
+    }
+
+    public function verifyEmailVerificationHash(string $hash)
+    {
+        $verification = EmailLinkVerification::where('hash', $hash)->first();
+
+        if (!$verification) {
+            return response()->json(['message' => 'Invalid verification link'], 400);
+        }
+
+        $user = User::find($verification->user_id);
+        $user->email_verified_at = now();
+        $user->save();
+        $verification->delete();
+
+        return response()->json([
+            'message' => 'Email verified successfully',
+            'token' => JWTAuth::fromUser($user),
+            'user' => new UserResource($user)
+        ]);
     }
 
     public function updateProfile(Request $request)

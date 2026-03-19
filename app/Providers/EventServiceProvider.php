@@ -3,12 +3,14 @@
 namespace App\Providers;
 
 use App\Events\PasswordTokenCreated;
+use App\Events\ResendEmailVerificationLinkEvent;
 use App\Events\RevenueOverview;
 use App\Events\TicketPurchaseCompleted;
 use App\Events\UserRegistered;
 use App\Listeners\NotifyAdminAndOrganizersOnPayment;
 use App\Listeners\NotifyAdminOnNewSignup;
 use App\Listeners\NotifyCouponReferral;
+use App\Listeners\SendEmailVerificationLinkListener;
 use App\Listeners\SendOTPCode;
 use App\Listeners\SendPasswordResetEmail;
 use App\Listeners\SendPurchasedTickets;
@@ -27,9 +29,13 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         UserRegistered::class => [
-            SendOTPCode::class,
+            // SendOTPCode::class,
             SendWelcomeMail::class,
             NotifyAdminOnNewSignup::class,
+            SendEmailVerificationLinkListener::class,
+        ],
+        ResendEmailVerificationLinkEvent::class => [
+            SendEmailVerificationLinkListener::class,
         ],
         TicketPurchaseCompleted::class => [
             SendPurchasedTickets::class,
