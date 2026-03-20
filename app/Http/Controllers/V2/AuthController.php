@@ -12,6 +12,7 @@ use App\Mail\OtpCode;
 use App\Models\EmailLinkVerification;
 use App\Models\OtpVerification;
 use App\Models\User;
+use App\Services\PhoneNumberVerifier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -21,7 +22,15 @@ class AuthController extends Controller
 {
     public function signup(SignUpRequest $request)
     {
-        $user = User::create($request->validated());
+        $payload = $request->validated();
+
+        if (!PhoneNumberVerifier::verifyPhoneNumber($payload['country'], $payload['phone_number'])) {
+            return response()->json([
+                'message' => 'The phone number is invalid for the selected country.',
+            ], 422);
+        }
+
+        $user = User::create($payload);
 
         event(new UserRegistered($user));
 
