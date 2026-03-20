@@ -13,6 +13,7 @@ use App\Models\EmailLinkVerification;
 use App\Models\OtpVerification;
 use App\Models\User;
 use App\Services\PhoneNumberVerifier;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -147,6 +148,12 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid OTP'], 400);
         }
 
+        $hasExpired = now()->gt(Carbon::parse($otp->expires_at));
+
+        if ($hasExpired) {
+            return $this->error('Otp has expired');
+        }
+
         $user = User::find($otp->user_id);
         $user->email_verified_at = now();
         $user->save();
@@ -181,6 +188,12 @@ class AuthController extends Controller
 
         if (!$verification) {
             return response()->json(['message' => 'Invalid verification link'], 400);
+        }
+
+        $hasExpired = now()->gt(Carbon::parse($verification->expires_at));
+
+        if ($hasExpired) {
+            return $this->error("Link has expired");
         }
 
         $user = User::find($verification->user_id);
