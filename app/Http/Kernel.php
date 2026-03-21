@@ -2,10 +2,10 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\LogRequestMetrics;
 use App\Http\Middleware\LoginGoogleCallback;
 use App\Http\Middleware\RegisterGoogleCallback;
 use App\Http\Middleware\ValidateRecaptcha;
-use App\Http\Middleware\ValidateTicketId;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -20,6 +20,7 @@ class Kernel extends HttpKernel
     protected $middleware = [
         // \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
+        LogRequestMetrics::class,
         \Illuminate\Http\Middleware\HandleCors::class,
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
