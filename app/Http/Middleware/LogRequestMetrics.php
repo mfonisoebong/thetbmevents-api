@@ -27,6 +27,7 @@ class LogRequestMetrics
 
         $entry = [
             'route' => $route ? $route->uri() : $request->path(),
+            'parameters' => json_encode($route->parameters ?? []),
             'method' => $request->method(),
             'duration_ms' => $durationInMilliseconds,
             'timestamp' => now()->toDateTimeString(),

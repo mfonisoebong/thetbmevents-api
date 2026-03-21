@@ -60,6 +60,7 @@
             <th>Timestamp</th>
             <th>HTTP Verb</th>
             <th>Route</th>
+            <th>Parameters</th>
             <th>Duration (ms)</th>
         </tr>
         </thead>
@@ -69,6 +70,7 @@
                 <td>{{ $log['timestamp'] ?? '-' }}</td>
                 <td>{{ $log['method'] ?? '-' }}</td>
                 <td>{{ $log['route'] ?? '-' }}</td>
+                <td>{{ $log['parameters'] ?? '-' }}</td>
                 <td>{{ $log['duration_ms'] ?? '-' }}</td>
             </tr>
         @endforeach
