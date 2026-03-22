@@ -22,7 +22,7 @@ class LogRequestMetrics
 
         $response = $next($request);
 
-        $durationInMilliseconds = round((microtime(true) - $startedAt) * 1000, 2);
+        $durationInMilliseconds = round((microtime(true) - $startedAt) * 1000, 3);
         $route = $request->route();
 
         $entry = [
@@ -30,7 +30,9 @@ class LogRequestMetrics
             'parameters' => json_encode($route->parameters ?? []),
             'method' => $request->method(),
             'duration_ms' => $durationInMilliseconds,
-            'timestamp' => now()->toDateTimeString(),
+            'timestamp' => now()->toDateTimeString('m'),
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
         ];
 
         try {

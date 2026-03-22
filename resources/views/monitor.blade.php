@@ -61,6 +61,8 @@
             <th>HTTP Verb</th>
             <th>Route</th>
             <th>Parameters</th>
+            <th>IP Address</th>
+            <th>User Agent</th>
             <th>Duration (ms)</th>
         </tr>
         </thead>
@@ -71,6 +73,8 @@
                 <td>{{ $log['method'] ?? '-' }}</td>
                 <td>{{ $log['route'] ?? '-' }}</td>
                 <td>{{ $log['parameters'] ?? '-' }}</td>
+                <td>{{ $log['ip_address'] ?? '-' }}</td>
+                <td>{{ $log['user_agent'] ?? '-' }}</td>
                 <td>{{ $log['duration_ms'] ?? '-' }}</td>
             </tr>
         @endforeach
