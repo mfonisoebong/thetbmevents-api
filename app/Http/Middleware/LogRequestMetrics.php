@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Redis;
-
 class LogRequestMetrics
 {
     public function handle($request, Closure $next)
@@ -31,7 +30,7 @@ class LogRequestMetrics
             'method' => $request->method(),
             'duration_ms' => $durationInMilliseconds,
             'timestamp' => now()->toDateTimeString('m'),
-            'ip_address' => $request->ip(),
+            'ip_address' => $request->headers->get('X-user-ip') ?: $request->ip(),
             'user_agent' => $request->userAgent(),
         ];
 

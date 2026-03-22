@@ -29,7 +29,7 @@ Route::group(['namespace' => 'App\Http\Controllers\V2'], function () {
     Route::prefix('events')->group(function () {
         Route::get('/', 'EventController@listRecentEvents');
         Route::get('/category/{category}', 'EventController@listRecentEventsByCategory');
-        Route::get('/{event}', 'EventController@getEventDetails');
+        Route::get('/{event}', 'EventController@getEventDetails')->withoutMiddleware('throttle:api');
     });
 
     Route::prefix('checkout')->group(function () {
