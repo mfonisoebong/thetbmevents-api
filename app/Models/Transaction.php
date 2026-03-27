@@ -18,7 +18,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class Transaction extends Model
 {
-    use HasFactory, HasUuids;
+    use HasUuids;
 
     protected static function booted(): void
     {

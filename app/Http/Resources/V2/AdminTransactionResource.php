@@ -5,15 +5,25 @@ namespace App\Http\Resources\V2;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Redis;
 
 class AdminTransactionResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        $eventName = Redis::get("event_name_$this->id");
+
+        if (!$eventName) {
+            if ($newPurchasedTicket = $this->newPurchasedTickets->first()) {
+                $eventName = ($newPurchasedTicket->ticket->event->title . ' (' . $newPurchasedTicket->ticket->name . ')') ?? 'N/A';
+                Redis::set("event_name_$this->id", $eventName);
+            }
+        }
+
         return [
             'id' => $this->id,
             'reference' => $this->reference,
-            'event_name' => Event::find($this->cart_items[0]['id'])->name ?? 'N/A',
+            'event_name' => $eventName,
             'email' => $this->customer?->email,
             'amount' => $this->amount,
             'currency' => $this->currency,

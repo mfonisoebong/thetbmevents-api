@@ -13,6 +13,7 @@ use App\Traits\V2\GetTotalAmountInCart;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
@@ -204,7 +205,7 @@ class CheckoutController extends Controller
             return $this->error($gatewayResponse['message'], 502, $gatewayResponse['data'] ?? null);
         }
 
-        Transaction::create([
+        $transaction = Transaction::create([
             'amount' => $total - $platformFee,
             'charged_amount' => $chargedAmount,
             'gateway' => $gateway,
@@ -215,6 +216,8 @@ class CheckoutController extends Controller
             'user_id' => $request->user()?->id,
             'data' => $data,
         ]);
+
+        Redis::set("event_name_$transaction->id", $firstTicket->event->title . ' (' . $firstTicket->name . ')');
 
         return response()->json($gatewayResponse['data']);
     }

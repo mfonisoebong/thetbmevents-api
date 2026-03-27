@@ -13,15 +13,10 @@ class AdminFinanceController extends Controller
 
     public function overview()
     {
-        $successfulTransactionsBuilder = Transaction::where('status', 'success');
-        $allTimeRevenue = $successfulTransactionsBuilder->sum('amount');
+        $allTimeRevenue = Transaction::where('status', 'success')->sum('amount');
 
-        // 10 most recent transactions
-        $recentTransactions = $successfulTransactionsBuilder
-            ->orWhere('status', 'pending')
-            ->orderByDesc('created_at')
-            ->take(10)
-            ->get();
+        $recentTransactions = Transaction::with(['newPurchasedTickets', 'newPurchasedTickets.ticket', 'newPurchasedTickets.ticket.event'])
+        ->orderByDesc('created_at')->take(100)->get();
 
         return $this->success([
             'all_time_revenue' => $allTimeRevenue,
@@ -33,7 +28,11 @@ class AdminFinanceController extends Controller
     public function verifyTransaction(string $reference)
     {
         $paymentWebhookController = new PaymentWebhookController();
-        $paymentWebhookController->manualVerifyPayment($reference);
+        $response = $paymentWebhookController->manualVerifyPayment($reference);
+
+        if ($response->status() !== 200) {
+            return $response;
+        }
 
         $transaction = Transaction::where('reference', $reference)->first();
 
