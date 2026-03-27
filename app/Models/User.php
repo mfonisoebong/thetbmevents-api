@@ -145,19 +145,9 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->hasMany(Event::class);
     }
 
-    public function cartItems(): HasMany
-    {
-        return $this->hasMany(CartItem::class);
-    }
-
     public function notifications(): HasMany
     {
         return $this->hasMany(Notification::class);
-    }
-
-    public function billingInfo(): HasOne
-    {
-        return $this->hasOne(BillingInfo::class);
     }
 
     public function createdTickets(): HasMany
@@ -181,16 +171,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->hasMany(Sale::class, 'organizer_id');
     }
 
-    public function purchasedTickets(): HasMany
-    {
-        return $this->hasMany(PurchasedTicket::class, 'user_id');
-    }
-
-    public function usersPurhcasedTickets(): HasMany
-    {
-        return $this->hasMany(PurchasedTicket::class, 'organizer_id');
-    }
-
     public function payouts(): HasMany
     {
         return $this->hasMany(Payout::class, 'user_id');
@@ -200,6 +180,4 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     {
         return $this->hasOne(Wallet::class, 'user_id');
     }
-
-
 }

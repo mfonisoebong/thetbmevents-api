@@ -11,22 +11,14 @@ trait GetTopOrganizers
 {
     public function computeTopOrganizers($orderBy = 'tickets_sold'): array
     {
-        $organizers = User::where('role', 'organizer')->get();
+        $organizers = User::where('role', 'organizer')->with(['events', 'createdTickets', 'createdTickets.purchasedTickets', 'createdTickets.newPurchasedTickets'])->get();
 
         return $organizers->map((function ($organizer) {
-            $events = $organizer->events()->with('tickets')->get();
+            $events = $organizer->events;
 
-            $ticketsSold = $events->sum(function ($event) {
-                return $event->tickets->sum('sold');
+            $ticketsSold = $organizer->createdTickets->sum(function ($ticket) {
+                return $ticket->newPurchasedTickets->count() + $ticket->purchasedTickets->count();
             });
-
-            if ($ticketsSold == 0) {
-                $ticketsSold = $events->sum(function ($event) {
-                    return $event->tickets->sum(function ($ticket) {
-                        return $ticket->newPurchasedTickets->count() + $ticket->purchasedTickets->count();
-                    });
-                });
-            }
 
             return [
                 'id' => $organizer->id,
