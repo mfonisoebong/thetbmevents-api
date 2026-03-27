@@ -16,9 +16,13 @@ trait GetTopOrganizers
         return $organizers->map((function ($organizer) {
             $events = $organizer->events;
 
-            $ticketsSold = $organizer->createdTickets->sum(function ($ticket) {
-                return $ticket->newPurchasedTickets->count() + $ticket->purchasedTickets->count();
-            });
+            $ticketsSold = $organizer->createdTickets->sum('sold');
+
+            if ($ticketsSold === 0) {
+                $ticketsSold = $organizer->createdTickets->sum(function ($ticket) {
+                    return $ticket->newPurchasedTickets->count() + $ticket->purchasedTickets->count();
+                });
+            }
 
             return [
                 'id' => $organizer->id,
