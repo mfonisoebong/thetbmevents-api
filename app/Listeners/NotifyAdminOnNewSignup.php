@@ -21,6 +21,6 @@ class NotifyAdminOnNewSignup
      */
     public function handle(UserRegistered $event): void
     {
-        Mail::to(config('mail.admin_email'))->send(new NotifyAdminOnNewSignupMail($event->user));
+        Mail::to(config('mail.admin_email'))->send(new NotifyAdminOnNewSignupMail($event->user, $event->medium));
     }
 }

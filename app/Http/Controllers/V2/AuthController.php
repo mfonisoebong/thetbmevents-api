@@ -33,7 +33,7 @@ class AuthController extends Controller
 
         $user = User::create($payload);
 
-        event(new UserRegistered($user));
+        event(new UserRegistered($user, 'web'));
 
         return response()->json([
             'message' => 'Successfully registered. Verify your email to complete registration',

@@ -92,6 +92,7 @@
                                                     Email: <span style="color:#111827;">{{ $user->email }}</span><br />
                                                     Phone: <span style="color:#111827;">{{ $user->phone_number }}</span><br />
                                                     Country: <span style="color:#111827;">{{ $user->country }}</span><br />
+                                                    Via: <span style="color:#111827;">{{ $medium }}</span><br />
                                                 </div>
 
                                                 <div style="margin-top:10px;font-family:Inter,Segoe UI,Arial,sans-serif;font-size:12px;line-height:18px;color:#6B7280;">
