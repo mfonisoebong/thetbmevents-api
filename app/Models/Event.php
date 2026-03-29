@@ -113,16 +113,6 @@ class Event extends Model
         });
     }
 
-    public function getStartDateTimeAttribute()
-    {
-        return $this->commence_date . ' ' . $this->commence_time;
-    }
-
-    public function getEndDateTimeAttribute()
-    {
-        return $this->end_date . ' ' . $this->end_time;
-    }
-
     public function getImageUrlAttribute($value)
     {
         if(Str::isUrl($value)) return $value;

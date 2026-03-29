@@ -9,7 +9,6 @@ use App\Http\Controllers\admin\OrderHistoryController;
 use App\Http\Controllers\admin\OverviewController;
 use App\Http\Controllers\admin\PaymentMethodController;
 use App\Http\Controllers\admin\SlidersController;
-use App\Http\Controllers\admin\TestimoniesController;
 use App\Http\Controllers\admin\UsersController;
 use App\Http\Controllers\users\AuthController;
 use App\Http\Controllers\users\ContactMessagesController;
@@ -103,8 +102,7 @@ Route::group(['prefix' => 'payments'], function () {
 
 
 Route::prefix('/contact-messages')->group(function () {
-    Route::post('/', [ContactMessagesController::class, 'store'])
-        ->middleware('validaterecaptcha');;
+    Route::post('/', [ContactMessagesController::class, 'store'])->middleware('validaterecaptcha');
 });
 
 Route::prefix('auth')->group(function () {
@@ -237,13 +235,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum'], function () 
     Route::prefix('order-history')->group(function () {
         Route::get('/', [OrderHistoryController::class, 'getOrderHistory']);
         Route::get('/export', [OrderHistoryController::class, 'exportAsCSV']);
-    })
-        ->middleware('role:admin,support');
-
-    Route::prefix('/testimonies')->group(function () {
-        Route::get('/', [TestimoniesController::class, 'getTestimonies']);
-        Route::post('/', [TestimoniesController::class, 'store']);
-        Route::post('/update', [TestimoniesController::class, 'update']);
     })
         ->middleware('role:admin,support');
 

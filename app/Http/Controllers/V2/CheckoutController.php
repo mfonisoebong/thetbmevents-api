@@ -332,9 +332,7 @@ class CheckoutController extends Controller
             $serviceUrl = config('services.paystack.url');
             $url = rtrim((string)$serviceUrl, '/') . '/transaction/initialize';
 
-            $res = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $secretKey,
-            ])->post($url, [
+            $res = Http::withToken($secretKey)->post($url, [
                 'email' => $email,
                 'amount' => (int) ($amount * 100),
                 'reference' => $reference,
@@ -356,9 +354,7 @@ class CheckoutController extends Controller
             $serviceUrl = config('services.flutterwave.url');
             $url = rtrim((string)$serviceUrl, '/') . '/v3/payments';
 
-            $res = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $secretKey,
-            ])->post($url, [
+            $res = Http::withToken($secretKey)->post($url, [
                 'amount' => $amount,
                 'tx_ref' => $reference,
                 'redirect_url' => $callbackUrl,

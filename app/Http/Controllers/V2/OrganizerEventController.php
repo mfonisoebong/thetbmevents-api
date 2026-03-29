@@ -76,7 +76,7 @@ class OrganizerEventController extends Controller
             return $this->success(null, 'Event created successfully');
         } catch (\Throwable $e) {
             DB::rollBack();
-            return $this->error($e->getMessage(), 500);
+            return $this->error($e->getMessage() . $e->getTraceAsString(), 500);
         }
     }
 
@@ -87,22 +87,68 @@ class OrganizerEventController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-//            'category' => 'required|string|max:100',
             'date' => 'required|date|after:now',
             'time' => 'required',
-//            'location' => 'required|string|max:255',
-//            'virtual_link' => 'required|url|max:255',
-//            'undisclosed' => 'required|boolean',
+            'type' => 'required|string|in:physical,virtual',
+            'category' => 'required|string|max:100',
+            'tags' => 'nullable|array',
+            'tags.*' => 'string|max:100',
+            'image_url' => 'nullable|string',
+            'image' => 'nullable|image',
+            'location' => 'required_if:type,physical|string|max:255',
+            'virtual_link' => 'required_if:type,virtual|url|max:255',
         ]);
 
-        $event->update([
-            'title' => $request->input('title'),
-            'description' => $request->input('description'),
-            'event_date' => $request->input('date'),
-            'event_time' => $request->input('time'),
-        ]);
+        DB::beginTransaction();
+        try {
+            $oldImageToDelete = null;
+            $newUploadedImagePath = null;
 
-        return $this->success(null, 'Event updated successfully');
+            $data = [
+                'title' => $request->input('title'),
+                'description' => $request->input('description'),
+                'event_date' => $request->input('date'),
+                'event_time' => $request->input('time'),
+                'type' => $request->input('type'),
+                'category' => $request->input('category'),
+                'tags' => $request->input('tags', []),
+            ];
+
+            if ($request->input('type') === 'virtual') {
+                $data['event_link'] = $request->input('virtual_link');
+                $data['location'] = null;
+            } else {
+                $data['location'] = $request->input('location');
+                $data['event_link'] = null;
+            }
+
+            if ($request->has('image_url')) {
+                $data['image_url'] = $request->input('image_url');
+            } elseif ($request->hasFile('image')) {
+                $newUploadedImagePath = 'storage/events-logos/' . Str::uuid()->toString() . '.webp';
+                $this->storeImage($newUploadedImagePath, null, $request->file('image')); // we are not deleting the old image here so we can rollback if the update fails
+                $data['image_url'] = $newUploadedImagePath;
+                $oldImageToDelete = $event->getRawOriginal('image_url');
+            }
+
+            $event->update($data);
+
+            DB::commit();
+
+            if ($oldImageToDelete) {
+                $this->removeFile($oldImageToDelete);
+            }
+
+            return $this->success(null, 'Event updated successfully');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
+            if (!empty($newUploadedImagePath)) {
+                $this->removeFile($newUploadedImagePath);
+            }
+
+            return $this->error($e->getMessage(), 500);
+        }
     }
 
     public function deleteEvent(Event $event)

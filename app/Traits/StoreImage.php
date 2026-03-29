@@ -6,10 +6,6 @@ use Intervention\Image\Facades\Image;
 
 trait StoreImage
 {
-
-    protected $quality = 60;
-    protected $encoding = 'webp';
-
     public function storeImage($path, $oldPath, $image): void
     {
         if ($oldPath) {
@@ -25,6 +21,12 @@ trait StoreImage
         }
 
         $newPath = public_path($path);
+
+        $dir = dirname($newPath);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
         Image::make($image)
             ->encode('webp', 60)
             ->save($newPath);
