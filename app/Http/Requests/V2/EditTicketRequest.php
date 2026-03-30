@@ -13,7 +13,7 @@ class EditTicketRequest extends FormRequest
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:0',
-            'end_selling_date' => 'required|date|after_or_equal:now',
+            'end_selling_date' => 'required|date',
         ];
     }
 
