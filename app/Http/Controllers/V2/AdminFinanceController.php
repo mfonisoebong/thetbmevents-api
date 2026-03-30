@@ -15,7 +15,7 @@ class AdminFinanceController extends Controller
     {
         $allTimeRevenue = Transaction::where('status', 'success')->sum('amount');
 
-        $recentTransactions = Transaction::with(['newPurchasedTickets', 'newPurchasedTickets.ticket', 'newPurchasedTickets.ticket.event'])
+        $recentTransactions = Transaction::with(['customer', 'newPurchasedTickets', 'newPurchasedTickets.ticket', 'newPurchasedTickets.ticket.event'])
         ->orderByDesc('created_at')->take(100)->get();
 
         return $this->success([

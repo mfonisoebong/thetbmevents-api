@@ -55,7 +55,7 @@ class AdminController extends Controller
 
     public function listAttendees()
     {
-        return $this->success(OrganizerAttendeeResource::collection(Attendee::distinct()->take(10)->orderByDesc('created_at')->get()));
+        return $this->success(OrganizerAttendeeResource::collection(Attendee::distinct()->take(100)->orderByDesc('created_at')->get()));
     }
 
     public function events()

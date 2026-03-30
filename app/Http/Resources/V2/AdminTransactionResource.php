@@ -24,7 +24,7 @@ class AdminTransactionResource extends JsonResource
             'id' => $this->id,
             'reference' => $this->reference,
             'event_name' => $eventName,
-            'email' => $this->customer?->email,
+            'customer' => $this->data['customer'],
             'amount' => $this->amount,
             'currency' => $this->currency,
             'status' => $this->status,
