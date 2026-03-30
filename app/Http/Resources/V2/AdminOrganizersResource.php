@@ -15,6 +15,7 @@ class AdminOrganizersResource extends JsonResource
             'email' => $this->email,
             'phone' => $this->phone_number,
             'created_at' => $this->created_at->format('j M Y, g:i A'),
+            'email_verified_at' => $this->email_verified_at?->format('j M Y, g:i A') ?: 'Not verified',
             'status' => $this->account_state,
         ];
     }
