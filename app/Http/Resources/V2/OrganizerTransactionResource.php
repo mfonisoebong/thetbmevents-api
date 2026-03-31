@@ -3,10 +3,12 @@
 namespace App\Http\Resources\V2;
 
 use App\Models\Ticket;
+use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/** @mixin Transaction */
 class OrganizerTransactionResource extends JsonResource
 {
     /**
@@ -24,9 +26,9 @@ class OrganizerTransactionResource extends JsonResource
             'amount' => $this->amount,
             'status' => $this->status,
             'customer' => [
-                'full_name' => $this->customer?->full_name,
-                'email' => $this->customer?->email,
-                'phone_number' => $this->customer?->phone_number,
+                'full_name' => $this->data['fullname'] ?? $this->customer->full_name ?? null,
+                'email' => $this->data['email'] ?? $this->customer->email ?? null,
+                'phone_number' => $this->data['phone'] ?? $this->customer->phone_number ?? null,
             ],
             'quantity' => $this->getTotalQuantityFromCartItems($this->cart_items),
             'date' => Carbon::parse($this->created_at)->format('M d, Y h:ia'),

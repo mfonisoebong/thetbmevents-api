@@ -39,8 +39,7 @@ class OrganizerDashboardController extends Controller
             ]);
         }
 
-        $transactions = Transaction::where('status', 'success')
-            ->where(function ($query) use ($ticketIds) {
+        $transactions = Transaction::where(function ($query) use ($ticketIds) {
                 foreach ($ticketIds as $ticketId) {
                     $query->orWhereJsonContains('cart_items', [['id' => $ticketId]]);
                 }
