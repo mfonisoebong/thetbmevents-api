@@ -45,6 +45,7 @@ class OrganizerDashboardController extends Controller
                 }
             })
             ->with(['customer:id,full_name,email,phone_number'])
+            ->orderByDesc('created_at')
             ->get();
 
         // Fetch attendees in one query (instead of merging per-transaction) and eager-load what's needed by the resource.

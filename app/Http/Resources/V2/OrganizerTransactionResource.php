@@ -22,6 +22,7 @@ class OrganizerTransactionResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'reference' => $this->reference,
             'items' => $this->cartItemsTicketNames($this->cart_items, $request),
             'amount' => $this->amount,
             'status' => $this->status,
