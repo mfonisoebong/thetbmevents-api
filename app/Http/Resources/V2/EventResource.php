@@ -21,6 +21,7 @@ class EventResource extends JsonResource
             'date' => $this->event_date,
             'time' => $this->event_time,
             'location' => !$this->undisclose_location ? $this->location : 'Undisclosed',
+            'event_link' => $this->event_link,
             'category' => $this->category,
             'tags' => $this->tags,
             'image' => $this->image_url,

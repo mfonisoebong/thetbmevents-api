@@ -39,12 +39,12 @@ class QueueTestBlastEmail extends Command
         $recipients = [
             'ajayimarvellous777@gmail.com',
             'admin@thetbmevents.com',
-            'freah235@yahoo.com',
+            // 'freah235@yahoo.com',
         ];
 
         SendBlastEmailJob::dispatch($subject, $content, $eventId, $recipients);
 
-        $this->info('Dispatched SendBlastEmailJob to queue "emails" for 3 test recipients.');
+        $this->info('Successfully Dispatched!');
         $this->line('Next: run a worker to process it, e.g. `php artisan queue:work --queue=emails`');
 
         return self::SUCCESS;

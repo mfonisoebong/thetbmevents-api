@@ -14,6 +14,7 @@ class EventWithStatsResource extends EventResource
             'location' => $this->location,
             'total_tickets_sold' => $this->getTicketsSold(),
             'total_revenue' => $this->getTotalRevenue(),
+            'undisclosed' => $this->undisclose_location,
         ]);
     }
 

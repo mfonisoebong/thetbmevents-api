@@ -18,7 +18,7 @@ class OrganizerEventController extends Controller
 
     public function index()
     {
-        $myEvents = Event::where('user_id', auth()->id())->get();
+        $myEvents = auth()->user()->events()->with('tickets')->latest()->get();
         return $this->success(EventResource::collection($myEvents));
     }
 
@@ -97,6 +97,7 @@ class OrganizerEventController extends Controller
             'image' => 'nullable|image',
             'location' => 'required_if:type,physical|string|max:255',
             'virtual_link' => 'required_if:type,virtual|url|max:255',
+            'undisclosed' => 'required|boolean'
         ]);
 
         DB::beginTransaction();
@@ -132,6 +133,9 @@ class OrganizerEventController extends Controller
             }
 
             $event->update($data);
+
+            $event->undisclose_location = $request->input('undisclosed');
+            $event->save();
 
             DB::commit();
 
