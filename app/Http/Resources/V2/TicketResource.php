@@ -2,11 +2,6 @@
 
 namespace App\Http\Resources\V2;
 
-use App\Http\Resources\Mobile\Auth\ProfileResource;
-use App\Http\Resources\Mobile\Invoice\TicketResource as InvoiceTicketResource;
-use App\Http\Resources\Mobile\Sale\EventSaleResource;
-use App\Models\NewPurchasedTicket;
-use App\Models\PurchasedTicket;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -41,7 +36,7 @@ class TicketResource extends JsonResource
             return $sold;
         }
 
-        return $this->purchasedTickets->count();
+        return $this->purchasedTickets->count() + $this->newPurchasedTickets->count();
     }
 
 }

@@ -2,8 +2,10 @@
 
 namespace App\Http\Resources\V2;
 
+use App\Models\Event;
 use Illuminate\Http\Request;
 
+/** @mixin Event */
 class EventWithStatsResource extends EventResource
 {
     public function toArray(Request $request): array
@@ -17,7 +19,7 @@ class EventWithStatsResource extends EventResource
 
     private function getTicketsSold(): int
     {
-        $sumSoldQuantity = (int) $this->whenLoaded('tickets')->sum('sold');
+        $sumSoldQuantity = $this->whenLoaded('tickets')->sum('sold');
 
         if ($sumSoldQuantity > 0) {
             return $sumSoldQuantity;

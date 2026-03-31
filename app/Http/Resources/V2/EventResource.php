@@ -3,10 +3,11 @@
 namespace App\Http\Resources\V2;
 
 use App\Http\Resources\UserResource;
-use App\Models\Ticket;
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/** @mixin Event */
 class EventResource extends JsonResource
 {
     public function toArray(Request $request): array
