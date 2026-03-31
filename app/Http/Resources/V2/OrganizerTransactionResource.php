@@ -27,9 +27,9 @@ class OrganizerTransactionResource extends JsonResource
             'amount' => $this->amount,
             'status' => $this->status,
             'customer' => [
-                'full_name' => $this->data['fullname'] ?? $this->customer->full_name ?? null,
-                'email' => $this->data['email'] ?? $this->customer->email ?? null,
-                'phone_number' => $this->data['phone'] ?? $this->customer->phone_number ?? null,
+                'full_name' => $this->data['customer']['fullname'] ?? $this->customer->full_name ?? null,
+                'email' => $this->data['customer']['email'] ?? $this->customer->email ?? null,
+                'phone_number' => $this->data['customer']['phone'] ?? $this->customer->phone_number ?? null,
             ],
             'quantity' => $this->getTotalQuantityFromCartItems($this->cart_items),
             'date' => Carbon::parse($this->created_at)->format('M d, Y h:ia'),
