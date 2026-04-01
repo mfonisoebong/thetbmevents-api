@@ -10,14 +10,23 @@ class EventController extends Controller
 {
     public function listRecentEvents()
     {
-        $events = Event::where('status', 'published')->orderByDesc('created_at')->take(50)->get();
+        $events = Event::where('status', 'published')
+            ->with(['user', 'tickets'])
+            ->orderByDesc('created_at')
+            ->take(50)
+            ->get();
 
         return $this->success(EventResource::collection($events), 'Recent events fetched successfully');
     }
 
     public function listRecentEventsByCategory(string $category)
     {
-        $events = Event::where('category', 'like', "%$category%")->orderByDesc('created_at')->take(50)->get();
+        $events = Event::where('category', 'like', "%$category%")
+            ->where('status', 'published')
+            ->with(['user', 'tickets'])
+            ->orderByDesc('created_at')
+            ->take(50)
+            ->get();
 
         return $this->success(EventResource::collection($events), 'Recent events in category fetched successfully');
     }
