@@ -16,6 +16,8 @@ class CreateCouponRequest extends FormRequest
             'event_id' => 'required|exists:events,id',
             'start_date_time' => 'required|date',
             'end_date_time' => 'required|date|after:start_date_time',
+            'referral_name' => 'required_with:referral_email|string',
+            'referral_email' => 'required_with:referral_name|email',
         ];
     }
 
