@@ -13,7 +13,8 @@ class EventController extends Controller
         $events = Event::where('status', 'published')
             ->with(['user', 'tickets'])
             ->orderByDesc('created_at')
-            ->take(50)
+            ->take(24)
+            ->offset(request('offset', 0))
             ->get();
 
         return $this->success(EventResource::collection($events), 'Recent events fetched successfully');
@@ -25,7 +26,8 @@ class EventController extends Controller
             ->where('status', 'published')
             ->with(['user', 'tickets'])
             ->orderByDesc('created_at')
-            ->take(50)
+            ->take(24)
+            ->offset(request('offset', 0))
             ->get();
 
         return $this->success(EventResource::collection($events), 'Recent events in category fetched successfully');
