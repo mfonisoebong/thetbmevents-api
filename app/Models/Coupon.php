@@ -50,7 +50,7 @@ class Coupon extends Model
         return $this->limit === 0;
     }
 
-    public function getIsActiveAttribute(): bool
+    public function getInSellingWindowAttribute(): bool
     {
         $startDate = Carbon::parse($this->start_date_time);
         $endDate = Carbon::parse($this->end_date_time);

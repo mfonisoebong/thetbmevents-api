@@ -20,6 +20,10 @@ class CheckoutController extends Controller
 {
     use ApiResponses, GetTotalAmountInCart;
 
+    private array $payload;
+    private array $cartItems;
+    private float $ticketsAmount;
+
     public function applyCoupon(Request $request)
     {
         $validated = $request->validate([
@@ -45,7 +49,7 @@ class CheckoutController extends Controller
             return $this->error('Coupon is inactive', 422);
         }
 
-        if (!$coupon->is_active) {
+        if (!$coupon->in_selling_window) {
             return $this->error('Coupon is not active', 422);
         }
 
@@ -84,46 +88,61 @@ class CheckoutController extends Controller
 
     public function processCheckout(CheckoutRequest $request)
     {
-        $payload = $request->validated();
+        $this->payload = $request->validated();
 
-        $cartItems = $this->transformTicketIdsToCartItems($payload['tickets']);
+        $this->cartItems = $this->transformTicketIdsToCartItems($this->payload['tickets']);
 
-        $this->checkSellingDateFromCartItems($cartItems);
-        $this->validateTicketAvailabilityFromCartItems($cartItems);
+        $this->checkSellingDateFromCartItems($this->cartItems);
+        $this->validateTicketAvailabilityFromCartItems($this->cartItems);
 
-        $ticketsAmount = $this->getTotalAmount($cartItems);
+        $this->ticketsAmount = $this->getTotalAmount($this->cartItems);
 
-        if ($payload['is_free_checkout'] && $ticketsAmount == 0) {
-            $data = [
-                'customer' => $payload['customer'],
-                'send_to_different_email' => $payload['send_to_different_email'],
-                'attendees' => $payload['attendees'] ?? [],
-                'meta' => [
-                    'tickets_amount' => $ticketsAmount,
-                    'gateway_fees' => 0,
-                    'platform_fee' => 0,
-                    'tickets_count' => count($payload['tickets']),
-                    'tickets' => $payload['tickets']
-                ],
-            ];
-
-            $transaction = Transaction::create([
-                'amount' => 0,
-                'charged_amount' => 0,
-                'gateway' => 'free',
-                'cart_items' => $cartItems,
-                'reference' => $reference = Str::uuid()->toString(),
-                'user_id' => $request->user()?->id,
-                'data' => $data,
-            ]);
-
-            \DB::beginTransaction();
-            PaymentWebhookController::finishUp($transaction);
-
-            return $this->success(['reference' => $reference], 'Free checkout successful');
+        if ($this->payload['is_free_checkout'] && $this->ticketsAmount == 0) {
+            return $this->processAsFreeCheckout();
         }
 
-        $gateway = $payload['gateway'];
+        // I need an event context for coupon validation
+        $firstTicket = Ticket::where('id', $this->cartItems[0]['id'])->first();
+        if (!$firstTicket) {
+            return $this->error('Invalid ticket selected', 422);
+        }
+
+        $platformFee = $this->getPlatformFee($this->ticketsAmount);
+
+        $coupon = null;
+        $couponAmount = 0.0;
+        $subFee = $this->ticketsAmount + $platformFee;
+
+        if (!empty($this->payload['coupon_applied'])) {
+            $couponCode = $this->payload['coupon_code'];
+
+            $coupon = Coupon::where('code', $couponCode)
+                ->where('event_id', $firstTicket->event_id)
+                ->where('status', 'active')
+                ->first();
+
+            if (!$coupon) {
+                return $this->error('Invalid coupon code for this event', 422);
+            }
+
+            if (!$coupon->in_selling_window) {
+                return $this->error('Coupon is no longer valid', 422);
+            }
+
+            if ($coupon->limit === 0) {
+                return $this->error('Coupon has been used up', 422);
+            }
+
+            $couponAmount = max(0, min($coupon->calculateValue($subFee), $subFee));
+        }
+
+        $total = max(0, $subFee - $couponAmount);
+
+        if ($total == 0) {
+            return $this->processAsFreeCheckout();
+        }
+
+        $gateway = $this->payload['gateway'] ?? abort(401, 'Payment gateway is required for paid checkout');
 
         $paymentMethod = PaymentMethod::where('gateway', $gateway)->firstOrFail();
 
@@ -137,43 +156,6 @@ class CheckoutController extends Controller
             return $this->error(ucfirst($gateway) . ' payment method is disabled', 500);
         }
 
-        // I need an event context for coupon validation
-        $firstTicket = Ticket::query()->where('id', $cartItems[0]['id'])->first();
-        if (!$firstTicket) {
-            return $this->error('Invalid ticket selected', 422);
-        }
-
-        $platformFee = $this->getPlatformFee($ticketsAmount);
-
-        $coupon = null;
-        $couponAmount = 0.0;
-
-        if (!empty($payload['coupon_applied'])) {
-            $couponCode = $payload['coupon_code'];
-
-            $coupon = Coupon::where('code', $couponCode)
-                ->where('event_id', $firstTicket->event_id)
-                ->where('status', 'active')
-                ->first();
-
-            if (!$coupon) {
-                return $this->error('Invalid coupon code for this event', 422);
-            }
-
-            if (!$coupon->is_active) {
-                return $this->error('Coupon is no longer valid', 422);
-            }
-
-            if ($coupon->limit === 0) {
-                return $this->error('Coupon has been used up', 422);
-            }
-
-            $couponAmount = $coupon->calculateValue($ticketsAmount + $platformFee);
-            $couponAmount = max(0, min($couponAmount, $ticketsAmount));
-        }
-
-        $total = max(0, $ticketsAmount + $platformFee - $couponAmount);
-
         $gatewayFees = $this->getGatewayFees($total, $gateway);
 
         $chargedAmount = $total + $gatewayFees;
@@ -181,22 +163,22 @@ class CheckoutController extends Controller
         $reference = Str::uuid()->toString();
 
         $data = [
-            'customer' => $payload['customer'],
-            'send_to_different_email' => $payload['send_to_different_email'],
-            'attendees' => $payload['attendees'] ?? [],
+            'customer' => $this->payload['customer'],
+            'send_to_different_email' => $this->payload['send_to_different_email'],
+            'attendees' => $this->payload['attendees'] ?? [],
             'meta' => [
-                'tickets_amount' => $ticketsAmount,
+                'tickets_amount' => $this->ticketsAmount,
                 'gateway_fees' => $gatewayFees,
                 'platform_fee' => $platformFee,
-                'tickets_count' => count($payload['tickets']),
-                'tickets' => $payload['tickets']
+                'tickets_count' => count($this->payload['tickets']),
+                'tickets' => $this->payload['tickets']
             ],
         ];
 
         $gatewayResponse = $this->initializeGatewayPayment(
             gateway: $gateway,
             secretKey: $secretKey,
-            email: $payload['customer']['email'],
+            email: $this->payload['customer']['email'],
             amount: $gateway === 'paystack' ? $chargedAmount : $total,
             reference: $reference
         );
@@ -209,7 +191,7 @@ class CheckoutController extends Controller
             'amount' => $total - $platformFee,
             'charged_amount' => $chargedAmount,
             'gateway' => $gateway,
-            'cart_items' => $cartItems,
+            'cart_items' => $this->cartItems,
             'reference' => $reference,
             'coupon_id' => $coupon?->id,
             'coupon_amount' => $couponAmount,
@@ -220,6 +202,37 @@ class CheckoutController extends Controller
         Redis::set("event_name_$transaction->id", $firstTicket->event->title . ' (' . $firstTicket->name . ')');
 
         return response()->json($gatewayResponse['data']);
+    }
+
+    private function processAsFreeCheckout()
+    {
+        $data = [
+            'customer' => $this->payload['customer'],
+            'send_to_different_email' => $this->payload['send_to_different_email'],
+            'attendees' => $this->payload['attendees'] ?? [],
+            'meta' => [
+                'tickets_amount' => $this->ticketsAmount,
+                'gateway_fees' => 0,
+                'platform_fee' => 0,
+                'tickets_count' => count($this->payload['tickets']),
+                'tickets' => $this->payload['tickets']
+            ],
+        ];
+
+        $transaction = Transaction::create([
+            'amount' => 0,
+            'charged_amount' => 0,
+            'gateway' => 'free',
+            'cart_items' => $this->cartItems,
+            'reference' => $reference = Str::uuid()->toString(),
+            'user_id' => request()->user()?->id,
+            'data' => $data,
+        ]);
+
+        \DB::beginTransaction();
+        PaymentWebhookController::finishUp($transaction);
+
+        return $this->success(['reference' => $reference], 'Free checkout successful');
     }
 
     private function transformTicketIdsToCartItems(array $ticketIds): array
