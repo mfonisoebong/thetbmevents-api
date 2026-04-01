@@ -21,6 +21,8 @@ return new class extends Migration
             $table->json('data');
             $table->timestamps();
 
+            $table->index('reference');
+
             $table->foreign('customer_id')
                 ->references('id')
                 ->on('customers')
