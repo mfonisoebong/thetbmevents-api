@@ -24,6 +24,16 @@ class PaymentWebhookController extends Controller
 
     public function paystackWebhook(Request $request)
     {
+        // verify it came from paystack
+        $secret = config('services.paystack.secret');
+        $signature = $request->header('x-paystack-signature');
+
+        if (!$signature || !hash_equals(hash_hmac('sha512', $request->getContent(), $secret), $signature)) {
+            Log::warning('Paystack webhook received with invalid signature');
+            return response(null, 400);
+        }
+
+
         $event = $request->event;
         if (!in_array($event, $this->paystackSupportedEvents, true)) {
             Log::warning('Paystack webhook received unsupported event', ['event' => $event]);
@@ -32,7 +42,7 @@ class PaymentWebhookController extends Controller
 
         $data = $request->data;
         $reference = $data['reference'];
-        $amount = (float) $data['amount'];
+        $amount = (float)$data['amount'];
 
         if (!$reference) {
             Log::warning('Paystack webhook received without reference', ['data' => $data]);
@@ -76,7 +86,7 @@ class PaymentWebhookController extends Controller
 
         $data = $request->data;
         $reference = $data['tx_ref'];
-        $amount = (float) $data['amount'];
+        $amount = (float)$data['amount'];
 
         if (!$reference) {
             Log::warning('Flutterwave webhook received without reference', ['data' => $data]);
@@ -101,7 +111,7 @@ class PaymentWebhookController extends Controller
 
         $expectedAmount = $transaction->amount + $platformFee;
 
-        if ($expectedAmount!== $amount || $data['status'] !== 'successful') {
+        if ($expectedAmount !== $amount || $data['status'] !== 'successful') {
             Log::warning('Flutterwave webhook amount/status mismatch', [
                 'reference' => $reference,
                 'expected_amount' => $expectedAmount,
