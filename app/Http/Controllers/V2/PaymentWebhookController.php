@@ -77,6 +77,16 @@ class PaymentWebhookController extends Controller
 
     public function flutterwaveWebhook(Request $request)
     {
+        $secretHash = config('services.flutterwave.secret_hash');
+
+        $signature = $request->header('verif-hash');
+
+        if (!$signature || ($signature !== $secretHash)) {
+            Log::alert('Flutterwave webhook received with invalid signature', ['ip' => $request->ip(), 'user_agent' => $request->userAgent()]);
+
+            abort(401);
+        }
+
         $event = $request->event;
 
         if (!in_array($event, $this->flutterwaveSupportedEvents, true)) {
