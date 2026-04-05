@@ -48,6 +48,10 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $loginRequest)
     {
+        if (!User::where('email', $loginRequest->email)->exists()) {
+            return $this->error('No account found with the provided email address', 404);
+        }
+
         $credentials = $loginRequest->validated();
 
         if (!$token = auth()->attempt($credentials)) {
