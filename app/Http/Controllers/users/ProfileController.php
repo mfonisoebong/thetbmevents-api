@@ -157,7 +157,7 @@ class ProfileController extends Controller
                 ->first();
             return [
                 'total_tickets' => $customer['total_tickets'],
-                'name' => $user->first_name . ' ' . $user->last_name
+                'name' => $user->full_name
             ];
         }, $topCustomers);
 

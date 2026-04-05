@@ -145,11 +145,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->hasMany(Event::class);
     }
 
-    public function notifications(): HasMany
-    {
-        return $this->hasMany(Notification::class);
-    }
-
     public function createdTickets(): HasMany
     {
         return $this->hasMany(Ticket::class, 'organizer_id');

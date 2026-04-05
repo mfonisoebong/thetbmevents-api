@@ -5,7 +5,6 @@ use App\Http\Controllers\users\AuthController;
 use App\Http\Controllers\users\CouponController;
 use App\Http\Controllers\users\EventsController;
 use App\Http\Controllers\users\OrganizerBankDetailsController;
-use App\Http\Controllers\users\PaymentController;
 use App\Http\Controllers\users\ProfileController;
 use App\Http\Controllers\users\TicketsController;
 use App\Http\Middleware\AuthOrGuestMiddleware;
@@ -67,15 +66,6 @@ Route::group([
         Route::post('/{category}', [AdminEventsController::class, 'update']);
         Route::delete('/{category}', [AdminEventsController::class, 'destroy']);
     })->middleware(['auth:sanctum', 'role:admin,manager']);
-
-    Route::group(['prefix' => 'payments'], function () {
-        Route::middleware(AuthOrGuestMiddleware::class)->group(function () {
-            Route::post('/paystack', [PaymentController::class, 'paystackRedirectToGateway']);
-            Route::post('/free', [PaymentController::class, 'freePayment']);
-        });
-        Route::get('/callback/{reference}', [PaymentController::class, 'callback']);
-    });
-
 
     Route::prefix('coupons')
         ->group(function () {
