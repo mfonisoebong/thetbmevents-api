@@ -137,6 +137,8 @@ class PaymentWebhookController extends Controller
 
     public function flutterwaveWebhookFailed(Request $request)
     {
+        return response(null, 200);
+
         $event = $request->event;
 
         if (!in_array($event, $this->flutterwaveSupportedEvents, true)) {
