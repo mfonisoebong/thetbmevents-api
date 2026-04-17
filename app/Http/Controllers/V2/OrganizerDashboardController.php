@@ -73,6 +73,10 @@ class OrganizerDashboardController extends Controller
 
         $ticketIds = auth()->user()->createdTickets->pluck('id')->all();
 
+        if (empty($ticketIds)) {
+            return $this->success(array_fill(0, 12, 0.0));
+        }
+
         // Note: months returned by MySQL are 1..12.
         $monthly = Transaction::where('status', 'success')
             ->where(function ($query) use ($ticketIds) {
