@@ -16,6 +16,7 @@ class AdminPayoutRequestMail extends Mailable
     public function __construct(
         public User $organizer,
         public string $bankName,
+        public string $accountName,
         public string $accountNumber
     ) {
     }

@@ -71,12 +71,19 @@
                         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                             <tr>
                                 <td style="padding:16px 22px 18px 22px;">
-                                    <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:20px;color:#4B5563;">
-                                        Organizer: <span style="color:#111827;font-weight:700;">{{ $organizer->business_name ?: $organizer->full_name }}</span><br />
-                                        Organizer Email: <span style="color:#111827;">{{ $organizer->email }}</span><br />
-                                        Bank Name: <span style="color:#111827;">{{ $bankName }}</span><br />
-                                        Account Number: <span style="color:#111827;">{{ $accountNumber }}</span>
-                                    </div>
+                                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#FFFBEB;border:1px solid #FDE68A;border-left:4px solid #E8B025;border-radius:8px;">
+                                        <tr>
+                                            <td style="padding:12px 14px;">
+                                                <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:20px;color:#4B5563;">
+                                                    Organizer: <span style="color:#111827;font-weight:700;">{{ $organizer->business_name ?: $organizer->full_name }}</span><br />
+                                                    Organizer Email: <span style="color:#111827;">{{ $organizer->email }}</span><br />
+                                                    Bank Name: <span style="color:#111827;">{{ $bankName }}</span><br />
+                                                    Account Name: <span style="color:#111827;">{{ $accountName }}</span><br />
+                                                    Account Number: <span style="color:#111827;">{{ $accountNumber }}</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
                             </tr>
                         </table>

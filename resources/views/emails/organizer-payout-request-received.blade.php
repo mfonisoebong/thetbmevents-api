@@ -68,6 +68,7 @@
                                 <td style="padding:16px 22px 18px 22px;">
                                     <div style="font-family:Inter,Segoe UI,Arial,sans-serif;font-size:13px;line-height:20px;color:#4B5563;">
                                         Bank Name: <span style="color:#111827;">{{ $bankName }}</span><br />
+                                        Account Name: <span style="color:#111827;">{{ $accountName }}</span><br />
                                         Account Number: <span style="color:#111827;">{{ $accountNumber }}</span><br />
                                         Status: <span style="color:#111827;font-weight:700;">Pending review</span>
                                     </div>

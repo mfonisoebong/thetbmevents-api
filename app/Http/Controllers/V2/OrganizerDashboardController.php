@@ -147,6 +147,7 @@ class OrganizerDashboardController extends Controller
     public function requestPayout(Request $request)
     {
         $data = $request->validate([
+            'account_name' => ['required', 'string'],
             'account_number' => ['required', 'string'],
             'bank_name' => ['required', 'string'],
         ]);
@@ -157,6 +158,7 @@ class OrganizerDashboardController extends Controller
             new AdminPayoutRequestMail(
                 $organizer,
                 $data['bank_name'],
+                $data['account_name'],
                 $data['account_number']
             )
         );
@@ -165,6 +167,7 @@ class OrganizerDashboardController extends Controller
             new OrganizerPayoutRequestReceivedMail(
                 $organizer,
                 $data['bank_name'],
+                $data['account_name'],
                 $data['account_number']
             )
         );
