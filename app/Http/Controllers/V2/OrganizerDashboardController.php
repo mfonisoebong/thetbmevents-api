@@ -8,6 +8,7 @@ use App\Http\Resources\V2\EventWithStatsResource;
 use App\Http\Resources\V2\OrganizerAttendeeResource;
 use App\Http\Resources\V2\OrganizerTransactionResource;
 use App\Jobs\SendBlastEmailJob;
+use App\Mail\AdminPayoutRequestMail;
 use App\Mail\OrganizerPayoutRequestReceivedMail;
 use App\Models\Attendee;
 use App\Models\Event;
@@ -152,12 +153,12 @@ class OrganizerDashboardController extends Controller
 
         $organizer = auth()->user();
 
-        Mail::raw(
-            "Organizer name: {$organizer->business_name}\nOrganizer Email: {$organizer->email}\nBank Name: {$data['bank_name']}\nAccount Number: {$data['account_number']}",
-            function ($message) {
-                $message->to('admin@thetbmevents.com')
-                    ->subject('Organizer payout request');
-            }
+        Mail::to('admin@thetbmevents.com')->send(
+            new AdminPayoutRequestMail(
+                $organizer,
+                $data['bank_name'],
+                $data['account_number']
+            )
         );
 
         Mail::to($organizer->email)->send(
