@@ -64,6 +64,7 @@ Route::group(['namespace' => 'App\Http\Controllers\V2'], function () {
         Route::prefix('organizer')->group(function () {
             Route::get('overview', 'OrganizerDashboardController@overview');
             Route::get('/event-orders-and-attendees/{event}', 'OrganizerDashboardController@eventOrdersAndAttendees');
+            Route::post('/request-payout', 'OrganizerDashboardController@requestPayout');
 
             Route::prefix('event')->group(function () {
                 Route::get('/', 'OrganizerEventController@index');

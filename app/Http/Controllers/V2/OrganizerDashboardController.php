@@ -8,12 +8,14 @@ use App\Http\Resources\V2\EventWithStatsResource;
 use App\Http\Resources\V2\OrganizerAttendeeResource;
 use App\Http\Resources\V2\OrganizerTransactionResource;
 use App\Jobs\SendBlastEmailJob;
+use App\Mail\OrganizerPayoutRequestReceivedMail;
 use App\Models\Attendee;
 use App\Models\Event;
 use App\Models\NewPurchasedTicket;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class OrganizerDashboardController extends Controller
 {
@@ -139,5 +141,33 @@ class OrganizerDashboardController extends Controller
         );
 
         return $this->success(null, 'Blast email has been queued and will be sent shortly.');
+    }
+
+    public function requestPayout(Request $request)
+    {
+        $data = $request->validate([
+            'account_number' => ['required', 'string'],
+            'bank_name' => ['required', 'string'],
+        ]);
+
+        $organizer = auth()->user();
+
+        Mail::raw(
+            "Organizer name: {$organizer->business_name}\nOrganizer Email: {$organizer->email}\nBank Name: {$data['bank_name']}\nAccount Number: {$data['account_number']}",
+            function ($message) {
+                $message->to('admin@thetbmevents.com')
+                    ->subject('Organizer payout request');
+            }
+        );
+
+        Mail::to($organizer->email)->send(
+            new OrganizerPayoutRequestReceivedMail(
+                $organizer,
+                $data['bank_name'],
+                $data['account_number']
+            )
+        );
+
+        return $this->success(null, 'Your payout request has been sent and will be processed shortly.');
     }
 }
